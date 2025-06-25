@@ -3,29 +3,42 @@ import React, { useState, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Upload, File, Search, SortAsc, SortDesc, Trash2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Upload, File, SortAsc, SortDesc, Trash2 } from 'lucide-react';
 
 interface Document {
   id: string;
   name: string;
   size: number;
   type: string;
+  category: string;
   uploadDate: Date;
   file: File;
 }
+
+const CATEGORIES = [
+  'École',
+  'Personnel',
+  'Administratif',
+  'Projet',
+  'Autre'
+];
 
 const DocumentsModule = () => {
   const [documents, setDocuments] = useState<Document[]>(() => {
     const saved = localStorage.getItem('skoolife_documents');
     return saved ? JSON.parse(saved).map((doc: any) => ({
       ...doc,
-      uploadDate: new Date(doc.uploadDate)
+      uploadDate: new Date(doc.uploadDate),
+      category: doc.category || 'Autre'
     })) : [];
   });
   
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'date' | 'size' | 'type'>('date');
+  const [sortBy, setSortBy] = useState<'name' | 'date' | 'size' | 'type' | 'category'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [categoryFilter, setCategoryFilter] = useState<string>('Toutes');
+  const [selectedCategory, setSelectedCategory] = useState<string>('École');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const saveDocuments = (docs: Document[]) => {
@@ -34,6 +47,7 @@ const DocumentsModule = () => {
       name: doc.name,
       size: doc.size,
       type: doc.type,
+      category: doc.category,
       uploadDate: doc.uploadDate.toISOString()
     }));
     localStorage.setItem('skoolife_documents', JSON.stringify(docsToSave));
@@ -49,6 +63,7 @@ const DocumentsModule = () => {
       name: file.name,
       size: file.size,
       type: file.type || 'unknown',
+      category: selectedCategory,
       uploadDate: new Date(),
       file
     }));
@@ -61,7 +76,7 @@ const DocumentsModule = () => {
     }
   };
 
-  const handleSort = (field: 'name' | 'date' | 'size' | 'type') => {
+  const handleSort = (field: 'name' | 'date' | 'size' | 'type' | 'category') => {
     if (sortBy === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -95,11 +110,24 @@ const DocumentsModule = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  const getCategoryColor = (category: string) => {
+    const colors = {
+      'École': 'bg-blue-100 text-blue-800 border-blue-200',
+      'Personnel': 'bg-green-100 text-green-800 border-green-200',
+      'Administratif': 'bg-purple-100 text-purple-800 border-purple-200',
+      'Projet': 'bg-orange-100 text-orange-800 border-orange-200',
+      'Autre': 'bg-gray-100 text-gray-800 border-gray-200'
+    };
+    return colors[category as keyof typeof colors] || colors['Autre'];
+  };
+
   const filteredAndSortedDocuments = documents
-    .filter(doc => 
-      doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doc.type.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter(doc => {
+      const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           doc.type.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = categoryFilter === 'Toutes' || doc.category === categoryFilter;
+      return matchesSearch && matchesCategory;
+    })
     .sort((a, b) => {
       let comparison = 0;
       
@@ -115,6 +143,9 @@ const DocumentsModule = () => {
           break;
         case 'type':
           comparison = a.type.localeCompare(b.type);
+          break;
+        case 'category':
+          comparison = a.category.localeCompare(b.category);
           break;
       }
       
@@ -139,6 +170,26 @@ const DocumentsModule = () => {
               <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-4">
                 Glissez vos fichiers ici ou cliquez pour sélectionner
               </p>
+              
+              {/* Category selection for upload */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Catégorie du document
+                </label>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-48 mx-auto border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map(category => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
               <Button
                 onClick={() => fileInputRef.current?.click()}
                 className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-semibold shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105"
@@ -156,19 +207,37 @@ const DocumentsModule = () => {
             </div>
           </div>
 
-          {/* Search and Sort Controls */}
-          <div className="mb-6 flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <Input
-                type="text"
-                placeholder="Rechercher des documents..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors duration-300"
-              />
+          {/* Search and Filter Controls */}
+          <div className="mb-6 space-y-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <Input
+                  type="text"
+                  placeholder="Rechercher des documents..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors duration-300"
+                />
+              </div>
+              <div className="w-full sm:w-48">
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger className="border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700">
+                    <SelectValue placeholder="Filtrer par catégorie" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Toutes">Toutes les catégories</SelectItem>
+                    {CATEGORIES.map(category => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="flex gap-2">
+            
+            {/* Sort Controls */}
+            <div className="flex gap-2 flex-wrap">
               <Button
                 variant="outline"
                 onClick={() => handleSort('name')}
@@ -190,6 +259,13 @@ const DocumentsModule = () => {
               >
                 Taille {getSortIcon('size')}
               </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleSort('category')}
+                className="border-yellow-200 dark:border-gray-600 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors duration-300"
+              >
+                Catégorie {getSortIcon('category')}
+              </Button>
             </div>
           </div>
 
@@ -199,7 +275,7 @@ const DocumentsModule = () => {
               <div className="text-center py-12">
                 <File className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">
-                  {searchTerm ? 'Aucun document trouvé' : 'Aucun document importé'}
+                  {searchTerm || categoryFilter !== 'Toutes' ? 'Aucun document trouvé' : 'Aucun document importé'}
                 </p>
               </div>
             ) : (
@@ -214,9 +290,14 @@ const DocumentsModule = () => {
                       <h3 className="font-medium text-gray-900 dark:text-white break-all">
                         {doc.name}
                       </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {formatFileSize(doc.size)} • {doc.uploadDate.toLocaleDateString('fr-FR')}
-                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getCategoryColor(doc.category)}`}>
+                          {doc.category}
+                        </span>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {formatFileSize(doc.size)} • {doc.uploadDate.toLocaleDateString('fr-FR')}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div className="flex gap-2">
