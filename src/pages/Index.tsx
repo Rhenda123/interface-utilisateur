@@ -7,6 +7,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import TodoModule from "@/components/TodoModule";
 import ScheduleModule from "@/components/ScheduleModule";
 import DocumentsModule from "@/components/DocumentsModule";
+import ForumModule from "@/components/ForumModule";
 
 const initialData = [
   { name: "Expenses", amount: 300 },
@@ -105,6 +106,16 @@ export default function Index() {
               >
                 Documents
               </button>
+              <button 
+                onClick={() => setView("forum")} 
+                className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
+                  view === "forum" 
+                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md" 
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                Forum
+              </button>
             </nav>
             <ThemeToggle />
           </div>
@@ -201,6 +212,7 @@ export default function Index() {
         {view === "todo" && <TodoModule />}
         {view === "planning" && <ScheduleModule />}
         {view === "documents" && <DocumentsModule />}
+        {view === "forum" && <ForumModule />}
       </div>
     </div>
   );
