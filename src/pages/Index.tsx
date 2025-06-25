@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import ThemeToggle from "@/components/ThemeToggle";
+import HomeModule from "@/components/HomeModule";
 import TodoModule from "@/components/TodoModule";
 import ScheduleModule from "@/components/ScheduleModule";
 import DocumentsModule from "@/components/DocumentsModule";
@@ -22,7 +23,7 @@ const initialTransactions = [
 ];
 
 export default function Index() {
-  const [view, setView] = useState("finances");
+  const [view, setView] = useState("home");
   const [transactions, setTransactions] = useState(initialTransactions);
   const [data, setData] = useState(initialData);
   const [name, setName] = useState("");
@@ -66,6 +67,16 @@ export default function Index() {
           </h1>
           <div className="flex items-center gap-4">
             <nav className="inline-flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-lg border border-yellow-200 dark:border-gray-700 overflow-x-auto">
+              <button 
+                onClick={() => setView("home")} 
+                className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
+                  view === "home" 
+                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md" 
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                Home
+              </button>
               <button 
                 onClick={() => setView("finances")} 
                 className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
@@ -121,6 +132,7 @@ export default function Index() {
           </div>
         </div>
 
+        {view === "home" && <HomeModule />}
         {view === "finances" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 transition-colors duration-300">
