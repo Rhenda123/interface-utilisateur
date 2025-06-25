@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import ThemeToggle from "@/components/ThemeToggle";
 import TodoModule from "@/components/TodoModule";
 import ScheduleModule from "@/components/ScheduleModule";
+import DocumentsModule from "@/components/DocumentsModule";
 
 const initialData = [
   { name: "Expenses", amount: 300 },
@@ -94,6 +94,16 @@ export default function Index() {
                 }`}
               >
                 Planning
+              </button>
+              <button 
+                onClick={() => setView("documents")} 
+                className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
+                  view === "documents" 
+                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md" 
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                Documents
               </button>
             </nav>
             <ThemeToggle />
@@ -190,6 +200,7 @@ export default function Index() {
 
         {view === "todo" && <TodoModule />}
         {view === "planning" && <ScheduleModule />}
+        {view === "documents" && <DocumentsModule />}
       </div>
     </div>
   );
