@@ -51,6 +51,13 @@ export default function Index() {
     );
     setData(updatedData);
 
+    // Save updated financial data to localStorage to sync with HomeModule
+    const financeData = {
+      income: updatedData.find(d => d.name === "Income")!.amount,
+      expenses: updatedData.find(d => d.name === "Expenses")!.amount
+    };
+    localStorage.setItem("skoolife_finances", JSON.stringify(financeData));
+
     setName("");
     setAmount("");
     setIcon("");
@@ -139,8 +146,12 @@ export default function Index() {
               <CardContent className="p-6 sm:p-8">
                 <div className="text-center mb-6">
                   <h2 className="text-lg sm:text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">{currentMonth}</h2>
-                  <p className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">€{currentBalance}</p>
-                  <p className="text-gray-500 dark:text-gray-400 font-medium">Current Balance</p>
+                  <p className={`text-3xl sm:text-4xl font-bold mb-2 ${
+                    currentBalance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                  }`}>
+                    €{currentBalance}
+                  </p>
+                  <p className="text-gray-500 dark:text-gray-400 font-medium">Solde actuel</p>
                 </div>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">

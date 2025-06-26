@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,6 +23,33 @@ const HomeModule = () => {
 
     const savedPosts = localStorage.getItem("skoolife_forum_posts");
     if (savedPosts) setPosts(JSON.parse(savedPosts));
+
+    // Load financial data from localStorage
+    const savedFinances = localStorage.getItem("skoolife_finances");
+    if (savedFinances) {
+      setFinances(JSON.parse(savedFinances));
+    }
+
+    // Listen for localStorage changes to update finances in real-time
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "skoolife_finances" && e.newValue) {
+        setFinances(JSON.parse(e.newValue));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also listen for custom events for same-page updates
+    const handleFinanceUpdate = (e: CustomEvent) => {
+      setFinances(e.detail);
+    };
+    
+    window.addEventListener('financeUpdate', handleFinanceUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('financeUpdate', handleFinanceUpdate as EventListener);
+    };
   }, []);
 
   const completedTasks = tasks.filter((task: any) => task.completed).length;
@@ -55,7 +81,9 @@ const HomeModule = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
           <CardContent className="p-6 text-center">
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">
+            <div className={`text-2xl font-bold mb-1 ${
+              currentBalance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+            }`}>
               €{currentBalance}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-300">
