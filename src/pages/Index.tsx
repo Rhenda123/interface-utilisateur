@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import TodoModule from "@/components/TodoModule";
 import ScheduleModule from "@/components/ScheduleModule";
 import DocumentsModule from "@/components/DocumentsModule";
 import ForumModule from "@/components/ForumModule";
+import Logo from "@/components/Logo";
 
 const initialData = [
   { name: "Expenses", amount: 300 },
@@ -70,13 +70,7 @@ export default function Index() {
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6 mb-8 sm:mb-12">
-          <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/c3dd693b-5768-4f09-94d8-78f267c90377.png" 
-              alt="SKOOLIFE Logo" 
-              className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
-            />
-          </div>
+          <Logo />
           <div className="flex items-center gap-4">
             <nav className="inline-flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-lg border border-yellow-200 dark:border-gray-700 overflow-x-auto">
               <button 
