@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -67,74 +68,74 @@ const HomeModule = () => {
   ];
 
   return (
-    <div className="space-y-6 p-4 sm:p-6">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+    <div className="space-y-4 sm:space-y-6 p-2 sm:p-4">
+      <div className="text-center mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
           Tableau de Bord
         </h2>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">
           Aperçu de votre vie étudiante
         </p>
       </div>
 
-      {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      {/* Quick Stats Grid - Stack vertically on mobile */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-6 text-center">
-            <div className={`text-2xl font-bold mb-1 ${
+          <CardContent className="p-4 sm:p-6 text-center">
+            <div className={`text-xl sm:text-2xl font-bold mb-1 ${
               currentBalance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
             }`}>
               €{currentBalance}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               Solde Actuel
             </div>
           </CardContent>
         </Card>
 
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-6 text-center">
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
+          <CardContent className="p-4 sm:p-6 text-center">
+            <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
               {pendingTasks}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               Tâches à Faire
             </div>
           </CardContent>
         </Card>
 
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-6 text-center">
-            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
+          <CardContent className="p-4 sm:p-6 text-center">
+            <div className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
               {todaysCourses}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               Cours Aujourd'hui
             </div>
           </CardContent>
         </Card>
 
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-6 text-center">
-            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1">
+          <CardContent className="p-4 sm:p-6 text-center">
+            <div className="text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1">
               {documents.length}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               Documents
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Main Content Grid - Stack vertically on mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Finance Summary */}
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <CardContent className="p-4 sm:p-6">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Aperçu Financier
             </h3>
-            <div className="h-48">
+            <div className="h-40 sm:h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={financeData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#fef3c7" className="dark:stroke-gray-600" />
@@ -158,29 +159,29 @@ const HomeModule = () => {
 
         {/* Recent Tasks */}
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <CardContent className="p-4 sm:p-6">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Tâches Récentes
             </h3>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
+            <div className="space-y-2 sm:space-y-3 max-h-40 sm:max-h-48 overflow-y-auto">
               {tasks.slice(0, 5).map((task: any, index: number) => (
-                <div key={index} className={`p-3 rounded-lg border ${
+                <div key={index} className={`p-2 sm:p-3 rounded-lg border ${
                   task.completed 
                     ? "bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600" 
                     : "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700"
                 }`}>
-                  <div className={`font-medium ${
+                  <div className={`font-medium text-sm sm:text-base ${
                     task.completed ? "line-through text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white"
                   }`}>
                     {task.text}
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                     Priorité: {task.priority}
                   </div>
                 </div>
               ))}
               {tasks.length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
                   Aucune tâche pour le moment
                 </p>
               )}
@@ -190,21 +191,21 @@ const HomeModule = () => {
 
         {/* Today's Schedule */}
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <CardContent className="p-4 sm:p-6">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Planning d'Aujourd'hui
             </h3>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
+            <div className="space-y-2 sm:space-y-3 max-h-40 sm:max-h-48 overflow-y-auto">
               {courses.filter((course: any) => {
                 const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long' });
                 const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
                 return course.day === todayFrench;
               }).map((course: any, index: number) => (
-                <div key={index} className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
-                  <div className="font-medium text-gray-900 dark:text-white">
+                <div key={index} className="p-2 sm:p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                  <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">
                     {course.name}
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                     {course.hour}
                   </div>
                 </div>
@@ -214,7 +215,7 @@ const HomeModule = () => {
                 const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
                 return course.day === todayFrench;
               }).length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
                   Aucun cours aujourd'hui
                 </p>
               )}
@@ -224,13 +225,13 @@ const HomeModule = () => {
 
         {/* Recent Forum Activity */}
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <CardContent className="p-4 sm:p-6">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Activité du Forum
             </h3>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
+            <div className="space-y-2 sm:space-y-3 max-h-40 sm:max-h-48 overflow-y-auto">
               {posts.slice(0, 3).map((post: any, index: number) => (
-                <div key={index} className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                <div key={index} className="p-2 sm:p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
                   <div className="font-medium text-gray-900 dark:text-white text-sm">
                     {post.title}
                   </div>
@@ -240,7 +241,7 @@ const HomeModule = () => {
                 </div>
               ))}
               {posts.length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
                   Aucune activité récente
                 </p>
               )}

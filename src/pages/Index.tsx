@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -67,93 +68,98 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6 mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-700 dark:from-yellow-400 dark:to-yellow-500 bg-clip-text text-transparent">
-            SKOOLIFE
-          </h1>
-          <div className="flex items-center gap-4">
-            <nav className="inline-flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-lg border border-yellow-200 dark:border-gray-700 overflow-x-auto">
-              <button 
-                onClick={() => setView("home")} 
-                className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
-                  view === "home" 
-                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md" 
-                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                Home
-              </button>
-              <button 
-                onClick={() => setView("finances")} 
-                className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
-                  view === "finances" 
-                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md" 
-                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                Finances
-              </button>
-              <button 
-                onClick={() => setView("todo")} 
-                className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
-                  view === "todo" 
-                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md" 
-                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                To-Do
-              </button>
-              <button 
-                onClick={() => setView("planning")} 
-                className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
-                  view === "planning" 
-                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md" 
-                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                Planning
-              </button>
-              <button 
-                onClick={() => setView("documents")} 
-                className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
-                  view === "documents" 
-                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md" 
-                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                Documents
-              </button>
-              <button 
-                onClick={() => setView("forum")} 
-                className={`px-4 sm:px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap ${
-                  view === "forum" 
-                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md" 
-                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                Forum
-              </button>
-            </nav>
-            <ThemeToggle />
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-yellow-200 dark:border-gray-700 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-700 dark:from-yellow-400 dark:to-yellow-500 bg-clip-text text-transparent">
+              SKOOLIFE
+            </h1>
+            <div className="flex items-center gap-4">
+              <nav className="inline-flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-lg border border-yellow-200 dark:border-gray-700 overflow-x-auto">
+                <button 
+                  onClick={() => setView("home")} 
+                  className={`px-3 sm:px-4 py-2 rounded-md font-medium transition-all duration-200 whitespace-nowrap hover:shadow-md ${
+                    view === "home" 
+                      ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md transform scale-105" 
+                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700 hover:shadow-sm"
+                  }`}
+                >
+                  Home
+                </button>
+                <button 
+                  onClick={() => setView("finances")} 
+                  className={`px-3 sm:px-4 py-2 rounded-md font-medium transition-all duration-200 whitespace-nowrap hover:shadow-md ${
+                    view === "finances" 
+                      ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md transform scale-105" 
+                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700 hover:shadow-sm"
+                  }`}
+                >
+                  Finances
+                </button>
+                <button 
+                  onClick={() => setView("todo")} 
+                  className={`px-3 sm:px-4 py-2 rounded-md font-medium transition-all duration-200 whitespace-nowrap hover:shadow-md ${
+                    view === "todo" 
+                      ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md transform scale-105" 
+                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700 hover:shadow-sm"
+                  }`}
+                >
+                  To-Do
+                </button>
+                <button 
+                  onClick={() => setView("planning")} 
+                  className={`px-3 sm:px-4 py-2 rounded-md font-medium transition-all duration-200 whitespace-nowrap hover:shadow-md ${
+                    view === "planning" 
+                      ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md transform scale-105" 
+                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700 hover:shadow-sm"
+                  }`}
+                >
+                  Planning
+                </button>
+                <button 
+                  onClick={() => setView("documents")} 
+                  className={`px-3 sm:px-4 py-2 rounded-md font-medium transition-all duration-200 whitespace-nowrap hover:shadow-md ${
+                    view === "documents" 
+                      ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md transform scale-105" 
+                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700 hover:shadow-sm"
+                  }`}
+                >
+                  Documents
+                </button>
+                <button 
+                  onClick={() => setView("forum")} 
+                  className={`px-3 sm:px-4 py-2 rounded-md font-medium transition-all duration-200 whitespace-nowrap hover:shadow-md ${
+                    view === "forum" 
+                      ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-md transform scale-105" 
+                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-100 dark:hover:bg-gray-700 hover:shadow-sm"
+                  }`}
+                >
+                  Forum
+                </button>
+              </nav>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
+      </header>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {view === "home" && <HomeModule />}
         {view === "finances" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 transition-colors duration-300">
-              <CardContent className="p-6 sm:p-8">
-                <div className="text-center mb-6">
+              <CardContent className="p-4 sm:p-6">
+                <div className="text-center mb-4 sm:mb-6">
                   <h2 className="text-lg sm:text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">{currentMonth}</h2>
-                  <p className={`text-3xl sm:text-4xl font-bold mb-2 ${
+                  <p className={`text-2xl sm:text-3xl font-bold mb-2 ${
                     currentBalance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
                   }`}>
                     €{currentBalance}
                   </p>
                   <p className="text-gray-500 dark:text-gray-400 font-medium">Solde actuel</p>
                 </div>
-                <div className="h-64">
+                <div className="h-48 sm:h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={data}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#fef3c7" className="dark:stroke-gray-600" />
@@ -176,23 +182,23 @@ export default function Index() {
             </Card>
 
             <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 transition-colors duration-300">
-              <CardContent className="p-6 sm:p-8">
-                <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Transactions</h2>
-                <div className="space-y-3 mb-8 max-h-64 overflow-y-auto">
+              <CardContent className="p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-900 dark:text-white">Transactions</h2>
+                <div className="space-y-3 mb-6 sm:mb-8 max-h-48 sm:max-h-64 overflow-y-auto">
                   {transactions.map((t, i) => (
-                    <div key={i} className="flex justify-between items-center p-4 bg-yellow-50 dark:bg-gray-700 rounded-lg border border-yellow-200 dark:border-gray-600 transition-colors duration-300">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xl sm:text-2xl">{t.icon}</span>
+                    <div key={i} className="flex justify-between items-center p-3 sm:p-4 bg-yellow-50 dark:bg-gray-700 rounded-lg border border-yellow-200 dark:border-gray-600 transition-colors duration-300">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <span className="text-lg sm:text-xl">{t.icon}</span>
                         <span className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">{t.name}</span>
                       </div>
-                      <span className={`font-bold text-base sm:text-lg ${t.color}`}>{t.amount}</span>
+                      <span className={`font-bold text-sm sm:text-base ${t.color}`}>{t.amount}</span>
                     </div>
                   ))}
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <select 
-                    className="w-full border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 rounded-lg px-4 py-3 font-medium text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 focus:outline-none transition-colors duration-300" 
+                    className="w-full border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 rounded-lg px-3 sm:px-4 py-2 sm:py-3 font-medium text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 focus:outline-none transition-colors duration-300" 
                     value={type} 
                     onChange={e => setType(e.target.value)}
                   >
@@ -204,24 +210,24 @@ export default function Index() {
                     placeholder="Emoji (ex: 🛍️)" 
                     value={icon} 
                     onChange={e => setIcon(e.target.value)} 
-                    className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors duration-300"
+                    className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors duration-300"
                   />
                   <Input 
                     type="text" 
                     placeholder="Name" 
                     value={name} 
                     onChange={e => setName(e.target.value)} 
-                    className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors duration-300"
+                    className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors duration-300"
                   />
                   <Input 
                     type="number" 
                     placeholder="Amount" 
                     value={amount} 
                     onChange={e => setAmount(e.target.value)} 
-                    className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors duration-300"
+                    className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors duration-300"
                   />
                   <Button 
-                    className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 py-3 rounded-lg font-semibold shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105" 
+                    className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 py-2 sm:py-3 rounded-lg font-semibold shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105" 
                     onClick={handleAddTransaction}
                   >
                     Add Transaction
