@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Edit2, Trash2, AlertTriangle, Plus, X, Check, Filter, Bell } from "lucide-react";
 import { eventTypes, getEventTypeById, getEventTypeColor, EventType } from "@/utils/eventTypes";
+import EventDetailsPopover from "@/components/EventDetailsPopover";
 
 interface Event {
   id: string;
@@ -527,66 +527,72 @@ function ScheduleModule() {
                               const left = groupSize > 1 ? `${(eventIndex * 95) / groupSize + 2}%` : '2.5%';
                               
                               return (
-                                <div
+                                <EventDetailsPopover
                                   key={event.id}
-                                  className="absolute rounded-lg shadow-sm text-white font-medium group cursor-pointer transition-all hover:shadow-lg hover:z-10"
-                                  style={{
-                                    backgroundColor: event.color,
-                                    top: `${top}px`,
-                                    height: `${Math.max(height, 20)}px`,
-                                    width,
-                                    left,
-                                  }}
+                                  event={event}
+                                  onEdit={editEvent}
+                                  onDelete={deleteEvent}
                                 >
-                                  <div className="p-2 h-full flex flex-col justify-between">
-                                    <div>
-                                      <div className="flex items-center gap-1 mb-1">
-                                        {IconComponent && <IconComponent className="w-3 h-3 flex-shrink-0" />}
-                                        <div className="font-semibold text-xs leading-tight truncate">{event.name}</div>
+                                  <div
+                                    className="absolute rounded-lg shadow-sm text-white font-medium group cursor-pointer transition-all hover:shadow-lg hover:z-10"
+                                    style={{
+                                      backgroundColor: event.color,
+                                      top: `${top}px`,
+                                      height: `${Math.max(height, 20)}px`,
+                                      width,
+                                      left,
+                                    }}
+                                  >
+                                    <div className="p-2 h-full flex flex-col justify-between">
+                                      <div>
+                                        <div className="flex items-center gap-1 mb-1">
+                                          {IconComponent && <IconComponent className="w-3 h-3 flex-shrink-0" />}
+                                          <div className="font-semibold text-xs leading-tight truncate">{event.name}</div>
+                                        </div>
+                                        
+                                        <div className="text-xs opacity-90">
+                                          {event.startTime} - {event.endTime}
+                                        </div>
+                                        
+                                        {Object.entries(event.dynamicFields).map(([key, value]) => (
+                                          value && (
+                                            <div key={key} className="text-xs opacity-80 truncate">{value}</div>
+                                          )
+                                        ))}
                                       </div>
                                       
-                                      <div className="text-xs opacity-90">
-                                        {event.startTime} - {event.endTime}
+                                      <div className="flex items-center justify-between">
+                                        {event.isRecurring && (
+                                          <div className="text-xs opacity-80">↻</div>
+                                        )}
+                                        {event.reminders.length > 0 && (
+                                          <Bell className="w-3 h-3 opacity-80" />
+                                        )}
                                       </div>
-                                      
-                                      {Object.entries(event.dynamicFields).map(([key, value]) => (
-                                        value && (
-                                          <div key={key} className="text-xs opacity-80 truncate">{value}</div>
-                                        )
-                                      ))}
                                     </div>
                                     
-                                    <div className="flex items-center justify-between">
-                                      {event.isRecurring && (
-                                        <div className="text-xs opacity-80">↻</div>
-                                      )}
-                                      {event.reminders.length > 0 && (
-                                        <Bell className="w-3 h-3 opacity-80" />
-                                      )}
+                                    <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          editEvent(event);
+                                        }}
+                                        className="bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"
+                                      >
+                                        <Edit2 className="w-3 h-3" />
+                                      </button>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          deleteEvent(event.id);
+                                        }}
+                                        className="bg-white/20 hover:bg-red-500 rounded p-1 transition-colors"
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                      </button>
                                     </div>
                                   </div>
-                                  
-                                  <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        editEvent(event);
-                                      }}
-                                      className="bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"
-                                    >
-                                      <Edit2 className="w-3 h-3" />
-                                    </button>
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        deleteEvent(event.id);
-                                      }}
-                                      className="bg-white/20 hover:bg-red-500 rounded p-1 transition-colors"
-                                    >
-                                      <Trash2 className="w-3 h-3" />
-                                    </button>
-                                  </div>
-                                </div>
+                                </EventDetailsPopover>
                               );
                             })
                           );

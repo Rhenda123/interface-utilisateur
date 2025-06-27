@@ -5,36 +5,56 @@ import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const HomeModule = () => {
-  const [finances, setFinances] = useState({ income: 1250, expenses: 300 });
+  const [finances, setFinances] = useState({ income: 0, expenses: 0 });
   const [tasks, setTasks] = useState([]);
-  const [courses, setCourses] = useState([]);
+  const [events, setEvents] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    // Load data from localStorage
-    const savedTasks = localStorage.getItem("skoolife_tasks");
-    if (savedTasks) setTasks(JSON.parse(savedTasks));
+    // Load data from localStorage and set up real-time updates
+    const loadData = () => {
+      const savedTasks = localStorage.getItem("skoolife_tasks");
+      if (savedTasks) setTasks(JSON.parse(savedTasks));
 
-    const savedCourses = localStorage.getItem("skoolife_courses");
-    if (savedCourses) setCourses(JSON.parse(savedCourses));
+      const savedEvents = localStorage.getItem("skoolife_events");
+      if (savedEvents) setEvents(JSON.parse(savedEvents));
 
-    const savedDocuments = localStorage.getItem("skoolife_documents");
-    if (savedDocuments) setDocuments(JSON.parse(savedDocuments));
+      const savedDocuments = localStorage.getItem("skoolife_documents");
+      if (savedDocuments) setDocuments(JSON.parse(savedDocuments));
 
-    const savedPosts = localStorage.getItem("skoolife_forum_posts");
-    if (savedPosts) setPosts(JSON.parse(savedPosts));
+      const savedPosts = localStorage.getItem("skoolife_forum_posts");
+      if (savedPosts) setPosts(JSON.parse(savedPosts));
 
-    // Load financial data from localStorage
-    const savedFinances = localStorage.getItem("skoolife_finances");
-    if (savedFinances) {
-      setFinances(JSON.parse(savedFinances));
-    }
+      const savedFinances = localStorage.getItem("skoolife_finances");
+      if (savedFinances) {
+        setFinances(JSON.parse(savedFinances));
+      }
+    };
 
-    // Listen for localStorage changes to update finances in real-time
+    // Initial load
+    loadData();
+
+    // Listen for localStorage changes to update data in real-time
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "skoolife_finances" && e.newValue) {
-        setFinances(JSON.parse(e.newValue));
+      if (e.key && e.newValue) {
+        switch (e.key) {
+          case "skoolife_finances":
+            setFinances(JSON.parse(e.newValue));
+            break;
+          case "skoolife_tasks":
+            setTasks(JSON.parse(e.newValue));
+            break;
+          case "skoolife_events":
+            setEvents(JSON.parse(e.newValue));
+            break;
+          case "skoolife_documents":
+            setDocuments(JSON.parse(e.newValue));
+            break;
+          case "skoolife_forum_posts":
+            setPosts(JSON.parse(e.newValue));
+            break;
+        }
       }
     };
 
@@ -45,21 +65,34 @@ const HomeModule = () => {
       setFinances(e.detail);
     };
     
+    const handleDataUpdate = () => {
+      loadData();
+    };
+    
     window.addEventListener('financeUpdate', handleFinanceUpdate as EventListener);
+    window.addEventListener('dataUpdate', handleDataUpdate);
+
+    // Set up periodic refresh to catch updates within the same tab
+    const intervalId = setInterval(loadData, 1000);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('financeUpdate', handleFinanceUpdate as EventListener);
+      window.removeEventListener('dataUpdate', handleDataUpdate);
+      clearInterval(intervalId);
     };
   }, []);
 
+  // Calculate metrics automatically
   const completedTasks = tasks.filter((task: any) => task.completed).length;
   const pendingTasks = tasks.length - completedTasks;
   const currentBalance = finances.income - finances.expenses;
-  const todaysCourses = courses.filter((course: any) => {
+  
+  // Calculate today's events (changed from courses to events)
+  const todaysEvents = events.filter((event: any) => {
     const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long' });
     const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
-    return course.day === todayFrench;
+    return event.day === todayFrench;
   }).length;
 
   const financeData = [
@@ -107,10 +140,10 @@ const HomeModule = () => {
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
           <CardContent className="p-4 sm:p-6 text-center">
             <div className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
-              {todaysCourses}
+              {todaysEvents}
             </div>
             <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-              Cours Aujourd'hui
+              Événements Aujourd'hui
             </div>
           </CardContent>
         </Card>
@@ -196,27 +229,27 @@ const HomeModule = () => {
               Planning d'Aujourd'hui
             </h3>
             <div className="space-y-2 sm:space-y-3 max-h-40 sm:max-h-48 overflow-y-auto">
-              {courses.filter((course: any) => {
+              {events.filter((event: any) => {
                 const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long' });
                 const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
-                return course.day === todayFrench;
-              }).map((course: any, index: number) => (
+                return event.day === todayFrench;
+              }).map((event: any, index: number) => (
                 <div key={index} className="p-2 sm:p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
                   <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">
-                    {course.name}
+                    {event.name}
                   </div>
                   <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    {course.hour}
+                    {event.startTime} - {event.endTime}
                   </div>
                 </div>
               ))}
-              {courses.filter((course: any) => {
+              {events.filter((event: any) => {
                 const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long' });
                 const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
-                return course.day === todayFrench;
+                return event.day === todayFrench;
               }).length === 0 && (
                 <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
-                  Aucun cours aujourd'hui
+                  Aucun événement aujourd'hui
                 </p>
               )}
             </div>
