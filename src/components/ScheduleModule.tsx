@@ -4,27 +4,42 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Edit2, Trash2, AlertTriangle, Plus, X, Check, Filter, Bell } from "lucide-react";
 import { eventTypes, getEventTypeById, getEventTypeColor, EventType } from "@/utils/eventTypes";
 
 interface Event {
   id: string;
   day: string;
-  hour: string;
+  startTime: string;
+  endTime: string;
   name: string;
   typeId: string;
   color: string;
-  duration: number; // in hours
   isRecurring: boolean;
   recurringPattern?: 'daily' | 'weekly' | 'monthly';
   recurringEnd?: string;
   dynamicFields: Record<string, string>;
-  reminders: number[]; // minutes before event
+  reminders: number[];
 }
 
 function ScheduleModule() {
   const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
-  const hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+  
+  // Generate 15-minute intervals from 7:00 to 22:00
+  const generateTimeSlots = () => {
+    const slots = [];
+    for (let hour = 7; hour <= 22; hour++) {
+      for (let minute = 0; minute < 60; minute += 15) {
+        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        slots.push(timeString);
+      }
+    }
+    return slots;
+  };
+
+  const timeSlots = generateTimeSlots();
+  const majorHours = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
 
   const [events, setEvents] = useState<Event[]>(() => {
     const saved = localStorage.getItem("skoolife_events");
@@ -32,16 +47,15 @@ function ScheduleModule() {
   });
   
   const [selectedDay, setSelectedDay] = useState("Lundi");
-  const [selectedHour, setSelectedHour] = useState("08:00");
+  const [startTime, setStartTime] = useState("08:00");
+  const [endTime, setEndTime] = useState("09:00");
   const [eventName, setEventName] = useState("");
   const [selectedTypeId, setSelectedTypeId] = useState("class");
-  const [duration, setDuration] = useState(1);
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurringPattern, setRecurringPattern] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
   const [dynamicFields, setDynamicFields] = useState<Record<string, string>>({});
   const [customReminders, setCustomReminders] = useState<number[]>([]);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
-  const [conflicts, setConflicts] = useState<string[]>([]);
   
   // Filter states
   const [visibleEventTypes, setVisibleEventTypes] = useState<Set<string>>(
@@ -51,7 +65,6 @@ function ScheduleModule() {
 
   useEffect(() => {
     localStorage.setItem("skoolife_events", JSON.stringify(events));
-    checkTimeConflicts();
   }, [events]);
 
   useEffect(() => {
@@ -67,25 +80,67 @@ function ScheduleModule() {
     }
   }, [selectedTypeId]);
 
-  const checkTimeConflicts = () => {
-    const conflictKeys: string[] = [];
-    const timeSlots = new Map<string, Event[]>();
+  const timeToMinutes = (time: string): number => {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
+  };
+
+  const minutesToTime = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+  };
+
+  const calculateEventPosition = (startTime: string, endTime: string) => {
+    const startMinutes = timeToMinutes(startTime);
+    const endMinutes = timeToMinutes(endTime);
+    const duration = endMinutes - startMinutes;
     
-    events.forEach(event => {
-      const key = `${event.day}-${event.hour}`;
-      if (!timeSlots.has(key)) {
-        timeSlots.set(key, []);
+    // Each 15-minute slot is 20px high
+    const slotHeight = 20;
+    const startOffset = (startMinutes - 420) / 15; // 420 = 7:00 AM in minutes
+    const height = (duration / 15) * slotHeight;
+    const top = startOffset * slotHeight;
+    
+    return { top, height };
+  };
+
+  const getEventsForDay = (day: string): Event[] => {
+    return events.filter(e => 
+      e.day === day && 
+      visibleEventTypes.has(e.typeId)
+    ).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+  };
+
+  const getOverlappingEvents = (dayEvents: Event[]) => {
+    const groups: Event[][] = [];
+    
+    dayEvents.forEach(event => {
+      const eventStart = timeToMinutes(event.startTime);
+      const eventEnd = timeToMinutes(event.endTime);
+      
+      let placed = false;
+      
+      for (let group of groups) {
+        const hasOverlap = group.some(groupEvent => {
+          const groupStart = timeToMinutes(groupEvent.startTime);
+          const groupEnd = timeToMinutes(groupEvent.endTime);
+          return eventStart < groupEnd && eventEnd > groupStart;
+        });
+        
+        if (hasOverlap) {
+          group.push(event);
+          placed = true;
+          break;
+        }
       }
-      timeSlots.get(key)!.push(event);
+      
+      if (!placed) {
+        groups.push([event]);
+      }
     });
     
-    timeSlots.forEach((eventsInSlot, key) => {
-      if (eventsInSlot.length > 1) {
-        conflictKeys.push(key);
-      }
-    });
-    
-    setConflicts(conflictKeys);
+    return groups;
   };
 
   const addOrUpdateEvent = () => {
@@ -100,11 +155,11 @@ function ScheduleModule() {
           ? { 
               ...e, 
               day: selectedDay, 
-              hour: selectedHour, 
+              startTime,
+              endTime,
               name: eventName, 
               typeId: selectedTypeId,
               color: eventType.color,
-              duration,
               isRecurring,
               recurringPattern: isRecurring ? recurringPattern : undefined,
               dynamicFields: { ...dynamicFields },
@@ -117,11 +172,11 @@ function ScheduleModule() {
       const newEvent: Event = {
         id: Date.now().toString(),
         day: selectedDay,
-        hour: selectedHour,
+        startTime,
+        endTime,
         name: eventName,
         typeId: selectedTypeId,
         color: eventType.color,
-        duration,
         isRecurring,
         recurringPattern: isRecurring ? recurringPattern : undefined,
         dynamicFields: { ...dynamicFields },
@@ -136,10 +191,10 @@ function ScheduleModule() {
   const editEvent = (event: Event) => {
     setEditingEvent(event);
     setSelectedDay(event.day);
-    setSelectedHour(event.hour);
+    setStartTime(event.startTime);
+    setEndTime(event.endTime);
     setEventName(event.name);
     setSelectedTypeId(event.typeId);
-    setDuration(event.duration);
     setIsRecurring(event.isRecurring);
     setRecurringPattern(event.recurringPattern || 'weekly');
     setDynamicFields({ ...event.dynamicFields });
@@ -154,23 +209,12 @@ function ScheduleModule() {
 
   const resetForm = () => {
     setEventName("");
-    setDuration(1);
+    setStartTime("08:00");
+    setEndTime("09:00");
     setIsRecurring(false);
     setDynamicFields({});
     setCustomReminders([]);
     setEditingEvent(null);
-  };
-
-  const getEventsAt = (day: string, hour: string): Event[] => {
-    return events.filter(e => 
-      e.day === day && 
-      e.hour === hour && 
-      visibleEventTypes.has(e.typeId)
-    );
-  };
-
-  const hasConflict = (day: string, hour: string): boolean => {
-    return conflicts.includes(`${day}-${hour}`);
   };
 
   const toggleEventTypeVisibility = (typeId: string) => {
@@ -259,12 +303,21 @@ function ScheduleModule() {
               </SelectContent>
             </Select>
             
-            <Select value={selectedHour} onValueChange={setSelectedHour}>
+            <Select value={startTime} onValueChange={setStartTime}>
               <SelectTrigger className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700">
-                <SelectValue />
+                <SelectValue placeholder="Heure de début" />
               </SelectTrigger>
               <SelectContent>
-                {hours.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}
+                {timeSlots.map(time => <SelectItem key={time} value={time}>{time}</SelectItem>)}
+              </SelectContent>
+            </Select>
+
+            <Select value={endTime} onValueChange={setEndTime}>
+              <SelectTrigger className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700">
+                <SelectValue placeholder="Heure de fin" />
+              </SelectTrigger>
+              <SelectContent>
+                {timeSlots.map(time => <SelectItem key={time} value={time}>{time}</SelectItem>)}
               </SelectContent>
             </Select>
             
@@ -273,16 +326,6 @@ function ScheduleModule() {
               placeholder="Nom de l'événement" 
               value={eventName} 
               onChange={(e) => setEventName(e.target.value)} 
-              className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white" 
-            />
-
-            <Input 
-              type="number" 
-              placeholder="Durée (heures)" 
-              value={duration} 
-              onChange={(e) => setDuration(Number(e.target.value))} 
-              min="0.5"
-              step="0.5"
               className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white" 
             />
           </div>
@@ -422,121 +465,138 @@ function ScheduleModule() {
         </CardContent>
       </Card>
 
-      {/* Conflicts Warning */}
-      {conflicts.length > 0 && (
-        <Card className="border-red-200 dark:border-red-700 shadow-lg bg-red-50 dark:bg-red-900/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
-              <AlertTriangle className="w-5 h-5" />
-              <span className="font-semibold">Conflits d'horaires détectés!</span>
-            </div>
-            <p className="text-sm text-red-600 dark:text-red-400 mt-1">
-              Certains créneaux ont plusieurs événements programmés. Vérifiez votre planning.
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Schedule Table */}
+      {/* Calendar Grid */}
       <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 overflow-hidden">
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse min-w-[800px]">
-              <thead>
-                <tr className="bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800">
-                  <th className="px-4 py-4 text-left font-semibold text-gray-800 dark:text-gray-200 border-b border-yellow-300 dark:border-yellow-600 w-20"></th>
-                  {days.map((day) => (
-                    <th key={day} className="px-4 py-4 text-center font-semibold text-gray-800 dark:text-gray-200 min-w-[160px] border-b border-yellow-300 dark:border-yellow-600">
-                      {day}
-                    </th>
+          <div className="flex">
+            {/* Time Column */}
+            <div className="bg-gradient-to-b from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 border-r border-yellow-300 dark:border-yellow-600">
+              <div className="h-12 border-b border-yellow-300 dark:border-yellow-600"></div>
+              <ScrollArea className="h-[600px]">
+                <div className="relative">
+                  {majorHours.map((hour, index) => (
+                    <div key={hour} className="relative h-20 border-b border-yellow-200 dark:border-yellow-700">
+                      <div className="absolute -top-2 left-2 text-xs font-semibold text-gray-700 dark:text-gray-300 bg-yellow-100 dark:bg-yellow-900 px-1 rounded">
+                        {hour}
+                      </div>
+                      {/* 15-minute subdivisions */}
+                      <div className="absolute top-5 right-0 w-2 h-px bg-yellow-300 dark:bg-yellow-600"></div>
+                      <div className="absolute top-10 right-0 w-2 h-px bg-yellow-300 dark:bg-yellow-600"></div>
+                      <div className="absolute top-15 right-0 w-2 h-px bg-yellow-300 dark:bg-yellow-600"></div>
+                    </div>
                   ))}
-                </tr>
-              </thead>
-              <tbody>
-                {hours.map((hour, hourIndex) => (
-                  <tr key={hour} className={hourIndex % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-yellow-50/30 dark:bg-gray-700/30"}>
-                    <td className="px-4 py-4 font-semibold text-gray-700 dark:text-gray-300 bg-yellow-100 dark:bg-yellow-900 border-r border-yellow-200 dark:border-yellow-700 text-sm">
-                      {hour}
-                    </td>
-                    {days.map((day, dayIndex) => {
-                      const eventsAtSlot = getEventsAt(day, hour);
-                      const hasConflictHere = hasConflict(day, hour);
-                      
-                      return (
-                        <td key={dayIndex} className="px-2 py-2 text-center text-xs border-r border-yellow-100 dark:border-gray-600 last:border-r-0 relative">
-                          {eventsAtSlot.length === 0 ? (
-                            <div className="text-gray-400 dark:text-gray-500 py-4">-</div>
-                          ) : (
-                            <div className="space-y-1">
-                              {eventsAtSlot.map((event, index) => {
-                                const eventType = getEventTypeById(event.typeId);
-                                const IconComponent = eventType?.icon;
-                                
-                                return (
-                                  <div
-                                    key={event.id}
-                                    className={`p-2 rounded-lg shadow-sm text-white font-medium relative group ${
-                                      hasConflictHere ? 'ring-2 ring-red-400 animate-pulse' : ''
-                                    }`}
-                                    style={{ backgroundColor: event.color }}
-                                  >
-                                    <div className="flex items-center gap-1 justify-center mb-1">
-                                      {IconComponent && <IconComponent className="w-3 h-3" />}
-                                      <div className="font-semibold text-xs leading-tight truncate">{event.name}</div>
-                                    </div>
-                                    
-                                    {event.duration > 1 && (
-                                      <div className="text-xs opacity-90">{event.duration}h</div>
-                                    )}
-                                    
-                                    {event.isRecurring && (
-                                      <div className="text-xs opacity-80">↻ {event.recurringPattern}</div>
-                                    )}
-                                    
-                                    {Object.entries(event.dynamicFields).map(([key, value]) => (
-                                      value && (
-                                        <div key={key} className="text-xs opacity-80 truncate">{value}</div>
-                                      )
-                                    ))}
-                                    
-                                    <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                                      <button
-                                        onClick={() => editEvent(event)}
-                                        className="bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"
-                                      >
-                                        <Edit2 className="w-3 h-3" />
-                                      </button>
-                                      <button
-                                        onClick={() => deleteEvent(event.id)}
-                                        className="bg-white/20 hover:bg-red-500 rounded p-1 transition-colors"
-                                      >
-                                        <Trash2 className="w-3 h-3" />
-                                      </button>
-                                    </div>
-                                    
-                                    {hasConflictHere && (
-                                      <div className="absolute -top-1 -right-1">
-                                        <AlertTriangle className="w-4 h-4 text-red-500 bg-white rounded-full p-0.5" />
-                                      </div>
-                                    )}
+                </div>
+              </ScrollArea>
+            </div>
 
-                                    {event.reminders.length > 0 && (
-                                      <div className="absolute -top-1 -left-1">
-                                        <Bell className="w-3 h-3 text-yellow-300" />
+            {/* Days Columns */}
+            <div className="flex-1 overflow-x-auto">
+              <div className="flex min-w-[800px]">
+                {days.map((day) => (
+                  <div key={day} className="flex-1 border-r border-yellow-200 dark:border-gray-600 last:border-r-0">
+                    {/* Day Header */}
+                    <div className="h-12 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 border-b border-yellow-300 dark:border-yellow-600 flex items-center justify-center">
+                      <span className="font-semibold text-gray-800 dark:text-gray-200">{day}</span>
+                    </div>
+                    
+                    {/* Day Content */}
+                    <ScrollArea className="h-[600px]">
+                      <div className="relative h-[1200px]"> {/* 15 hours * 80px */}
+                        {/* Hour grid lines */}
+                        {majorHours.map((_, index) => (
+                          <div key={index} className="absolute w-full border-b border-yellow-100 dark:border-gray-700" style={{ top: index * 80 }}>
+                            {/* 15-minute lines */}
+                            <div className="absolute w-full border-b border-yellow-50 dark:border-gray-800" style={{ top: 20 }}></div>
+                            <div className="absolute w-full border-b border-yellow-50 dark:border-gray-800" style={{ top: 40 }}></div>
+                            <div className="absolute w-full border-b border-yellow-50 dark:border-gray-800" style={{ top: 60 }}></div>
+                          </div>
+                        ))}
+                        
+                        {/* Events */}
+                        {(() => {
+                          const dayEvents = getEventsForDay(day);
+                          const eventGroups = getOverlappingEvents(dayEvents);
+                          
+                          return eventGroups.map((group, groupIndex) => 
+                            group.map((event, eventIndex) => {
+                              const { top, height } = calculateEventPosition(event.startTime, event.endTime);
+                              const eventType = getEventTypeById(event.typeId);
+                              const IconComponent = eventType?.icon;
+                              const groupSize = group.length;
+                              const width = groupSize > 1 ? `${95 / groupSize}%` : '95%';
+                              const left = groupSize > 1 ? `${(eventIndex * 95) / groupSize + 2}%` : '2.5%';
+                              
+                              return (
+                                <div
+                                  key={event.id}
+                                  className="absolute rounded-lg shadow-sm text-white font-medium group cursor-pointer transition-all hover:shadow-lg hover:z-10"
+                                  style={{
+                                    backgroundColor: event.color,
+                                    top: `${top}px`,
+                                    height: `${Math.max(height, 20)}px`,
+                                    width,
+                                    left,
+                                  }}
+                                >
+                                  <div className="p-2 h-full flex flex-col justify-between">
+                                    <div>
+                                      <div className="flex items-center gap-1 mb-1">
+                                        {IconComponent && <IconComponent className="w-3 h-3 flex-shrink-0" />}
+                                        <div className="font-semibold text-xs leading-tight truncate">{event.name}</div>
                                       </div>
-                                    )}
+                                      
+                                      <div className="text-xs opacity-90">
+                                        {event.startTime} - {event.endTime}
+                                      </div>
+                                      
+                                      {Object.entries(event.dynamicFields).map(([key, value]) => (
+                                        value && (
+                                          <div key={key} className="text-xs opacity-80 truncate">{value}</div>
+                                        )
+                                      ))}
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between">
+                                      {event.isRecurring && (
+                                        <div className="text-xs opacity-80">↻</div>
+                                      )}
+                                      {event.reminders.length > 0 && (
+                                        <Bell className="w-3 h-3 opacity-80" />
+                                      )}
+                                    </div>
                                   </div>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
+                                  
+                                  <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        editEvent(event);
+                                      }}
+                                      className="bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"
+                                    >
+                                      <Edit2 className="w-3 h-3" />
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteEvent(event.id);
+                                      }}
+                                      className="bg-white/20 hover:bg-red-500 rounded p-1 transition-colors"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })
+                          );
+                        })()}
+                      </div>
+                    </ScrollArea>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
