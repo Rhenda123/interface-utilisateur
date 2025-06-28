@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -303,6 +302,21 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     return dayName.charAt(0).toUpperCase() + dayName.slice(1);
   };
 
+  // Get current week range (Monday to Sunday)
+  const getCurrentWeekRange = () => {
+    const today = new Date();
+    const currentDay = today.getDay();
+    const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // Handle Sunday as 0
+    
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + mondayOffset);
+    
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    
+    return { monday, sunday };
+  };
+
   // Real-time calculations that update automatically
   const completedTasks = tasks.filter((task: any) => task.completed).length;
   const pendingTasks = tasks.length - completedTasks;
@@ -334,17 +348,35 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   console.log('All events:', events);
   console.log('Today\'s events:', todaysEvents);
 
+  // Fixed this week events calculation
   const thisWeekEvents = events.filter((event: any) => {
-    const today = new Date();
-    const todayDay = today.toLocaleDateString('fr-FR', { weekday: 'long' });
-    const todayFrench = todayDay.charAt(0).toUpperCase() + todayDay.slice(1);
+    const { monday, sunday } = getCurrentWeekRange();
     
-    const weekDays = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-    const todayIndex = weekDays.indexOf(todayFrench);
-    const eventIndex = weekDays.indexOf(event.day);
+    // Map French day names to their position in the week (Monday = 0, Sunday = 6)
+    const dayNameMap = {
+      'lundi': 0, 'mardi': 1, 'mercredi': 2, 'jeudi': 3, 
+      'vendredi': 4, 'samedi': 5, 'dimanche': 6
+    };
     
-    return eventIndex >= todayIndex;
+    const eventDayName = event.day?.toLowerCase();
+    const eventDayIndex = dayNameMap[eventDayName];
+    
+    if (eventDayIndex === undefined) return false;
+    
+    // Calculate the actual date for this event day in the current week
+    const eventDate = new Date(monday);
+    eventDate.setDate(monday.getDate() + eventDayIndex);
+    
+    // Check if the event date is within the current week range
+    const isInCurrentWeek = eventDate >= monday && eventDate <= sunday;
+    
+    console.log('Event:', event.name, 'Day:', eventDayName, 'Date:', eventDate.toDateString(), 'In current week:', isInCurrentWeek);
+    
+    return isInCurrentWeek;
   });
+
+  console.log('Current week range:', getCurrentWeekRange());
+  console.log('This week events:', thisWeekEvents);
 
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
