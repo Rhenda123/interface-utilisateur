@@ -618,31 +618,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   <span>€{totalBudget.toFixed(0)} total</span>
                 </div>
               </div>
-
-              {/* Net Balance Indicator */}
-              <div className={`rounded-xl p-4 border-2 ${
-                currentBalance >= 0 
-                  ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700' 
-                  : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
-              }`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className={`w-5 h-5 ${
-                      currentBalance >= 0 ? 'text-green-600' : 'text-red-600'
-                    }`} />
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Solde net
-                    </span>
-                  </div>
-                  <div className={`text-xl font-bold ${
-                    currentBalance >= 0 
-                      ? 'text-green-600 dark:text-green-400' 
-                      : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    €{currentBalance.toFixed(0)}
-                  </div>
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>
