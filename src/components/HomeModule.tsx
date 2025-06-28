@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -98,10 +97,54 @@ const HomeModule = () => {
     };
   }, []);
 
-  // Enhanced calculations
+  // Calculate real-time budget spending for current month
+  const calculateCurrentMonthBudgetData = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    
+    // Update budget spent amounts based on current month transactions
+    const updatedBudgets = budgets.map(budget => {
+      const relevantTransactions = transactions.filter(t => {
+        const tDate = new Date(t.date);
+        const isExpense = t.type === 'expense';
+        const isCategory = t.category === budget.category;
+        
+        let isInPeriod = false;
+        switch (budget.period) {
+          case 'monthly':
+            isInPeriod = tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth;
+            break;
+          case 'quarterly':
+            const quarter = Math.floor(currentMonth / 3);
+            const tQuarter = Math.floor(tDate.getMonth() / 3);
+            isInPeriod = tDate.getFullYear() === currentYear && tQuarter === quarter;
+            break;
+          case 'yearly':
+            isInPeriod = tDate.getFullYear() === currentYear;
+            break;
+        }
+        
+        return isExpense && isCategory && isInPeriod;
+      });
+      
+      const spent = relevantTransactions.reduce((sum, t) => sum + t.amount, 0);
+      return { ...budget, spent };
+    });
+    
+    return updatedBudgets;
+  };
+
+  // Enhanced calculations with real-time budget data
   const completedTasks = tasks.filter((task: any) => task.completed).length;
   const pendingTasks = tasks.length - completedTasks;
   const currentBalance = finances.income - finances.expenses;
+  
+  // Calculate real budget progress
+  const currentBudgets = calculateCurrentMonthBudgetData();
+  const totalBudget = currentBudgets.reduce((sum: number, budget: any) => sum + budget.limit, 0);
+  const budgetSpent = currentBudgets.reduce((sum: number, budget: any) => sum + (budget.spent || 0), 0);
+  const budgetProgress = totalBudget > 0 ? (budgetSpent / totalBudget) * 100 : 0;
   
   // Calculate urgent tasks (high priority and due soon)
   const urgentTasks = tasks.filter((task: any) => 
@@ -148,11 +191,6 @@ const HomeModule = () => {
              t.type === 'expense';
     })
     .reduce((sum: number, t: any) => sum + t.amount, 0);
-
-  // Budget progress
-  const totalBudget = budgets.reduce((sum: number, budget: any) => sum + budget.amount, 0);
-  const budgetUsed = budgets.reduce((sum: number, budget: any) => sum + (budget.spent || 0), 0);
-  const budgetProgress = totalBudget > 0 ? (budgetUsed / totalBudget) * 100 : 0;
 
   // Recent documents (last 7 days)
   const recentDocuments = documents.filter((doc: any) => {
