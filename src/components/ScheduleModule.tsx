@@ -10,6 +10,7 @@ import EventDetailsPopover from "@/components/EventDetailsPopover";
 import TimeAxis from "@/components/planning/TimeAxis";
 import WeekNavigation from "@/components/planning/WeekNavigation";
 import DayColumn from "@/components/planning/DayColumn";
+import EventCreationModal from "@/components/planning/EventCreationModal";
 
 function ScheduleModule() {
   const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -71,6 +72,14 @@ function ScheduleModule() {
   );
   const [showFilters, setShowFilters] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
+
+  // Quick creation modal states
+  const [showQuickCreateModal, setShowQuickCreateModal] = useState(false);
+  const [quickCreateData, setQuickCreateData] = useState<{
+    day: string;
+    startTime: string;
+    endTime: string;
+  } | null>(null);
 
   useEffect(() => {
     localStorage.setItem("skoolife_events", JSON.stringify(events));
@@ -199,11 +208,42 @@ function ScheduleModule() {
     const timeString = `${hour.toString().padStart(2, '0')}:00`;
     const endTimeString = `${(hour + 1).toString().padStart(2, '0')}:00`;
     
-    setSelectedDay(day);
-    setStartTime(timeString);
-    setEndTime(endTimeString);
-    setShowEventForm(true);
-    resetForm();
+    setQuickCreateData({
+      day,
+      startTime: timeString,
+      endTime: endTimeString
+    });
+    setShowQuickCreateModal(true);
+  };
+
+  const handleQuickSave = (eventData: Partial<Event>) => {
+    const newEvent: Event = {
+      id: Date.now().toString(),
+      day: eventData.day!,
+      startTime: eventData.startTime!,
+      endTime: eventData.endTime!,
+      name: eventData.name!,
+      typeId: eventData.typeId!,
+      color: eventData.color!,
+      isRecurring: eventData.isRecurring || false,
+      recurringPattern: eventData.recurringPattern,
+      dynamicFields: eventData.dynamicFields || {},
+      reminders: eventData.reminders || []
+    };
+    
+    setEvents([...events, newEvent]);
+    setShowQuickCreateModal(false);
+  };
+
+  const handleMoreOptions = () => {
+    if (quickCreateData) {
+      setSelectedDay(quickCreateData.day);
+      setStartTime(quickCreateData.startTime);
+      setEndTime(quickCreateData.endTime);
+      setShowQuickCreateModal(false);
+      setShowEventForm(true);
+      resetForm();
+    }
   };
 
   const handlePreviousWeek = () => {
@@ -491,6 +531,17 @@ function ScheduleModule() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Quick Create Modal */}
+      {quickCreateData && (
+        <EventCreationModal
+          isOpen={showQuickCreateModal}
+          onClose={() => setShowQuickCreateModal(false)}
+          onSave={handleQuickSave}
+          initialData={quickCreateData}
+          onMoreOptions={handleMoreOptions}
+        />
+      )}
     </div>
   );
 }
