@@ -243,18 +243,22 @@ function TodoModule() {
                           Supprimer
                         </button>
                       </AlertDialogTrigger>
-                      <AlertDialogContent className="max-w-sm mx-auto rounded-2xl p-6">
-                        <AlertDialogHeader className="text-center">
-                          <AlertDialogTitle className="text-lg font-semibold mb-2">Confirmer la suppression</AlertDialogTitle>
-                          <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+                      <AlertDialogContent className="max-w-xs mx-auto rounded-2xl p-4 sm:p-6">
+                        <AlertDialogHeader className="text-center space-y-2">
+                          <AlertDialogTitle className="text-base sm:text-lg font-semibold text-center">
+                            Confirmer la suppression
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center">
                             Êtes-vous sûr de vouloir supprimer cette tâche ?
                           </AlertDialogDescription>
                         </AlertDialogHeader>
-                        <AlertDialogFooter className="flex gap-2 mt-4">
-                          <AlertDialogCancel className="flex-1 rounded-xl py-2 text-sm">Annuler</AlertDialogCancel>
+                        <AlertDialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
+                          <AlertDialogCancel className="flex-1 rounded-xl py-2 text-xs sm:text-sm order-2 sm:order-1">
+                            Annuler
+                          </AlertDialogCancel>
                           <AlertDialogAction 
                             onClick={() => deleteTask(index)} 
-                            className="flex-1 bg-red-500 hover:bg-red-600 rounded-xl py-2 text-sm"
+                            className="flex-1 bg-red-500 hover:bg-red-600 rounded-xl py-2 text-xs sm:text-sm order-1 sm:order-2"
                           >
                             Supprimer
                           </AlertDialogAction>
