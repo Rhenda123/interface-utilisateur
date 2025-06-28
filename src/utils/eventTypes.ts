@@ -21,6 +21,7 @@ export interface EventField {
 export interface Event {
   id: string;
   day: string;
+  date: string; // Added specific date in YYYY-MM-DD format
   startTime: string;
   endTime: string;
   name: string;

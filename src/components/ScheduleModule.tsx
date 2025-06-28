@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,7 +60,15 @@ function ScheduleModule() {
 
   const [events, setEvents] = useState<Event[]>(() => {
     const saved = localStorage.getItem("skoolife_events");
-    return saved ? JSON.parse(saved) : [];
+    if (saved) {
+      const parsedEvents = JSON.parse(saved);
+      // Migrate old events without date to include date
+      return parsedEvents.map((event: any) => ({
+        ...event,
+        date: event.date || new Date().toISOString().split('T')[0] // Add current date if missing
+      }));
+    }
+    return [];
   });
   
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
@@ -80,6 +87,7 @@ function ScheduleModule() {
     day: string;
     startTime: string;
     endTime: string;
+    date: string;
   } | null>(null);
 
   // Mobile view state
@@ -92,8 +100,14 @@ function ScheduleModule() {
   }, [events]);
 
   const getEventsForDay = (dayName: string): Event[] => {
+    const dayInfo = days.find(d => d.name === dayName);
+    if (!dayInfo) return [];
+    
+    const dayDateString = dayInfo.fullDate.toISOString().split('T')[0];
+    
     return events.filter(e => 
       e.day === dayName && 
+      e.date === dayDateString && 
       visibleEventTypes.has(e.typeId)
     ).sort((a, b) => {
       const timeToMinutes = (time: string): number => {
@@ -266,19 +280,26 @@ function ScheduleModule() {
   const handleTimeSlotClick = (day: string, hour: number) => {
     const timeString = `${hour.toString().padStart(2, '0')}:00`;
     const endTimeString = `${(hour + 1).toString().padStart(2, '0')}:00`;
+    const dayInfo = days.find(d => d.name === day);
+    const dayDate = dayInfo ? dayInfo.fullDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
     
     setQuickCreateData({
       day,
       startTime: timeString,
-      endTime: endTimeString
+      endTime: endTimeString,
+      date: dayDate
     });
     setShowQuickCreateModal(true);
   };
 
   const handleQuickSave = (eventData: Partial<Event>) => {
+    const dayInfo = days.find(d => d.name === eventData.day);
+    const eventDate = dayInfo ? dayInfo.fullDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+    
     const newEvent: Event = {
       id: Date.now().toString(),
       day: eventData.day!,
+      date: eventDate,
       startTime: eventData.startTime!,
       endTime: eventData.endTime!,
       name: eventData.name!,
@@ -370,7 +391,7 @@ function ScheduleModule() {
 
       {/* Enhanced Mobile Week Navigation - More compact */}
       {isMobileView && !selectedDay && (
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-900 rounded-xl mx-4">
+        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-900 rounded-xl mx-1">
           <CardContent className="p-3">
             <div className="flex items-center justify-between">
               <Button
@@ -411,10 +432,10 @@ function ScheduleModule() {
 
       {/* Mobile Week Overview - Smaller cards */}
       {isMobileView && !selectedDay && (
-        <div className="grid grid-cols-2 gap-3 px-2">
+        <div className="grid grid-cols-2 gap-2 px-1">
           {days.map((day) => {
             const dayEvents = getEventsForDay(day.name);
-            const isToday = new Date().toLocaleDateString('fr-FR', { weekday: 'long' }).toLowerCase() === day.name.toLowerCase();
+            const isToday = new Date().toDateString() === day.fullDate.toDateString();
             
             return (
               <Card 
@@ -424,19 +445,19 @@ function ScheduleModule() {
                 }`}
                 onClick={() => setSelectedDay(day.name)}
               >
-                <CardContent className="p-3">
+                <CardContent className="p-2.5">
                   <div className="text-center">
-                    <h3 className={`text-sm font-bold mb-1 capitalize ${isToday ? 'text-yellow-700 dark:text-yellow-400' : 'text-gray-900 dark:text-white'}`}>
+                    <h3 className={`text-xs font-bold mb-1 capitalize ${isToday ? 'text-yellow-700 dark:text-yellow-400' : 'text-gray-900 dark:text-white'}`}>
                       {day.name.substring(0, 3)}
                     </h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
                       {day.date}
                     </p>
                     <div className="space-y-1">
                       {dayEvents.slice(0, 2).map((event) => (
                         <div 
                           key={event.id} 
-                          className="text-xs px-2 py-1 rounded-full text-white truncate font-medium shadow-sm"
+                          className="text-xs px-1.5 py-0.5 rounded-full text-white truncate font-medium shadow-sm"
                           style={{ backgroundColor: event.color }}
                         >
                           {event.name}
@@ -444,11 +465,11 @@ function ScheduleModule() {
                       ))}
                       {dayEvents.length > 2 && (
                         <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                          +{dayEvents.length - 2} autres
+                          +{dayEvents.length - 2}
                         </div>
                       )}
                       {dayEvents.length === 0 && (
-                        <div className="text-xs text-gray-400 font-medium py-1">Libre</div>
+                        <div className="text-xs text-gray-400 font-medium py-0.5">Libre</div>
                       )}
                     </div>
                   </div>
@@ -513,7 +534,12 @@ function ScheduleModule() {
         isOpen={showFullCreateModal}
         onClose={() => setShowFullCreateModal(false)}
         onSave={addOrUpdateEvent}
-        initialData={quickCreateData || { day: days[0]?.name || 'Lundi', startTime: '08:00', endTime: '09:00' }}
+        initialData={quickCreateData || { 
+          day: days[0]?.name || 'Lundi', 
+          startTime: '08:00', 
+          endTime: '09:00',
+          date: days[0]?.fullDate.toISOString().split('T')[0] || new Date().toISOString().split('T')[0]
+        }}
         onMoreOptions={() => {}}
       />
 
