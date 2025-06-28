@@ -432,21 +432,9 @@ export default function FinanceModule() {
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
-              <div className="flex items-center gap-2">
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap">
-                  {selectedMonthName}
-                </p>
-                {!isCurrentMonth && (
-                  <Button
-                    onClick={goToCurrentMonth}
-                    variant="ghost"
-                    size="sm"
-                    className="text-xs h-6 px-2 whitespace-nowrap"
-                  >
-                    Aujourd'hui
-                  </Button>
-                )}
-              </div>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap">
+                {selectedMonthName}
+              </p>
               <Button
                 onClick={() => navigateMonth('next')}
                 variant="outline"
