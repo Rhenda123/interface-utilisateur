@@ -710,7 +710,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Enhanced Planning Overview with improved alignment */}
+        {/* Enhanced Planning Overview with modern clean design */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-6">
@@ -728,13 +728,13 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               </Button>
             </div>
             
-            {/* Modern Planning Overview with fixed alignment */}
+            {/* Modern Planning Overview */}
             <div className="space-y-4">
-              {/* Event Statistics Cards - Fixed to ensure equal heights and proper alignment */}
+              {/* Event Statistics Cards - Fixed alignment and icon sizes */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700 flex flex-col justify-between min-h-[80px]">
+                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
                   <div className="flex items-center gap-2 mb-2">
-                    <Clock className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                    <Clock className="w-5 h-5 text-purple-600" />
                     <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Aujourd'hui</span>
                   </div>
                   <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
@@ -742,9 +742,9 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   </div>
                 </div>
                 
-                <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 border border-indigo-200 dark:border-indigo-700 flex flex-col justify-between min-h-[80px]">
+                <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 border border-indigo-200 dark:border-indigo-700">
                   <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-5 h-5 text-indigo-600 flex-shrink-0" />
+                    <Calendar className="w-5 h-5 text-indigo-600" />
                     <span className="text-sm font-medium text-indigo-700 dark:text-indigo-300">Cette semaine</span>
                   </div>
                   <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
