@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Progress } from "@/components/ui/progress";
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from "recharts";
-import { Search, ArrowUp, ArrowDown, Edit, Trash2, Download, Plus, TrendingUp, TrendingDown, Wallet, Euro, Calendar, Filter, Settings } from "lucide-react";
+import { Search, ArrowUp, ArrowDown, Edit, Trash2, Download, Plus, TrendingUp, TrendingDown, Wallet, Euro, Calendar, Filter, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import BudgetManager from "@/components/finance/BudgetManager";
 import CategoryManager from "@/components/finance/CategoryManager";
 
@@ -106,8 +105,14 @@ export default function FinanceModule() {
     date: new Date().toISOString().split('T')[0]
   });
 
+  const [selectedMonth, setSelectedMonth] = useState<string>(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
+
   const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+  const selectedDate = new Date(selectedMonth + '-01');
+  const selectedMonthName = selectedDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
 
   // Get all available categories
   const allCategories = useMemo(() => {
@@ -116,10 +121,10 @@ export default function FinanceModule() {
     return [...defaultCats, ...customCats];
   }, [customCategories]);
 
-  // Update budget spent amounts based on transactions
+  // Update budget spent amounts based on transactions for selected month
   useEffect(() => {
-    const currentYear = currentDate.getFullYear();
-    const currentMonthNum = currentDate.getMonth();
+    const selectedYear = selectedDate.getFullYear();
+    const selectedMonthNum = selectedDate.getMonth();
     
     const updatedBudgets = budgets.map(budget => {
       const relevantTransactions = transactions.filter(t => {
@@ -130,15 +135,15 @@ export default function FinanceModule() {
         let isInPeriod = false;
         switch (budget.period) {
           case 'monthly':
-            isInPeriod = tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonthNum;
+            isInPeriod = tDate.getFullYear() === selectedYear && tDate.getMonth() === selectedMonthNum;
             break;
           case 'quarterly':
-            const quarter = Math.floor(currentMonthNum / 3);
+            const quarter = Math.floor(selectedMonthNum / 3);
             const tQuarter = Math.floor(tDate.getMonth() / 3);
-            isInPeriod = tDate.getFullYear() === currentYear && tQuarter === quarter;
+            isInPeriod = tDate.getFullYear() === selectedYear && tQuarter === quarter;
             break;
           case 'yearly':
-            isInPeriod = tDate.getFullYear() === currentYear;
+            isInPeriod = tDate.getFullYear() === selectedYear;
             break;
         }
         
@@ -150,7 +155,7 @@ export default function FinanceModule() {
     });
     
     setBudgets(updatedBudgets);
-  }, [transactions, currentDate]);
+  }, [transactions, selectedDate]);
 
   // Save to localStorage
   useEffect(() => {
@@ -165,30 +170,30 @@ export default function FinanceModule() {
     localStorage.setItem("skoolife_custom_categories", JSON.stringify(customCategories));
   }, [customCategories]);
 
-  // Calculate current month summary
-  const currentMonthData = useMemo(() => {
-    const currentYear = currentDate.getFullYear();
-    const currentMonthNum = currentDate.getMonth();
+  // Calculate selected month summary
+  const selectedMonthData = useMemo(() => {
+    const selectedYear = selectedDate.getFullYear();
+    const selectedMonthNum = selectedDate.getMonth();
     
-    const currentMonthTransactions = transactions.filter(t => {
+    const selectedMonthTransactions = transactions.filter(t => {
       const tDate = new Date(t.date);
-      return tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonthNum;
+      return tDate.getFullYear() === selectedYear && tDate.getMonth() === selectedMonthNum;
     });
 
-    const income = currentMonthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-    const expenses = currentMonthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    const income = selectedMonthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const expenses = selectedMonthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
     const net = income - expenses;
 
     return { income, expenses, net };
-  }, [transactions, currentDate]);
+  }, [transactions, selectedDate]);
 
-  // Calculate monthly data for charts (last 6 months)
+  // Calculate monthly data for charts (6 months centered around selected month)
   const monthlyData = useMemo(() => {
     const months: { [key: string]: { month: string; income: number; expenses: number; net: number } } = {};
     
-    // Generate last 6 months
-    for (let i = 5; i >= 0; i--) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+    // Generate 6 months: 2 before selected, selected month, 3 after selected
+    for (let i = -2; i <= 3; i++) {
+      const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + i, 1);
       const monthKey = date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
       months[monthKey] = { month: monthKey, income: 0, expenses: 0, net: 0 };
     }
@@ -208,22 +213,44 @@ export default function FinanceModule() {
     });
     
     return Object.values(months);
-  }, [transactions, currentDate]);
+  }, [transactions, selectedDate]);
 
-  // Expense breakdown for pie chart
+  // Expense breakdown for pie chart (selected month only)
   const expenseBreakdown = useMemo(() => {
+    const selectedYear = selectedDate.getFullYear();
+    const selectedMonthNum = selectedDate.getMonth();
+    
     const breakdown: { [key: string]: number } = {};
-    transactions.filter(t => t.type === 'expense').forEach(t => {
-      breakdown[t.category] = (breakdown[t.category] || 0) + t.amount;
-    });
+    transactions
+      .filter(t => {
+        const tDate = new Date(t.date);
+        return t.type === 'expense' && 
+               tDate.getFullYear() === selectedYear && 
+               tDate.getMonth() === selectedMonthNum;
+      })
+      .forEach(t => {
+        breakdown[t.category] = (breakdown[t.category] || 0) + t.amount;
+      });
+    
     return Object.entries(breakdown)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
-  }, [transactions]);
+  }, [transactions, selectedDate]);
 
-  // Filter and sort transactions
+  // Filter transactions for selected month in the list
+  const monthFilteredTransactions = useMemo(() => {
+    const selectedYear = selectedDate.getFullYear();
+    const selectedMonthNum = selectedDate.getMonth();
+    
+    return transactions.filter(t => {
+      const tDate = new Date(t.date);
+      return tDate.getFullYear() === selectedYear && tDate.getMonth() === selectedMonthNum;
+    });
+  }, [transactions, selectedDate]);
+
+  // Filter and sort transactions (now using month-filtered transactions)
   const filteredTransactions = useMemo(() => {
-    let filtered = transactions.filter(transaction => {
+    let filtered = monthFilteredTransactions.filter(transaction => {
       const matchesSearch = transaction.name.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === 'all' || transaction.type === filterType;
       const matchesCategory = filterCategory === 'all' || transaction.category === filterCategory;
@@ -231,7 +258,7 @@ export default function FinanceModule() {
       let matchesDate = true;
       if (dateFilter !== 'all') {
         const transactionDate = new Date(transaction.date);
-        const now = new Date();
+        const now = selectedDate; // Use selected date as reference
         
         switch (dateFilter) {
           case 'thisMonth':
@@ -257,7 +284,7 @@ export default function FinanceModule() {
     });
 
     return filtered;
-  }, [transactions, searchTerm, filterType, filterCategory, dateFilter, sortBy, sortOrder]);
+  }, [monthFilteredTransactions, searchTerm, filterType, filterCategory, dateFilter, sortBy, sortOrder, selectedDate]);
 
   const getCurrencySymbol = () => {
     const symbols: { [key: string]: string } = { EUR: '€', USD: '$', GBP: '£', CAD: 'C$' };
@@ -379,13 +406,52 @@ export default function FinanceModule() {
     URL.revokeObjectURL(url);
   };
 
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    const currentSelectedDate = new Date(selectedMonth + '-01');
+    const newDate = new Date(currentSelectedDate.getFullYear(), currentSelectedDate.getMonth() + (direction === 'next' ? 1 : -1), 1);
+    setSelectedMonth(`${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(2, '0')}`);
+  };
+
+  const goToCurrentMonth = () => {
+    const now = new Date();
+    setSelectedMonth(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
+  };
+
   return (
     <div className="space-y-6 p-4 sm:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Finances</h2>
-          <p className="text-gray-600 dark:text-gray-400">{currentMonth}</p>
+          <div className="flex items-center gap-3 mt-2">
+            <Button
+              onClick={() => navigateMonth('prev')}
+              variant="outline"
+              size="sm"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <div className="flex items-center gap-2">
+              <p className="text-gray-600 dark:text-gray-400 font-medium">{selectedMonthName}</p>
+              {selectedMonth !== `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}` && (
+                <Button
+                  onClick={goToCurrentMonth}
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs"
+                >
+                  Aujourd'hui
+                </Button>
+              )}
+            </div>
+            <Button
+              onClick={() => navigateMonth('next')}
+              variant="outline"
+              size="sm"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <Button
@@ -437,12 +503,12 @@ export default function FinanceModule() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Solde actuel</p>
-                <p className={`text-2xl font-bold ${currentMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
-                  {getCurrencySymbol()}{currentMonthData.net}
+                <p className={`text-2xl font-bold ${selectedMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                  {getCurrencySymbol()}{selectedMonthData.net}
                 </p>
               </div>
-              <div className={`p-3 rounded-full ${currentMonthData.net >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-red-100 dark:bg-red-900/30'}`}>
-                <Wallet className={`w-6 h-6 ${currentMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`} />
+              <div className={`p-3 rounded-full ${selectedMonthData.net >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-red-100 dark:bg-red-900/30'}`}>
+                <Wallet className={`w-6 h-6 ${selectedMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`} />
               </div>
             </div>
           </CardContent>
@@ -454,7 +520,7 @@ export default function FinanceModule() {
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Revenus</p>
                 <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                  {getCurrencySymbol()}{currentMonthData.income}
+                  {getCurrencySymbol()}{selectedMonthData.income}
                 </p>
               </div>
               <div className="p-3 rounded-full bg-emerald-100 dark:bg-emerald-900/30">
@@ -470,7 +536,7 @@ export default function FinanceModule() {
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Dépenses</p>
                 <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-                  {getCurrencySymbol()}{currentMonthData.expenses}
+                  {getCurrencySymbol()}{selectedMonthData.expenses}
                 </p>
               </div>
               <div className="p-3 rounded-full bg-red-100 dark:bg-red-900/30">
@@ -625,7 +691,7 @@ export default function FinanceModule() {
       {budgets.length > 0 && (
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Budget mensuel</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Budget - {selectedMonthName}</CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -661,7 +727,7 @@ export default function FinanceModule() {
       <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
         <CardHeader>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Transactions</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Transactions - {selectedMonthName}</CardTitle>
             <div className="flex gap-2">
               <Button onClick={exportToCSV} variant="outline" size="sm">
                 <Download className="w-4 h-4 mr-2" />
