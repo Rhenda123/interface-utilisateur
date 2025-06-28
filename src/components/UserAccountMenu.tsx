@@ -10,16 +10,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { LogOut, User, Settings, Bell, Sun, Moon } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
+import { LogOut, User, Settings, Bell } from "lucide-react";
 
 const UserAccountMenu = () => {
-  const { theme, toggleTheme } = useTheme();
   const user = {
-    name: "Alex Johnson",
-    email: "alex.johnson@university.edu",
+    name: "Ridouane Henda",
+    email: "r.henda@icloud.com",
     avatar: "",
-    initials: "AJ"
+    initials: "RH"
   };
 
   const handleLogout = () => {
@@ -117,30 +115,6 @@ const UserAccountMenu = () => {
               className="data-[state=checked]:bg-yellow-500"
               onCheckedChange={handleNotificationToggle}
             />
-          </div>
-        </div>
-
-        <DropdownMenuSeparator className="bg-yellow-100 dark:bg-gray-700" />
-
-        {/* Theme & Appearance Section */}
-        <div className="py-2">
-          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-2 pb-2">
-            Theme & Appearance
-          </p>
-          <div 
-            className="flex items-center justify-between py-2 px-2 hover:bg-yellow-50 dark:hover:bg-gray-700 rounded-md cursor-pointer"
-            onClick={toggleTheme}
-          >
-            <div className="flex items-center space-x-3">
-              {theme === 'light' ? (
-                <Moon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-              ) : (
-                <Sun className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-              )}
-              <span className="text-sm">
-                {theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-              </span>
-            </div>
           </div>
         </div>
 
