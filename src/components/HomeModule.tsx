@@ -288,11 +288,9 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const budgetSpent = currentBudgets.reduce((sum: number, budget: any) => sum + (budget.spent || 0), 0);
   const budgetProgress = totalBudget > 0 ? (budgetSpent / totalBudget) * 100 : 0;
   
-  // Fixed urgent tasks calculation - only count "Haute" priority as urgent
+  // Only count tasks with "Haute" priority as urgent
   const urgentTasks = tasks.filter((task: any) => 
-    !task.completed && 
-    (task.priority === "Haute" || 
-     (task.deadline && new Date(task.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)))
+    !task.completed && task.priority === "Haute"
   );
 
   // Enhanced today's events calculation with better matching
