@@ -288,6 +288,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const budgetSpent = currentBudgets.reduce((sum: number, budget: any) => sum + (budget.spent || 0), 0);
   const budgetProgress = totalBudget > 0 ? (budgetSpent / totalBudget) * 100 : 0;
   
+  // Fixed urgent tasks calculation - only count "Haute" priority as urgent
   const urgentTasks = tasks.filter((task: any) => 
     !task.completed && 
     (task.priority === "Haute" || 
