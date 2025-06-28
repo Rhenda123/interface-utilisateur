@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -372,7 +373,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </Card>
       </div>
 
-      {/* Enhanced Responsive Content Grid */}
+      {/* Enhanced Responsive Content Grid - Removed Documents and Cette Semaine blocks */}
       <div className={`grid ${gridConfig.contentGrid} gap-4 sm:gap-6`}>
         {/* Enhanced Finance Summary */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
@@ -512,52 +513,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Documents Activity - Fixed to show unique documents */}
-        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-4 sm:p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-                Documents
-              </h3>
-              <Button
-                onClick={() => onNavigate?.('documents')}
-                variant="ghost"
-                size="sm"
-                className="text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full p-2"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
-              {recentDocuments.slice(0, screenSize === 'mobile' ? 1 : 2).map((doc: any, index: number) => (
-                <div key={doc.id} className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-700 animate-fade-in">
-                  <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
-                    {doc.name}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {doc.category}
-                  </div>
-                </div>
-              ))}
-              {documents.filter(doc => !recentDocuments.includes(doc)).slice(0, 1).map((doc: any, index: number) => (
-                <div key={`older-${doc.id}`} className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <div className="font-medium text-xs text-gray-700 dark:text-gray-300 truncate">
-                    {doc.name}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {doc.category}
-                  </div>
-                </div>
-              ))}
-              {documents.length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
-                  Aucun document
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Forum Activity - Enhanced */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
@@ -590,29 +545,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   Aucune activité récente
                 </p>
               )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Enhanced Weekly Insights */}
-        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-4 sm:p-6">
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              Cette Semaine
-            </h3>
-            <div className="space-y-3 sm:space-y-4">
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-[#F6C103] dark:border-gray-600">
-                <span className="text-sm text-gray-600 dark:text-gray-300">Tâches</span>
-                <span className="font-bold text-green-600 dark:text-green-400">{completedTasks}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-[#F6C103] dark:border-gray-600">
-                <span className="text-sm text-gray-600 dark:text-gray-300">Événements</span>
-                <span className="font-bold text-purple-600 dark:text-purple-400">{thisWeekEvents.length}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-[#F6C103] dark:border-gray-600">
-                <span className="text-sm text-gray-600 dark:text-gray-300">Dépenses</span>
-                <span className="font-bold text-red-600 dark:text-red-400">€{monthlySpending.toFixed(0)}</span>
-              </div>
             </div>
           </CardContent>
         </Card>
