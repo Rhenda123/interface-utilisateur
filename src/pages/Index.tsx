@@ -12,6 +12,10 @@ import FinanceModule from "@/components/FinanceModule";
 export default function Index() {
   const [view, setView] = useState("home");
 
+  const handleNavigation = (newView: string) => {
+    setView(newView);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
       {/* Sticky Header */}
@@ -99,7 +103,7 @@ export default function Index() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        {view === "home" && <HomeModule />}
+        {view === "home" && <HomeModule onNavigate={handleNavigation} />}
         {view === "finances" && <FinanceModule />}
         {view === "todo" && <TodoModule />}
         {view === "planning" && <ScheduleModule />}

@@ -1,11 +1,14 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { Calendar, Clock, FileText, MessageSquare, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
 
-const HomeModule = () => {
+interface HomeModuleProps {
+  onNavigate?: (view: string) => void;
+}
+
+const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const [finances, setFinances] = useState({ income: 0, expenses: 0 });
   const [tasks, setTasks] = useState([]);
   const [events, setEvents] = useState([]);
@@ -226,7 +229,10 @@ const HomeModule = () => {
 
       {/* Enhanced Quick Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <Card 
+          className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+          onClick={() => onNavigate?.('finances')}
+        >
           <CardContent className="p-6 text-center">
             <div className="flex items-center justify-center mb-3">
               <TrendingUp className={`w-8 h-8 ${currentBalance >= 0 ? "text-green-500" : "text-red-500"}`} />
@@ -245,7 +251,10 @@ const HomeModule = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <Card 
+          className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+          onClick={() => onNavigate?.('todo')}
+        >
           <CardContent className="p-6 text-center">
             <div className="flex items-center justify-center mb-3">
               <CheckCircle className="w-8 h-8 text-blue-500" />
@@ -262,7 +271,10 @@ const HomeModule = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <Card 
+          className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+          onClick={() => onNavigate?.('planning')}
+        >
           <CardContent className="p-6 text-center">
             <div className="flex items-center justify-center mb-3">
               <Calendar className="w-8 h-8 text-purple-500" />
@@ -279,7 +291,10 @@ const HomeModule = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <Card 
+          className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+          onClick={() => onNavigate?.('documents')}
+        >
           <CardContent className="p-6 text-center">
             <div className="flex items-center justify-center mb-3">
               <FileText className="w-8 h-8 text-orange-500" />
