@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -269,6 +270,30 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     return updatedBudgets;
   };
 
+  // Calculate current month's financial data from transactions (same logic as FinanceModule)
+  const calculateCurrentMonthData = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    
+    const currentMonthTransactions = transactions.filter(t => {
+      try {
+        const tDate = new Date(t.date);
+        return tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth;
+      } catch (error) {
+        return false;
+      }
+    });
+
+    const income = currentMonthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + (t.amount || 0), 0);
+    const expenses = currentMonthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + (t.amount || 0), 0);
+    const net = income - expenses;
+
+    console.log('Current month calculation - Income:', income, 'Expenses:', expenses, 'Net:', net);
+
+    return { income, expenses, net };
+  };
+
   // Get today's day name in French format matching ScheduleModule exactly
   const getTodayDayName = () => {
     const today = new Date();
@@ -281,7 +306,10 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   // Real-time calculations that update automatically
   const completedTasks = tasks.filter((task: any) => task.completed).length;
   const pendingTasks = tasks.length - completedTasks;
-  const currentBalance = finances.income - finances.expenses;
+  
+  // Use transaction-based calculation for current balance (same as FinanceModule)
+  const currentMonthData = calculateCurrentMonthData();
+  const currentBalance = currentMonthData.net;
   
   const currentBudgets = calculateCurrentMonthBudgetData();
   const totalBudget = currentBudgets.reduce((sum: number, budget: any) => sum + (budget.limit || 0), 0);
@@ -374,8 +402,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const gridConfig = getGridConfig();
 
   const financeData = [
-    { name: "Revenus", amount: finances.income, color: "#10b981" },
-    { name: "Dépenses", amount: finances.expenses, color: "#ef4444" },
+    { name: "Revenus", amount: currentMonthData.income, color: "#10b981" },
+    { name: "Dépenses", amount: currentMonthData.expenses, color: "#ef4444" },
   ];
 
   const taskData = [
