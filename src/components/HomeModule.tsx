@@ -13,18 +13,12 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const [finances, setFinances] = useState({ income: 0, expenses: 0 });
   const [tasks, setTasks] = useState([]);
   const [events, setEvents] = useState([]);
+  const [documents, setDocuments] = useState([]);
   const [posts, setPosts] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [screenSize, setScreenSize] = useState('desktop');
   const [lastUpdate, setLastUpdate] = useState(Date.now());
-
-  // Helper function to get today's day name in French
-  const getTodayInFrench = () => {
-    const today = new Date();
-    const dayNames = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-    return dayNames[today.getDay()];
-  };
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -56,14 +50,23 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         console.log('Tasks loaded:', parsedTasks.length);
       }
 
-      // Load events with enhanced logging
+      // Load events
       const savedEvents = localStorage.getItem("skoolife_events");
       if (savedEvents) {
         const parsedEvents = JSON.parse(savedEvents);
         setEvents(parsedEvents);
         console.log('Events loaded:', parsedEvents.length);
-        console.log('Today is:', getTodayInFrench());
-        console.log('Events for today:', parsedEvents.filter((e: any) => e.day === getTodayInFrench()));
+      }
+
+      // Load documents with deduplication
+      const savedDocuments = localStorage.getItem("skoolife_documents");
+      if (savedDocuments) {
+        const parsedDocs = JSON.parse(savedDocuments);
+        const uniqueDocs = parsedDocs.filter((doc: any, index: number, self: any[]) => 
+          index === self.findIndex((d: any) => d.id === doc.id)
+        );
+        setDocuments(uniqueDocs);
+        console.log('Documents loaded:', uniqueDocs.length);
       }
 
       // Load forum posts
@@ -129,7 +132,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               const newEvents = JSON.parse(e.newValue);
               setEvents(newEvents);
               console.log('Home: Events updated from storage');
-              console.log('Updated events for today:', newEvents.filter((e: any) => e.day === getTodayInFrench()));
+              break;
+            case "skoolife_documents":
+              const parsedDocs = JSON.parse(e.newValue);
+              const uniqueDocs = parsedDocs.filter((doc: any, index: number, self: any[]) => 
+                index === self.findIndex((d: any) => d.id === doc.id)
+              );
+              setDocuments(uniqueDocs);
+              console.log('Home: Documents updated from storage');
               break;
             case "skoolife_forum_posts":
               const newPosts = JSON.parse(e.newValue);
@@ -170,7 +180,15 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     const handleEventUpdate = (e: CustomEvent) => {
       console.log('Home: Event update event received');
       setEvents(e.detail);
-      console.log('Events updated via custom event for today:', e.detail.filter((event: any) => event.day === getTodayInFrench()));
+      setLastUpdate(Date.now());
+    };
+
+    const handleDocumentUpdate = (e: CustomEvent) => {
+      console.log('Home: Document update event received');
+      const uniqueDocs = e.detail.filter((doc: any, index: number, self: any[]) => 
+        index === self.findIndex((d: any) => d.id === doc.id)
+      );
+      setDocuments(uniqueDocs);
       setLastUpdate(Date.now());
     };
     
@@ -184,12 +202,13 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     window.addEventListener('financeUpdate', handleFinanceUpdate as EventListener);
     window.addEventListener('taskUpdate', handleTaskUpdate as EventListener);
     window.addEventListener('eventUpdate', handleEventUpdate as EventListener);
+    window.addEventListener('documentUpdate', handleDocumentUpdate as EventListener);
     window.addEventListener('dataUpdate', handleDataUpdate);
 
     // Enhanced polling for cross-tab synchronization (more frequent for better UX)
     const intervalId = setInterval(() => {
       loadAllData();
-    }, 2000); // Check every 2 seconds for better responsiveness
+    }, 1000); // Check every second for better responsiveness
 
     // Focus-based synchronization for when user returns to tab
     const handleFocus = () => {
@@ -203,6 +222,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       window.removeEventListener('financeUpdate', handleFinanceUpdate as EventListener);
       window.removeEventListener('taskUpdate', handleTaskUpdate as EventListener);
       window.removeEventListener('eventUpdate', handleEventUpdate as EventListener);
+      window.removeEventListener('documentUpdate', handleDocumentUpdate as EventListener);
       window.removeEventListener('dataUpdate', handleDataUpdate);
       window.removeEventListener('focus', handleFocus);
       clearInterval(intervalId);
@@ -266,14 +286,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
      (task.deadline && new Date(task.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)))
   );
 
-  // Fixed today's events calculation
-  const todayInFrench = getTodayInFrench();
   const todaysEvents = events.filter((event: any) => {
-    console.log('Checking event:', event.name, 'Day:', event.day, 'Today:', todayInFrench);
-    return event.day === todayInFrench;
+    const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long' });
+    const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
+    return event.day === todayFrench;
   });
-
-  console.log('Today\'s events count:', todaysEvents.length);
 
   const thisWeekEvents = events.filter((event: any) => {
     const today = new Date();
@@ -301,6 +318,17 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       }
     })
     .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+
+  const recentDocuments = documents.filter((doc: any) => {
+    if (!doc.uploadDate) return false;
+    try {
+      const docDate = new Date(doc.uploadDate);
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      return docDate >= weekAgo;
+    } catch (error) {
+      return false;
+    }
+  });
 
   // Responsive grid configurations
   const getGridConfig = () => {
@@ -419,6 +447,26 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400">
               {thisWeekEvents.length} cette semaine
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
+          onClick={() => onNavigate?.('documents')}
+        >
+          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+            <div className="flex items-center justify-center mb-2 sm:mb-3">
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-orange-500" />
+            </div>
+            <div className="text-base sm:text-lg lg:text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1 sm:mb-2">
+              {documents.length}
+            </div>
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
+              Documents
+            </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              {recentDocuments.length} récents
             </div>
           </CardContent>
         </Card>
