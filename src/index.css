@@ -46,12 +46,12 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Custom yellow theme colors */
-    --yellow-bg-light: 48 100% 96%;
-    --yellow-bg: 48 100% 88%;
-    --yellow-primary: 48 100% 50%;
-    --yellow-primary-dark: 45 100% 45%;
-    --yellow-accent: 48 100% 80%;
+    /* Skoolife yellow theme colors */
+    --yellow-bg-light: 45 100% 96%;
+    --yellow-bg: 45 100% 88%;
+    --yellow-primary: 45 96% 51%;
+    --yellow-primary-dark: 45 96% 45%;
+    --yellow-accent: 45 100% 80%;
   }
 
   .dark {
@@ -92,11 +92,11 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Custom yellow theme colors for dark mode */
+    /* Skoolife yellow theme colors for dark mode */
     --yellow-bg-light: 240 5.9% 10%;
     --yellow-bg: 240 3.7% 15.9%;
-    --yellow-primary: 48 100% 60%;
-    --yellow-primary-dark: 45 100% 55%;
+    --yellow-primary: 45 96% 60%;
+    --yellow-primary-dark: 45 96% 55%;
     --yellow-accent: 240 5.3% 26.1%;
   }
 }

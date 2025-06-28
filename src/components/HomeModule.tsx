@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -215,7 +216,7 @@ const HomeModule = () => {
   return (
     <div className="space-y-6 p-4 sm:p-6">
       <div className="text-center mb-8">
-        <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-700 dark:from-yellow-400 dark:to-yellow-500 bg-clip-text text-transparent mb-3">
+        <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AC00] bg-clip-text text-transparent mb-3">
           Tableau de Bord
         </h2>
         <p className="text-gray-600 dark:text-gray-300 text-lg">
@@ -225,7 +226,7 @@ const HomeModule = () => {
 
       {/* Enhanced Quick Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
           <CardContent className="p-6 text-center">
             <div className="flex items-center justify-center mb-3">
               <TrendingUp className={`w-8 h-8 ${currentBalance >= 0 ? "text-green-500" : "text-red-500"}`} />
@@ -244,7 +245,7 @@ const HomeModule = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
           <CardContent className="p-6 text-center">
             <div className="flex items-center justify-center mb-3">
               <CheckCircle className="w-8 h-8 text-blue-500" />
@@ -261,7 +262,7 @@ const HomeModule = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
           <CardContent className="p-6 text-center">
             <div className="flex items-center justify-center mb-3">
               <Calendar className="w-8 h-8 text-purple-500" />
@@ -278,7 +279,7 @@ const HomeModule = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
           <CardContent className="p-6 text-center">
             <div className="flex items-center justify-center mb-3">
               <FileText className="w-8 h-8 text-orange-500" />
@@ -299,13 +300,13 @@ const HomeModule = () => {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {/* Enhanced Finance Summary */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Finances
               </h3>
-              <TrendingUp className="w-5 h-5 text-yellow-500" />
+              <TrendingUp className="w-5 h-5 text-[#F6C103]" />
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
@@ -314,18 +315,18 @@ const HomeModule = () => {
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div 
-                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 h-2 rounded-full transition-all duration-500" 
+                  className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] h-2 rounded-full transition-all duration-500" 
                   style={{ width: `${Math.min(budgetProgress, 100)}%` }}
                 ></div>
               </div>
               <div className="h-32">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={financeData}>
-                    <Bar dataKey="amount" fill="#fcd34d" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="amount" fill="#F6C103" radius={[4, 4, 0, 0]} />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'var(--card)',
-                        border: '2px solid #fcd34d',
+                        border: '2px solid #F6C103',
                         borderRadius: '8px',
                         color: 'var(--card-foreground)'
                       }}
@@ -338,7 +339,7 @@ const HomeModule = () => {
         </Card>
 
         {/* Enhanced Tasks Overview */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -359,7 +360,7 @@ const HomeModule = () => {
               )}
               <div className="space-y-2 max-h-32 overflow-y-auto">
                 {tasks.filter((task: any) => !task.completed).slice(0, 3).map((task: any, index: number) => (
-                  <div key={index} className="p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700 animate-fade-in">
+                  <div key={index} className="p-2 bg-[#FEF7D6] dark:bg-yellow-900/20 rounded-lg border border-[#F6C103] dark:border-yellow-700 animate-fade-in">
                     <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
                       {task.text}
                     </div>
@@ -374,7 +375,7 @@ const HomeModule = () => {
         </Card>
 
         {/* Enhanced Planning Overview */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -414,7 +415,7 @@ const HomeModule = () => {
         </Card>
 
         {/* Documents Activity */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -453,7 +454,7 @@ const HomeModule = () => {
         </Card>
 
         {/* Forum Activity */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -482,21 +483,21 @@ const HomeModule = () => {
         </Card>
 
         {/* Weekly Insights */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300">
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-6">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Insights de la Semaine
             </h3>
             <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-yellow-200 dark:border-gray-600">
+              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-[#F6C103] dark:border-gray-600">
                 <span className="text-sm text-gray-600 dark:text-gray-300">Tâches complétées</span>
                 <span className="font-bold text-green-600 dark:text-green-400">{completedTasks}</span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-yellow-200 dark:border-gray-600">
+              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-[#F6C103] dark:border-gray-600">
                 <span className="text-sm text-gray-600 dark:text-gray-300">Événements cette semaine</span>
                 <span className="font-bold text-purple-600 dark:text-purple-400">{thisWeekEvents.length}</span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-yellow-200 dark:border-gray-600">
+              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-[#F6C103] dark:border-gray-600">
                 <span className="text-sm text-gray-600 dark:text-gray-300">Dépenses ce mois</span>
                 <span className="font-bold text-red-600 dark:text-red-400">€{monthlySpending.toFixed(2)}</span>
               </div>
