@@ -46,7 +46,24 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Custom yellow theme colors */
+    /* Skoolife Brand Color Palette */
+    --skoolife-yellow: 48 100% 50%;        /* #F6C103 - Brand primary */
+    --skoolife-yellow-light: 48 100% 88%;  /* Light yellow for backgrounds */
+    --skoolife-yellow-dark: 45 100% 45%;   /* Darker yellow for emphasis */
+    
+    --skoolife-blue: 210 100% 56%;         /* #1E7BF0 - Complementary blue */
+    --skoolife-blue-light: 210 100% 85%;   /* Light blue for backgrounds */
+    --skoolife-blue-dark: 210 100% 40%;    /* Dark blue for emphasis */
+    
+    --skoolife-green: 145 63% 42%;         /* #25B26E - Success/Income green */
+    --skoolife-green-light: 145 63% 85%;   /* Light green for backgrounds */
+    --skoolife-green-dark: 145 63% 30%;    /* Dark green for emphasis */
+    
+    --skoolife-red: 0 84% 60%;             /* #E53E3E - Alert/Expense red */
+    --skoolife-red-light: 0 84% 85%;       /* Light red for backgrounds */
+    --skoolife-red-dark: 0 84% 45%;        /* Dark red for emphasis */
+
+    /* Custom yellow theme colors (keeping existing for compatibility) */
     --yellow-bg-light: 48 100% 96%;
     --yellow-bg: 48 100% 88%;
     --yellow-primary: 48 100% 50%;
@@ -92,7 +109,24 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Custom yellow theme colors for dark mode */
+    /* Skoolife Brand Color Palette for Dark Mode */
+    --skoolife-yellow: 48 100% 60%;        /* Slightly brighter in dark mode */
+    --skoolife-yellow-light: 48 100% 20%;  /* Darker background in dark mode */
+    --skoolife-yellow-dark: 48 100% 70%;   /* Brighter emphasis in dark mode */
+    
+    --skoolife-blue: 210 100% 65%;         /* Brighter blue in dark mode */
+    --skoolife-blue-light: 210 100% 20%;   /* Dark blue background */
+    --skoolife-blue-dark: 210 100% 75%;    /* Bright blue emphasis */
+    
+    --skoolife-green: 145 63% 55%;         /* Brighter green in dark mode */
+    --skoolife-green-light: 145 63% 20%;   /* Dark green background */
+    --skoolife-green-dark: 145 63% 65%;    /* Bright green emphasis */
+    
+    --skoolife-red: 0 84% 70%;             /* Brighter red in dark mode */
+    --skoolife-red-light: 0 84% 20%;       /* Dark red background */
+    --skoolife-red-dark: 0 84% 80%;        /* Bright red emphasis */
+
+    /* Custom yellow theme colors for dark mode (keeping existing for compatibility) */
     --yellow-bg-light: 240 5.9% 10%;
     --yellow-bg: 240 3.7% 15.9%;
     --yellow-primary: 48 100% 60%;
@@ -109,4 +143,39 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Skoolife Brand Color Utilities */
+@layer utilities {
+  /* Yellow (Brand Primary) */
+  .bg-skoolife-yellow { background-color: hsl(var(--skoolife-yellow)); }
+  .bg-skoolife-yellow-light { background-color: hsl(var(--skoolife-yellow-light)); }
+  .bg-skoolife-yellow-dark { background-color: hsl(var(--skoolife-yellow-dark)); }
+  .text-skoolife-yellow { color: hsl(var(--skoolife-yellow)); }
+  .text-skoolife-yellow-dark { color: hsl(var(--skoolife-yellow-dark)); }
+  .border-skoolife-yellow { border-color: hsl(var(--skoolife-yellow)); }
+  
+  /* Blue (Complementary) */
+  .bg-skoolife-blue { background-color: hsl(var(--skoolife-blue)); }
+  .bg-skoolife-blue-light { background-color: hsl(var(--skoolife-blue-light)); }
+  .bg-skoolife-blue-dark { background-color: hsl(var(--skoolife-blue-dark)); }
+  .text-skoolife-blue { color: hsl(var(--skoolife-blue)); }
+  .text-skoolife-blue-dark { color: hsl(var(--skoolife-blue-dark)); }
+  .border-skoolife-blue { border-color: hsl(var(--skoolife-blue)); }
+  
+  /* Green (Success/Income) */
+  .bg-skoolife-green { background-color: hsl(var(--skoolife-green)); }
+  .bg-skoolife-green-light { background-color: hsl(var(--skoolife-green-light)); }
+  .bg-skoolife-green-dark { background-color: hsl(var(--skoolife-green-dark)); }
+  .text-skoolife-green { color: hsl(var(--skoolife-green)); }
+  .text-skoolife-green-dark { color: hsl(var(--skoolife-green-dark)); }
+  .border-skoolife-green { border-color: hsl(var(--skoolife-green)); }
+  
+  /* Red (Alert/Expense) */
+  .bg-skoolife-red { background-color: hsl(var(--skoolife-red)); }
+  .bg-skoolife-red-light { background-color: hsl(var(--skoolife-red-light)); }
+  .bg-skoolife-red-dark { background-color: hsl(var(--skoolife-red-dark)); }
+  .text-skoolife-red { color: hsl(var(--skoolife-red)); }
+  .text-skoolife-red-dark { color: hsl(var(--skoolife-red-dark)); }
+  .border-skoolife-red { border-color: hsl(var(--skoolife-red)); }
 }

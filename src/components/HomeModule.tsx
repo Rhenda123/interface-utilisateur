@@ -1,8 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
-import { Calendar, Clock, FileText, MessageSquare, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Home, 
+  Calendar, 
+  BookOpen, 
+  CheckCircle, 
+  Clock, 
+  TrendingUp, 
+  TrendingDown,
+  Euro,
+  FileText,
+  AlertTriangle,
+  Target,
+  Activity
+} from "lucide-react";
 
 const HomeModule = () => {
   const [finances, setFinances] = useState({ income: 0, expenses: 0 });
@@ -164,7 +178,7 @@ const HomeModule = () => {
   const thisWeekEvents = events.filter((event: any) => {
     const today = new Date();
     const todayDay = today.toLocaleDateString('fr-FR', { weekday: 'long' });
-    const todayFrench = todayDay.charAt(0).toUpperCase() + todayDay.slice(1);
+    const todayFrench = todayDay.charAt(0).toUpperCase() + today.slice(1);
     
     const weekDays = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
     const todayIndex = weekDays.indexOf(todayFrench);
@@ -200,6 +214,18 @@ const HomeModule = () => {
     return docDate >= weekAgo;
   });
 
+  // Recent transactions (last 7 days)
+  const recentTransactions = transactions.filter((t: any) => {
+    const transactionDate = new Date(t.date);
+    return transactionDate >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  });
+
+  // Upcoming events (next 7 days)
+  const upcomingEvents = events.filter((event: any) => {
+    const eventDate = new Date(event.start);
+    return eventDate >= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  });
+
   // Enhanced finance chart data
   const financeData = [
     { name: "Revenus", amount: finances.income, color: "#10b981" },
@@ -213,297 +239,278 @@ const HomeModule = () => {
   ];
 
   return (
-    <div className="space-y-6 p-4 sm:p-6">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-700 dark:from-yellow-400 dark:to-yellow-500 bg-clip-text text-transparent mb-3">
-          Tableau de Bord
-        </h2>
-        <p className="text-gray-600 dark:text-gray-300 text-lg">
-          Votre vue d'ensemble personnalisée
-        </p>
+    <div className="space-y-6 max-w-7xl mx-auto p-6">
+      {/* Welcome Header */}
+      <div className="bg-gradient-to-r from-skoolife-yellow-light to-skoolife-blue-light dark:from-skoolife-yellow-light dark:to-skoolife-blue-light rounded-lg p-6 border border-skoolife-yellow/20">
+        <div className="flex items-center gap-3">
+          <Home className="h-8 w-8 text-skoolife-yellow-dark" />
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              Bienvenue sur Skoolife
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300">
+              Voici un aperçu rapide de votre tableau de bord
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Enhanced Quick Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
-          <CardContent className="p-6 text-center">
-            <div className="flex items-center justify-center mb-3">
-              <TrendingUp className={`w-8 h-8 ${currentBalance >= 0 ? "text-green-500" : "text-red-500"}`} />
-            </div>
-            <div className={`text-2xl font-bold mb-2 ${
-              currentBalance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
-            }`}>
-              €{currentBalance.toFixed(2)}
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-              Solde Actuel
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              Budget utilisé: {budgetProgress.toFixed(0)}%
+      {/* Quick Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Balance Card */}
+        <Card className="border-skoolife-green/20 bg-skoolife-green-light/10">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Solde actuel</p>
+                <p className={`text-2xl font-bold ${currentBalance >= 0 ? 'text-skoolife-green-dark' : 'text-skoolife-red-dark'}`}>
+                  {currentBalance >= 0 ? '+' : ''}{currentBalance.toFixed(2)}€
+                </p>
+              </div>
+              <Euro className={`h-8 w-8 ${currentBalance >= 0 ? 'text-skoolife-green' : 'text-skoolife-red'}`} />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
-          <CardContent className="p-6 text-center">
-            <div className="flex items-center justify-center mb-3">
-              <CheckCircle className="w-8 h-8 text-blue-500" />
+        {/* Budget Progress Card */}
+        <Card className="border-skoolife-blue/20 bg-skoolife-blue-light/10">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Budget utilisé</p>
+                <p className="text-2xl font-bold text-skoolife-blue-dark">{budgetProgress.toFixed(1)}%</p>
+              </div>
+              <Target className="h-8 w-8 text-skoolife-blue" />
             </div>
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-              {pendingTasks}
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-              Tâches Restantes
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {urgentTasks.length} urgentes
+            <Progress 
+              value={budgetProgress} 
+              className="h-2 bg-skoolife-blue-light/30"
+            />
+          </CardContent>
+        </Card>
+
+        {/* Tasks Card */}
+        <Card className="border-skoolife-yellow/20 bg-skoolife-yellow-light/10">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Tâches</p>
+                <p className="text-2xl font-bold text-skoolife-yellow-dark">
+                  {completedTasks}/{tasks.length}
+                </p>
+              </div>
+              <CheckCircle className="h-8 w-8 text-skoolife-yellow" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
-          <CardContent className="p-6 text-center">
-            <div className="flex items-center justify-center mb-3">
-              <Calendar className="w-8 h-8 text-purple-500" />
-            </div>
-            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-2">
-              {todaysEvents.length}
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-              Événements Aujourd'hui
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {thisWeekEvents.length} cette semaine
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
-          <CardContent className="p-6 text-center">
-            <div className="flex items-center justify-center mb-3">
-              <FileText className="w-8 h-8 text-orange-500" />
-            </div>
-            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-2">
-              {documents.length}
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-              Documents Total
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {recentDocuments.length} récents
+        {/* Urgent Tasks Card */}
+        <Card className="border-skoolife-red/20 bg-skoolife-red-light/10">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Urgent</p>
+                <p className="text-2xl font-bold text-skoolife-red-dark">{urgentTasks}</p>
+              </div>
+              <AlertTriangle className="h-8 w-8 text-skoolife-red" />
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {/* Enhanced Finance Summary */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Activity */}
+        <Card className="border-skoolife-blue/10">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Finances
-              </h3>
-              <TrendingUp className="w-5 h-5 text-yellow-500" />
+            <div className="flex items-center gap-2 mb-4">
+              <Activity className="h-5 w-5 text-skoolife-blue" />
+              <h2 className="text-lg font-semibold">Activité récente</h2>
+            </div>
+            <div className="space-y-3">
+              {recentTransactions.slice(0, 5).map((transaction: any, index: number) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    {transaction.type === 'income' ? (
+                      <TrendingUp className="h-4 w-4 text-skoolife-green" />
+                    ) : (
+                      <TrendingDown className="h-4 w-4 text-skoolife-red" />
+                    )}
+                    <div>
+                      <p className="font-medium text-sm">{transaction.description}</p>
+                      <p className="text-xs text-gray-500">{transaction.category}</p>
+                    </div>
+                  </div>
+                  <div className={`font-medium ${
+                    transaction.type === 'income' ? 'text-skoolife-green-dark' : 'text-skoolife-red-dark'
+                  }`}>
+                    {transaction.type === 'income' ? '+' : '-'}{Math.abs(transaction.amount).toFixed(2)}€
+                  </div>
+                </div>
+              ))}
+              
+              {recentTransactions.length === 0 && (
+                <p className="text-gray-500 text-center py-4">Aucune transaction récente</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Upcoming Events */}
+        <Card className="border-skoolife-yellow/10">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Calendar className="h-5 w-5 text-skoolife-yellow" />
+              <h2 className="text-lg font-semibold">Événements à venir</h2>
+            </div>
+            <div className="space-y-3">
+              {upcomingEvents.slice(0, 5).map((event: any, index: number) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-skoolife-yellow-light/20 rounded-lg">
+                  <div className="w-2 h-2 bg-skoolife-yellow rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="font-medium text-sm">{event.title}</p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(event.start).toLocaleDateString('fr-FR', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </p>
+                  </div>
+                  <Badge 
+                    variant="outline" 
+                    className="text-xs border-skoolife-yellow text-skoolife-yellow-dark"
+                  >
+                    {event.type}
+                  </Badge>
+                </div>
+              ))}
+              
+              {upcomingEvents.length === 0 && (
+                <p className="text-gray-500 text-center py-4">Aucun événement prévu</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tasks Overview */}
+        <Card className="border-skoolife-green/10">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <CheckCircle className="h-5 w-5 text-skoolife-green" />
+              <h2 className="text-lg font-semibold">Aperçu des tâches</h2>
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600 dark:text-gray-300">Dépenses ce mois</span>
-                <span className="font-semibold text-red-600 dark:text-red-400">€{monthlySpending.toFixed(2)}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Terminées</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-skoolife-green h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-medium text-skoolife-green-dark">{completedTasks}</span>
+                </div>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div 
-                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 h-2 rounded-full transition-all duration-500" 
-                  style={{ width: `${Math.min(budgetProgress, 100)}%` }}
-                ></div>
+              
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 dark:text-gray-400">En attente</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-skoolife-blue h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${tasks.length > 0 ? (pendingTasks / tasks.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-medium text-skoolife-blue-dark">{pendingTasks}</span>
+                </div>
               </div>
-              <div className="h-32">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={financeData}>
-                    <Bar dataKey="amount" fill="#fcd34d" radius={[4, 4, 0, 0]} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'var(--card)',
-                        border: '2px solid #fcd34d',
-                        borderRadius: '8px',
-                        color: 'var(--card-foreground)'
-                      }}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+              
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Urgentes</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-skoolife-red h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${tasks.length > 0 ? (urgentTasks / tasks.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-medium text-skoolife-red-dark">{urgentTasks}</span>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Enhanced Tasks Overview */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
+        {/* Recent Documents */}
+        <Card className="border-skoolife-red/10">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Tâches
-              </h3>
-              <CheckCircle className="w-5 h-5 text-blue-500" />
+            <div className="flex items-center gap-2 mb-4">
+              <FileText className="h-5 w-5 text-skoolife-red" />
+              <h2 className="text-lg font-semibold">Documents récents</h2>
             </div>
-            <div className="space-y-4">
-              {urgentTasks.length > 0 && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertCircle className="w-4 h-4 text-red-500" />
-                    <span className="text-sm font-medium text-red-700 dark:text-red-300">
-                      {urgentTasks.length} tâche{urgentTasks.length > 1 ? 's' : ''} urgente{urgentTasks.length > 1 ? 's' : ''}
-                    </span>
+            <div className="space-y-3">
+              {recentDocuments.slice(0, 5).map((doc: any, index: number) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-skoolife-red-light/20 rounded-lg">
+                  <FileText className="h-4 w-4 text-skoolife-red" />
+                  <div className="flex-1">
+                    <p className="font-medium text-sm">{doc.title}</p>
+                    <p className="text-xs text-gray-500">{doc.type}</p>
                   </div>
+                  <Badge 
+                    variant="outline" 
+                    className="text-xs border-skoolife-red text-skoolife-red-dark"
+                  >
+                    Nouveau
+                  </Badge>
                 </div>
+              ))}
+              
+              {recentDocuments.length === 0 && (
+                <p className="text-gray-500 text-center py-4">Aucun document récent</p>
               )}
-              <div className="space-y-2 max-h-32 overflow-y-auto">
-                {tasks.filter((task: any) => !task.completed).slice(0, 3).map((task: any, index: number) => (
-                  <div key={index} className="p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700 animate-fade-in">
-                    <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
-                      {task.text}
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      Priorité: {task.priority}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Enhanced Planning Overview */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Planning
-              </h3>
-              <Calendar className="w-5 h-5 text-purple-500" />
-            </div>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
-              {todaysEvents.map((event: any, index: number) => (
-                <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700 animate-fade-in">
-                  <div className="font-medium text-sm text-gray-900 dark:text-white">
-                    {event.name}
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    <Clock className="w-3 h-3" />
-                    {event.startTime} - {event.endTime}
-                  </div>
-                </div>
-              ))}
-              {thisWeekEvents.slice(0, 2).map((event: any, index: number) => (
-                <div key={`week-${index}`} className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <div className="font-medium text-xs text-gray-700 dark:text-gray-300">
-                    {event.day}: {event.name}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {event.startTime}
-                  </div>
-                </div>
-              ))}
-              {todaysEvents.length === 0 && thisWeekEvents.length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
-                  Aucun événement prévu
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Documents Activity */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Documents
-              </h3>
-              <FileText className="w-5 h-5 text-orange-500" />
-            </div>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
-              {recentDocuments.slice(0, 3).map((doc: any, index: number) => (
-                <div key={index} className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-700 animate-fade-in">
-                  <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
-                    {doc.name}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {doc.category} • {new Date(doc.uploadDate).toLocaleDateString('fr-FR')}
-                  </div>
-                </div>
-              ))}
-              {documents.slice(0, 2).map((doc: any, index: number) => (
-                <div key={`all-${index}`} className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <div className="font-medium text-xs text-gray-700 dark:text-gray-300 truncate">
-                    {doc.name}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {doc.category}
-                  </div>
-                </div>
-              ))}
-              {documents.length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
-                  Aucun document
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Forum Activity */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Forum
-              </h3>
-              <MessageSquare className="w-5 h-5 text-green-500" />
-            </div>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
-              {posts.slice(0, 3).map((post: any, index: number) => (
-                <div key={index} className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700 animate-fade-in hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors cursor-pointer">
-                  <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
-                    {post.title}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Par {post.author} • {post.replies?.length || 0} réponses
-                  </div>
-                </div>
-              ))}
-              {posts.length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
-                  Aucune activité récente
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Weekly Insights */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              Insights de la Semaine
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-yellow-200 dark:border-gray-600">
-                <span className="text-sm text-gray-600 dark:text-gray-300">Tâches complétées</span>
-                <span className="font-bold text-green-600 dark:text-green-400">{completedTasks}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-yellow-200 dark:border-gray-600">
-                <span className="text-sm text-gray-600 dark:text-gray-300">Événements cette semaine</span>
-                <span className="font-bold text-purple-600 dark:text-purple-400">{thisWeekEvents.length}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-yellow-200 dark:border-gray-600">
-                <span className="text-sm text-gray-600 dark:text-gray-300">Dépenses ce mois</span>
-                <span className="font-bold text-red-600 dark:text-red-400">€{monthlySpending.toFixed(2)}</span>
-              </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Quick Actions */}
+      <Card className="border-skoolife-yellow/10">
+        <CardContent className="p-6">
+          <h2 className="text-lg font-semibold mb-4">Actions rapides</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <Button 
+              className="bg-skoolife-yellow hover:bg-skoolife-yellow-dark text-black font-medium"
+              onClick={() => console.log('Navigate to new task')}
+            >
+              <CheckCircle className="h-4 w-4 mr-2" />
+              Nouvelle tâche
+            </Button>
+            <Button 
+              className="bg-skoolife-blue hover:bg-skoolife-blue-dark text-white font-medium"
+              onClick={() => console.log('Navigate to add transaction')}
+            >
+              <Euro className="h-4 w-4 mr-2" />
+              Ajouter transaction
+            </Button>
+            <Button 
+              className="bg-skoolife-green hover:bg-skoolife-green-dark text-white font-medium"
+              onClick={() => console.log('Navigate to new event')}
+            >
+              <Calendar className="h-4 w-4 mr-2" />
+              Nouvel événement
+            </Button>
+            <Button 
+              className="bg-skoolife-red hover:bg-skoolife-red-dark text-white font-medium"
+              onClick={() => console.log('Navigate to add document')}
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              Ajouter document
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
