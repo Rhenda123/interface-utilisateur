@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -110,7 +109,7 @@ function ScheduleModule() {
     const dayInfo = days.find(d => d.name === dayName);
     
     return (
-      <div className="space-y-4">
+      <div className="space-y-5 px-1">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white capitalize">
@@ -124,7 +123,7 @@ function ScheduleModule() {
             onClick={() => setSelectedDay(null)}
             variant="outline"
             size="sm"
-            className="rounded-full"
+            className="rounded-full shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all"
           >
             <Eye className="w-4 h-4 mr-2" />
             Vue semaine
@@ -132,10 +131,10 @@ function ScheduleModule() {
         </div>
 
         {/* Enhanced Add Event Button */}
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Button
             onClick={() => handleTimeSlotClick(dayName, 9)}
-            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-full flex-1"
+            className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full flex-1 shadow-lg hover:shadow-xl transition-all font-medium py-3"
           >
             <Plus className="w-4 h-4 mr-2" />
             Ajouter un événement
@@ -150,43 +149,43 @@ function ScheduleModule() {
               setShowFullCreateModal(true);
             }}
             variant="outline"
-            className="rounded-full px-4"
+            className="rounded-full px-4 shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all"
           >
             <Calendar className="w-4 h-4" />
           </Button>
         </div>
         
-        <div className="space-y-3 max-h-96 overflow-y-auto">
+        <div className="space-y-4 max-h-96 overflow-y-auto">
           {dayEvents.length > 0 ? (
             dayEvents.map((event) => {
               const eventType = getEventTypeById(event.typeId);
               const IconComponent = eventType?.icon;
               
               return (
-                <Card key={event.id} className="border-l-4 hover:shadow-md transition-shadow touch-manipulation" style={{ borderLeftColor: event.color }}>
-                  <CardContent className="p-4">
+                <Card key={event.id} className="border-l-4 hover:shadow-lg transition-all duration-200 touch-manipulation rounded-xl shadow-md bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-100 dark:border-gray-700" style={{ borderLeftColor: event.color }}>
+                  <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          {IconComponent && <IconComponent className="w-4 h-4" style={{ color: event.color }} />}
-                          <h4 className="font-semibold text-gray-900 dark:text-white">{event.name}</h4>
+                        <div className="flex items-center gap-2 mb-3">
+                          {IconComponent && <IconComponent className="w-5 h-5" style={{ color: event.color }} />}
+                          <h4 className="font-semibold text-gray-900 dark:text-white text-base">{event.name}</h4>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-3">
                           <Clock className="w-4 h-4" />
                           <span>{event.startTime} - {event.endTime}</span>
                         </div>
                         {eventType && (
-                          <span className="inline-block mt-2 px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                          <span className="inline-block px-3 py-1 text-xs rounded-full bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900/30 dark:to-yellow-800/30 text-yellow-800 dark:text-yellow-200 font-medium">
                             {eventType.name}
                           </span>
                         )}
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 ml-4">
                         <Button
                           onClick={() => editEvent(event)}
                           variant="ghost"
                           size="sm"
-                          className="text-xs p-2 h-8 rounded-full"
+                          className="text-xs px-3 py-2 h-8 rounded-full hover:bg-yellow-100 dark:hover:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 font-medium transition-all"
                         >
                           Modifier
                         </Button>
@@ -194,7 +193,7 @@ function ScheduleModule() {
                           onClick={() => deleteEvent(event.id)}
                           variant="ghost"
                           size="sm"
-                          className="text-xs p-2 h-8 rounded-full text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                          className="text-xs px-2 py-2 h-8 rounded-full text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
                         >
                           <Trash2 className="w-3 h-3" />
                         </Button>
@@ -205,13 +204,13 @@ function ScheduleModule() {
               )
             })
           ) : (
-            <Card className="border-dashed border-2 border-gray-300 dark:border-gray-600">
+            <Card className="border-dashed border-2 border-gray-300 dark:border-gray-600 rounded-xl shadow-sm bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
               <CardContent className="p-8 text-center">
                 <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                <p className="text-gray-500 dark:text-gray-400 mb-4">Aucun événement prévu</p>
+                <p className="text-gray-500 dark:text-gray-400 mb-6 text-base">Aucun événement prévu</p>
                 <Button
                   onClick={() => handleTimeSlotClick(dayName, 9)}
-                  className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-full"
+                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all font-medium py-3 px-6"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Ajouter un événement
@@ -324,7 +323,7 @@ function ScheduleModule() {
         <div className="flex items-center gap-2 sm:gap-3">
           <Button
             onClick={() => setShowFullCreateModal(true)}
-            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 flex items-center gap-2 rounded-full sm:rounded-lg px-4 py-2 sm:px-6 sm:py-3 shadow-lg active:scale-95 transition-all touch-manipulation"
+            className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 flex items-center gap-2 rounded-full sm:rounded-lg px-4 py-2 sm:px-6 sm:py-3 shadow-lg hover:shadow-xl active:scale-95 transition-all touch-manipulation font-medium"
           >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">Nouvel événement</span>
@@ -332,7 +331,7 @@ function ScheduleModule() {
           <Button
             onClick={() => setShowFilters(!showFilters)}
             variant="outline"
-            className="flex items-center gap-2 rounded-full sm:rounded-lg px-4 py-2 sm:px-6 sm:py-3 active:scale-95 transition-all touch-manipulation"
+            className="flex items-center gap-2 rounded-full sm:rounded-lg px-4 py-2 sm:px-6 sm:py-3 active:scale-95 transition-all touch-manipulation shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md"
           >
             <Filter className="w-4 h-4" />
             <span className="hidden sm:inline">Filtres</span>
@@ -342,10 +341,10 @@ function ScheduleModule() {
 
       {/* Event Type Filters */}
       {showFilters && (
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-4">
+        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-900 rounded-xl">
+          <CardContent className="p-5">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Filtrer par type d'événement</h3>
-            <div className="flex flex-wrap gap-2 sm:gap-3">
+            <div className="flex flex-wrap gap-3">
               {eventTypes.map(type => {
                 const IconComponent = type.icon;
                 const isVisible = visibleEventTypes.has(type.id);
@@ -355,7 +354,7 @@ function ScheduleModule() {
                     onClick={() => toggleEventTypeVisibility(type.id)}
                     variant={isVisible ? "default" : "outline"}
                     size="sm"
-                    className={`flex items-center gap-2 rounded-full touch-manipulation active:scale-95 transition-all ${isVisible ? '' : 'opacity-50'}`}
+                    className={`flex items-center gap-2 rounded-full touch-manipulation active:scale-95 transition-all shadow-sm hover:shadow-md font-medium ${isVisible ? '' : 'opacity-50'}`}
                     style={isVisible ? { backgroundColor: type.color } : {}}
                   >
                     <IconComponent className="w-4 h-4" />
@@ -370,14 +369,14 @@ function ScheduleModule() {
 
       {/* Enhanced Mobile Week Navigation */}
       {isMobileView && !selectedDay && (
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-4">
+        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-900 rounded-xl">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
               <Button
                 onClick={handlePreviousWeek}
                 variant="outline"
                 size="sm"
-                className="rounded-full"
+                className="rounded-full shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all"
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
@@ -390,7 +389,7 @@ function ScheduleModule() {
                   onClick={handleToday}
                   variant="ghost"
                   size="sm"
-                  className="text-xs text-yellow-600 hover:text-yellow-700"
+                  className="text-xs text-yellow-600 hover:text-yellow-700 hover:bg-yellow-100 dark:hover:bg-yellow-900/20 rounded-full font-medium transition-all"
                 >
                   Aujourd'hui
                 </Button>
@@ -400,7 +399,7 @@ function ScheduleModule() {
                 onClick={handleNextWeek}
                 variant="outline"
                 size="sm"
-                className="rounded-full"
+                className="rounded-full shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all"
               >
                 <ChevronRight className="w-4 h-4" />
               </Button>
@@ -411,7 +410,7 @@ function ScheduleModule() {
 
       {/* Mobile Week Overview */}
       {isMobileView && !selectedDay && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           {days.map((day) => {
             const dayEvents = getEventsForDay(day.name);
             const isToday = new Date().toLocaleDateString('fr-FR', { weekday: 'long' }).toLowerCase() === day.name.toLowerCase();
@@ -419,36 +418,36 @@ function ScheduleModule() {
             return (
               <Card 
                 key={day.name} 
-                className={`cursor-pointer transition-all hover:shadow-md active:scale-95 touch-manipulation ${
-                  isToday ? 'ring-2 ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20' : ''
+                className={`cursor-pointer transition-all hover:shadow-xl active:scale-95 touch-manipulation rounded-xl shadow-lg bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-gray-100 dark:border-gray-700 ${
+                  isToday ? 'ring-2 ring-yellow-400 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20' : ''
                 }`}
                 onClick={() => setSelectedDay(day.name)}
               >
-                <CardContent className="p-4">
+                <CardContent className="p-5">
                   <div className="text-center">
-                    <h3 className={`text-sm font-bold mb-1 capitalize ${isToday ? 'text-yellow-700 dark:text-yellow-400' : 'text-gray-900 dark:text-white'}`}>
+                    <h3 className={`text-sm font-bold mb-2 capitalize ${isToday ? 'text-yellow-700 dark:text-yellow-400' : 'text-gray-900 dark:text-white'}`}>
                       {day.name.substring(0, 3)}
                     </h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
                       {day.date}
                     </p>
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                       {dayEvents.slice(0, 3).map((event) => (
                         <div 
                           key={event.id} 
-                          className="text-xs px-2 py-1 rounded-full text-white truncate"
+                          className="text-xs px-3 py-1.5 rounded-full text-white truncate font-medium shadow-sm"
                           style={{ backgroundColor: event.color }}
                         >
                           {event.name}
                         </div>
                       ))}
                       {dayEvents.length > 3 && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                           +{dayEvents.length - 3} autres
                         </div>
                       )}
                       {dayEvents.length === 0 && (
-                        <div className="text-xs text-gray-400">Libre</div>
+                        <div className="text-xs text-gray-400 font-medium py-2">Libre</div>
                       )}
                     </div>
                   </div>
@@ -466,7 +465,7 @@ function ScheduleModule() {
 
       {/* Desktop Calendar Grid */}
       {!isMobileView && (
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 overflow-hidden">
+        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 overflow-hidden rounded-xl">
           <WeekNavigation
             currentWeek={currentWeek}
             onPreviousWeek={handlePreviousWeek}
