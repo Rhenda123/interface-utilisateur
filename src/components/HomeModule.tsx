@@ -348,20 +348,26 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   console.log('All events:', events);
   console.log('Today\'s events:', todaysEvents);
 
-  // Fixed this week events calculation
+  // Fixed this week events calculation - handle both capitalized and lowercase day names
   const thisWeekEvents = events.filter((event: any) => {
     const { monday, sunday } = getCurrentWeekRange();
     
     // Map French day names to their position in the week (Monday = 0, Sunday = 6)
-    const dayNameMap = {
+    // Handle both lowercase and capitalized versions
+    const dayNameMap: { [key: string]: number } = {
       'lundi': 0, 'mardi': 1, 'mercredi': 2, 'jeudi': 3, 
-      'vendredi': 4, 'samedi': 5, 'dimanche': 6
+      'vendredi': 4, 'samedi': 5, 'dimanche': 6,
+      'Lundi': 0, 'Mardi': 1, 'Mercredi': 2, 'Jeudi': 3,
+      'Vendredi': 4, 'Samedi': 5, 'Dimanche': 6
     };
     
-    const eventDayName = event.day?.toLowerCase();
+    const eventDayName = event.day;
     const eventDayIndex = dayNameMap[eventDayName];
     
-    if (eventDayIndex === undefined) return false;
+    if (eventDayIndex === undefined) {
+      console.log('Event day not found in map:', eventDayName);
+      return false;
+    }
     
     // Calculate the actual date for this event day in the current week
     const eventDate = new Date(monday);
@@ -370,7 +376,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     // Check if the event date is within the current week range
     const isInCurrentWeek = eventDate >= monday && eventDate <= sunday;
     
-    console.log('Event:', event.name, 'Day:', eventDayName, 'Date:', eventDate.toDateString(), 'In current week:', isInCurrentWeek);
+    console.log('Event:', event.name, 'Day:', eventDayName, 'Index:', eventDayIndex, 'Date:', eventDate.toDateString(), 'In current week:', isInCurrentWeek);
     
     return isInCurrentWeek;
   });
