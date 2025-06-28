@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
-import { Calendar, Clock, FileText, MessageSquare, TrendingUp, AlertCircle, CheckCircle, ArrowRight, Eye } from "lucide-react";
+import { Calendar, Clock, FileText, MessageSquare, TrendingUp, AlertCircle, CheckCircle, ArrowRight, Eye, Users, BookOpen, Target } from "lucide-react";
 
 interface HomeModuleProps {
   onNavigate?: (view: string) => void;
@@ -17,71 +17,87 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const [posts, setPosts] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState([]);
-  const [isMobile, setIsMobile] = useState(false);
+  const [screenSize, setScreenSize] = useState('desktop');
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setScreenSize('mobile');
+      } else if (width < 1024) {
+        setScreenSize('tablet');
+      } else {
+        setScreenSize('desktop');
+      }
     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   useEffect(() => {
-    // Load data from localStorage and set up real-time updates
+    // Enhanced data loading with error handling and fallbacks
     const loadData = () => {
-      const savedTasks = localStorage.getItem("skoolife_tasks");
-      if (savedTasks) setTasks(JSON.parse(savedTasks));
+      try {
+        const savedTasks = localStorage.getItem("skoolife_tasks");
+        if (savedTasks) setTasks(JSON.parse(savedTasks));
 
-      const savedEvents = localStorage.getItem("skoolife_events");
-      if (savedEvents) setEvents(JSON.parse(savedEvents));
+        const savedEvents = localStorage.getItem("skoolife_events");
+        if (savedEvents) setEvents(JSON.parse(savedEvents));
 
-      const savedDocuments = localStorage.getItem("skoolife_documents");
-      if (savedDocuments) setDocuments(JSON.parse(savedDocuments));
+        const savedDocuments = localStorage.getItem("skoolife_documents");
+        if (savedDocuments) setDocuments(JSON.parse(savedDocuments));
 
-      const savedPosts = localStorage.getItem("skoolife_forum_posts");
-      if (savedPosts) setPosts(JSON.parse(savedPosts));
+        const savedPosts = localStorage.getItem("skoolife_forum_posts");
+        if (savedPosts) setPosts(JSON.parse(savedPosts));
 
-      const savedFinances = localStorage.getItem("skoolife_finances");
-      if (savedFinances) {
-        setFinances(JSON.parse(savedFinances));
+        const savedFinances = localStorage.getItem("skoolife_finances");
+        if (savedFinances) {
+          setFinances(JSON.parse(savedFinances));
+        }
+
+        const savedTransactions = localStorage.getItem("skoolife_transactions");
+        if (savedTransactions) setTransactions(JSON.parse(savedTransactions));
+
+        const savedBudgets = localStorage.getItem("skoolife_budgets");
+        if (savedBudgets) setBudgets(JSON.parse(savedBudgets));
+      } catch (error) {
+        console.error('Error loading data:', error);
       }
-
-      const savedTransactions = localStorage.getItem("skoolife_transactions");
-      if (savedTransactions) setTransactions(JSON.parse(savedTransactions));
-
-      const savedBudgets = localStorage.getItem("skoolife_budgets");
-      if (savedBudgets) setBudgets(JSON.parse(savedBudgets));
     };
 
     loadData();
 
+    // Enhanced real-time synchronization
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key && e.newValue) {
-        switch (e.key) {
-          case "skoolife_finances":
-            setFinances(JSON.parse(e.newValue));
-            break;
-          case "skoolife_tasks":
-            setTasks(JSON.parse(e.newValue));
-            break;
-          case "skoolife_events":
-            setEvents(JSON.parse(e.newValue));
-            break;
-          case "skoolife_documents":
-            setDocuments(JSON.parse(e.newValue));
-            break;
-          case "skoolife_forum_posts":
-            setPosts(JSON.parse(e.newValue));
-            break;
-          case "skoolife_transactions":
-            setTransactions(JSON.parse(e.newValue));
-            break;
-          case "skoolife_budgets":
-            setBudgets(JSON.parse(e.newValue));
-            break;
+        try {
+          switch (e.key) {
+            case "skoolife_finances":
+              setFinances(JSON.parse(e.newValue));
+              break;
+            case "skoolife_tasks":
+              setTasks(JSON.parse(e.newValue));
+              break;
+            case "skoolife_events":
+              setEvents(JSON.parse(e.newValue));
+              break;
+            case "skoolife_documents":
+              setDocuments(JSON.parse(e.newValue));
+              break;
+            case "skoolife_forum_posts":
+              setPosts(JSON.parse(e.newValue));
+              break;
+            case "skoolife_transactions":
+              setTransactions(JSON.parse(e.newValue));
+              break;
+            case "skoolife_budgets":
+              setBudgets(JSON.parse(e.newValue));
+              break;
+          }
+        } catch (error) {
+          console.error('Error parsing storage data:', error);
         }
       }
     };
@@ -99,7 +115,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     window.addEventListener('financeUpdate', handleFinanceUpdate as EventListener);
     window.addEventListener('dataUpdate', handleDataUpdate);
 
-    const intervalId = setInterval(loadData, 1000);
+    // More frequent updates for better synchronization
+    const intervalId = setInterval(loadData, 500);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -109,7 +126,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     };
   }, []);
 
-  // Calculate real-time budget spending for current month
+  // Enhanced calculations with better error handling
   const calculateCurrentMonthBudgetData = () => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -117,41 +134,46 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     
     const updatedBudgets = budgets.map(budget => {
       const relevantTransactions = transactions.filter(t => {
-        const tDate = new Date(t.date);
-        const isExpense = t.type === 'expense';
-        const isCategory = t.category === budget.category;
-        
-        let isInPeriod = false;
-        switch (budget.period) {
-          case 'monthly':
-            isInPeriod = tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth;
-            break;
-          case 'quarterly':
-            const quarter = Math.floor(currentMonth / 3);
-            const tQuarter = Math.floor(tDate.getMonth() / 3);
-            isInPeriod = tDate.getFullYear() === currentYear && tQuarter === quarter;
-            break;
-          case 'yearly':
-            isInPeriod = tDate.getFullYear() === currentYear;
-            break;
+        try {
+          const tDate = new Date(t.date);
+          const isExpense = t.type === 'expense';
+          const isCategory = t.category === budget.category;
+          
+          let isInPeriod = false;
+          switch (budget.period) {
+            case 'monthly':
+              isInPeriod = tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonth;
+              break;
+            case 'quarterly':
+              const quarter = Math.floor(currentMonth / 3);
+              const tQuarter = Math.floor(tDate.getMonth() / 3);
+              isInPeriod = tDate.getFullYear() === currentYear && tQuarter === quarter;
+              break;
+            case 'yearly':
+              isInPeriod = tDate.getFullYear() === currentYear;
+              break;
+          }
+          
+          return isExpense && isCategory && isInPeriod;
+        } catch (error) {
+          return false;
         }
-        
-        return isExpense && isCategory && isInPeriod;
       });
       
-      const spent = relevantTransactions.reduce((sum, t) => sum + t.amount, 0);
+      const spent = relevantTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
       return { ...budget, spent };
     });
     
     return updatedBudgets;
   };
 
+  // Enhanced data calculations
   const completedTasks = tasks.filter((task: any) => task.completed).length;
   const pendingTasks = tasks.length - completedTasks;
   const currentBalance = finances.income - finances.expenses;
   
   const currentBudgets = calculateCurrentMonthBudgetData();
-  const totalBudget = currentBudgets.reduce((sum: number, budget: any) => sum + budget.limit, 0);
+  const totalBudget = currentBudgets.reduce((sum: number, budget: any) => sum + (budget.limit || 0), 0);
   const budgetSpent = currentBudgets.reduce((sum: number, budget: any) => sum + (budget.spent || 0), 0);
   const budgetProgress = totalBudget > 0 ? (budgetSpent / totalBudget) * 100 : 0;
   
@@ -161,12 +183,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
      (task.deadline && new Date(task.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)))
   );
 
-  const getWeekStart = () => {
-    const now = new Date();
-    const day = now.getDay();
-    const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(now.setDate(diff));
-  };
+  const todaysEvents = events.filter((event: any) => {
+    const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long' });
+    const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
+    return event.day === todayFrench;
+  });
 
   const thisWeekEvents = events.filter((event: any) => {
     const today = new Date();
@@ -180,29 +201,60 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     return eventIndex >= todayIndex;
   });
 
-  const todaysEvents = events.filter((event: any) => {
-    const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long' });
-    const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
-    return event.day === todayFrench;
-  });
-
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
   const monthlySpending = transactions
     .filter((t: any) => {
-      const transactionDate = new Date(t.date);
-      return transactionDate.getMonth() === currentMonth && 
-             transactionDate.getFullYear() === currentYear &&
-             t.type === 'expense';
+      try {
+        const transactionDate = new Date(t.date);
+        return transactionDate.getMonth() === currentMonth && 
+               transactionDate.getFullYear() === currentYear &&
+               t.type === 'expense';
+      } catch (error) {
+        return false;
+      }
     })
-    .reduce((sum: number, t: any) => sum + t.amount, 0);
+    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
 
   const recentDocuments = documents.filter((doc: any) => {
     if (!doc.uploadDate) return false;
-    const docDate = new Date(doc.uploadDate);
-    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    return docDate >= weekAgo;
+    try {
+      const docDate = new Date(doc.uploadDate);
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      return docDate >= weekAgo;
+    } catch (error) {
+      return false;
+    }
   });
+
+  // Responsive grid configurations
+  const getGridConfig = () => {
+    switch (screenSize) {
+      case 'mobile':
+        return {
+          statsGrid: 'grid-cols-2',
+          contentGrid: 'grid-cols-1',
+          chartHeight: 'h-24',
+          showCharts: false
+        };
+      case 'tablet':
+        return {
+          statsGrid: 'grid-cols-2 sm:grid-cols-4',
+          contentGrid: 'grid-cols-1 md:grid-cols-2',
+          chartHeight: 'h-32',
+          showCharts: true
+        };
+      default:
+        return {
+          statsGrid: 'grid-cols-2 lg:grid-cols-4',
+          contentGrid: 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3',
+          chartHeight: 'h-32',
+          showCharts: true
+        };
+    }
+  };
+
+  const gridConfig = getGridConfig();
 
   const financeData = [
     { name: "Revenus", amount: finances.income, color: "#10b981" },
@@ -215,7 +267,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 lg:p-6">
+    <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 lg:p-6 max-w-full overflow-hidden">
       <div className="text-center mb-6 sm:mb-8">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AC00] bg-clip-text text-transparent mb-2 sm:mb-3">
           Tableau de Bord
@@ -225,17 +277,17 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </p>
       </div>
 
-      {/* Mobile-Optimized Quick Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+      {/* Enhanced Responsive Quick Stats Grid */}
+      <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-6 sm:mb-8`}>
         <Card 
           className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('finances')}
         >
-          <CardContent className="p-4 sm:p-6 text-center">
+          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
             <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <TrendingUp className={`w-6 h-6 sm:w-8 sm:h-8 ${currentBalance >= 0 ? "text-green-500" : "text-red-500"}`} />
+              <TrendingUp className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 ${currentBalance >= 0 ? "text-green-500" : "text-red-500"}`} />
             </div>
-            <div className={`text-lg sm:text-2xl font-bold mb-1 sm:mb-2 ${
+            <div className={`text-base sm:text-lg lg:text-2xl font-bold mb-1 sm:mb-2 ${
               currentBalance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
             }`}>
               €{currentBalance.toFixed(0)}
@@ -253,11 +305,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('todo')}
         >
-          <CardContent className="p-4 sm:p-6 text-center">
+          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
             <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
+              <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-blue-500" />
             </div>
-            <div className="text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1 sm:mb-2">
+            <div className="text-base sm:text-lg lg:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1 sm:mb-2">
               {pendingTasks}
             </div>
             <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
@@ -273,11 +325,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('planning')}
         >
-          <CardContent className="p-4 sm:p-6 text-center">
+          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
             <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500" />
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-purple-500" />
             </div>
-            <div className="text-lg sm:text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1 sm:mb-2">
+            <div className="text-base sm:text-lg lg:text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1 sm:mb-2">
               {todaysEvents.length}
             </div>
             <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
@@ -293,11 +345,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('documents')}
         >
-          <CardContent className="p-4 sm:p-6 text-center">
+          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
             <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" />
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-orange-500" />
             </div>
-            <div className="text-lg sm:text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1 sm:mb-2">
+            <div className="text-base sm:text-lg lg:text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1 sm:mb-2">
               {documents.length}
             </div>
             <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
@@ -310,8 +362,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </Card>
       </div>
 
-      {/* Mobile-Optimized Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+      {/* Enhanced Responsive Content Grid */}
+      <div className={`grid ${gridConfig.contentGrid} gap-4 sm:gap-6`}>
         {/* Enhanced Finance Summary */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
@@ -339,8 +391,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   style={{ width: `${Math.min(budgetProgress, 100)}%` }}
                 ></div>
               </div>
-              {!isMobile && (
-                <div className="h-32">
+              {gridConfig.showCharts && (
+                <div className={gridConfig.chartHeight}>
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={financeData}>
                       <Bar dataKey="amount" fill="#F6C103" radius={[4, 4, 0, 0]} />
@@ -388,7 +440,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 </div>
               )}
               <div className="space-y-2 max-h-32 overflow-y-auto">
-                {tasks.filter((task: any) => !task.completed).slice(0, 3).map((task: any, index: number) => (
+                {tasks.filter((task: any) => !task.completed).slice(0, screenSize === 'mobile' ? 2 : 3).map((task: any, index: number) => (
                   <div key={index} className="p-2 bg-[#FEF7D6] dark:bg-yellow-900/20 rounded-lg border border-[#F6C103] dark:border-yellow-700 animate-fade-in">
                     <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
                       {task.text}
@@ -420,7 +472,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               </Button>
             </div>
             <div className="space-y-3 max-h-48 overflow-y-auto">
-              {todaysEvents.slice(0, 2).map((event: any, index: number) => (
+              {todaysEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
                 <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700 animate-fade-in">
                   <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
                     {event.name}
@@ -450,8 +502,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Documents Activity - Mobile Optimized */}
-        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 lg:col-span-1">
+        {/* Documents Activity - Enhanced */}
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
@@ -467,7 +519,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               </Button>
             </div>
             <div className="space-y-3 max-h-48 overflow-y-auto">
-              {recentDocuments.slice(0, 2).map((doc: any, index: number) => (
+              {recentDocuments.slice(0, screenSize === 'mobile' ? 1 : 2).map((doc: any, index: number) => (
                 <div key={index} className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-700 animate-fade-in">
                   <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
                     {doc.name}
@@ -496,8 +548,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Forum Activity - Mobile Optimized */}
-        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 lg:col-span-1">
+        {/* Forum Activity - Enhanced */}
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
@@ -513,7 +565,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               </Button>
             </div>
             <div className="space-y-3 max-h-48 overflow-y-auto">
-              {posts.slice(0, 2).map((post: any, index: number) => (
+              {posts.slice(0, screenSize === 'mobile' ? 1 : 2).map((post: any, index: number) => (
                 <div key={index} className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700 animate-fade-in hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors cursor-pointer">
                   <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
                     {post.title}
@@ -532,8 +584,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Weekly Insights - Mobile Optimized */}
-        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 lg:col-span-1">
+        {/* Enhanced Weekly Insights */}
+        <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Cette Semaine
