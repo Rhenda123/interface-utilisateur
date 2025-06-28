@@ -18,6 +18,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [screenSize, setScreenSize] = useState('desktop');
+  const [lastUpdate, setLastUpdate] = useState(Date.now());
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -36,59 +37,101 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  useEffect(() => {
-    // Enhanced data loading with error handling and fallbacks
-    const loadData = () => {
-      try {
-        const savedTasks = localStorage.getItem("skoolife_tasks");
-        if (savedTasks) setTasks(JSON.parse(savedTasks));
-
-        const savedEvents = localStorage.getItem("skoolife_events");
-        if (savedEvents) setEvents(JSON.parse(savedEvents));
-
-        const savedDocuments = localStorage.getItem("skoolife_documents");
-        if (savedDocuments) {
-          const parsedDocs = JSON.parse(savedDocuments);
-          // Ensure unique documents by id
-          const uniqueDocs = parsedDocs.filter((doc: any, index: number, self: any[]) => 
-            index === self.findIndex((d: any) => d.id === doc.id)
-          );
-          setDocuments(uniqueDocs);
-        }
-
-        const savedPosts = localStorage.getItem("skoolife_forum_posts");
-        if (savedPosts) setPosts(JSON.parse(savedPosts));
-
-        const savedFinances = localStorage.getItem("skoolife_finances");
-        if (savedFinances) {
-          setFinances(JSON.parse(savedFinances));
-        }
-
-        const savedTransactions = localStorage.getItem("skoolife_transactions");
-        if (savedTransactions) setTransactions(JSON.parse(savedTransactions));
-
-        const savedBudgets = localStorage.getItem("skoolife_budgets");
-        if (savedBudgets) setBudgets(JSON.parse(savedBudgets));
-      } catch (error) {
-        console.error('Error loading data:', error);
+  // Enhanced data loading with better error handling and performance
+  const loadAllData = () => {
+    try {
+      console.log('Loading all data for Home dashboard synchronization...');
+      
+      // Load tasks
+      const savedTasks = localStorage.getItem("skoolife_tasks");
+      if (savedTasks) {
+        const parsedTasks = JSON.parse(savedTasks);
+        setTasks(parsedTasks);
+        console.log('Tasks loaded:', parsedTasks.length);
       }
-    };
 
-    loadData();
+      // Load events
+      const savedEvents = localStorage.getItem("skoolife_events");
+      if (savedEvents) {
+        const parsedEvents = JSON.parse(savedEvents);
+        setEvents(parsedEvents);
+        console.log('Events loaded:', parsedEvents.length);
+      }
 
-    // Enhanced real-time synchronization
+      // Load documents with deduplication
+      const savedDocuments = localStorage.getItem("skoolife_documents");
+      if (savedDocuments) {
+        const parsedDocs = JSON.parse(savedDocuments);
+        const uniqueDocs = parsedDocs.filter((doc: any, index: number, self: any[]) => 
+          index === self.findIndex((d: any) => d.id === doc.id)
+        );
+        setDocuments(uniqueDocs);
+        console.log('Documents loaded:', uniqueDocs.length);
+      }
+
+      // Load forum posts
+      const savedPosts = localStorage.getItem("skoolife_forum_posts");
+      if (savedPosts) {
+        const parsedPosts = JSON.parse(savedPosts);
+        setPosts(parsedPosts);
+        console.log('Forum posts loaded:', parsedPosts.length);
+      }
+
+      // Load financial data
+      const savedFinances = localStorage.getItem("skoolife_finances");
+      if (savedFinances) {
+        const parsedFinances = JSON.parse(savedFinances);
+        setFinances(parsedFinances);
+        console.log('Finances loaded:', parsedFinances);
+      }
+
+      // Load transactions
+      const savedTransactions = localStorage.getItem("skoolife_transactions");
+      if (savedTransactions) {
+        const parsedTransactions = JSON.parse(savedTransactions);
+        setTransactions(parsedTransactions);
+        console.log('Transactions loaded:', parsedTransactions.length);
+      }
+
+      // Load budgets
+      const savedBudgets = localStorage.getItem("skoolife_budgets");
+      if (savedBudgets) {
+        const parsedBudgets = JSON.parse(savedBudgets);
+        setBudgets(parsedBudgets);
+        console.log('Budgets loaded:', parsedBudgets.length);
+      }
+
+      setLastUpdate(Date.now());
+      console.log('All data loaded successfully for Home dashboard');
+    } catch (error) {
+      console.error('Error loading data for Home dashboard:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Initial data load
+    loadAllData();
+
+    // Enhanced real-time synchronization with multiple listeners
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key && e.newValue) {
+        console.log('Storage change detected:', e.key);
         try {
           switch (e.key) {
             case "skoolife_finances":
-              setFinances(JSON.parse(e.newValue));
+              const newFinances = JSON.parse(e.newValue);
+              setFinances(newFinances);
+              console.log('Home: Finances updated from storage');
               break;
             case "skoolife_tasks":
-              setTasks(JSON.parse(e.newValue));
+              const newTasks = JSON.parse(e.newValue);
+              setTasks(newTasks);
+              console.log('Home: Tasks updated from storage');
               break;
             case "skoolife_events":
-              setEvents(JSON.parse(e.newValue));
+              const newEvents = JSON.parse(e.newValue);
+              setEvents(newEvents);
+              console.log('Home: Events updated from storage');
               break;
             case "skoolife_documents":
               const parsedDocs = JSON.parse(e.newValue);
@@ -96,48 +139,97 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 index === self.findIndex((d: any) => d.id === doc.id)
               );
               setDocuments(uniqueDocs);
+              console.log('Home: Documents updated from storage');
               break;
             case "skoolife_forum_posts":
-              setPosts(JSON.parse(e.newValue));
+              const newPosts = JSON.parse(e.newValue);
+              setPosts(newPosts);
+              console.log('Home: Forum posts updated from storage');
               break;
             case "skoolife_transactions":
-              setTransactions(JSON.parse(e.newValue));
+              const newTransactions = JSON.parse(e.newValue);
+              setTransactions(newTransactions);
+              console.log('Home: Transactions updated from storage');
               break;
             case "skoolife_budgets":
-              setBudgets(JSON.parse(e.newValue));
+              const newBudgets = JSON.parse(e.newValue);
+              setBudgets(newBudgets);
+              console.log('Home: Budgets updated from storage');
               break;
           }
+          setLastUpdate(Date.now());
         } catch (error) {
-          console.error('Error parsing storage data:', error);
+          console.error('Error parsing storage data in Home:', error);
         }
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    
+    // Custom event listeners for direct module updates
     const handleFinanceUpdate = (e: CustomEvent) => {
+      console.log('Home: Finance update event received');
       setFinances(e.detail);
+      setLastUpdate(Date.now());
+    };
+    
+    const handleTaskUpdate = (e: CustomEvent) => {
+      console.log('Home: Task update event received');
+      setTasks(e.detail);
+      setLastUpdate(Date.now());
+    };
+
+    const handleEventUpdate = (e: CustomEvent) => {
+      console.log('Home: Event update event received');
+      setEvents(e.detail);
+      setLastUpdate(Date.now());
+    };
+
+    const handleDocumentUpdate = (e: CustomEvent) => {
+      console.log('Home: Document update event received');
+      const uniqueDocs = e.detail.filter((doc: any, index: number, self: any[]) => 
+        index === self.findIndex((d: any) => d.id === doc.id)
+      );
+      setDocuments(uniqueDocs);
+      setLastUpdate(Date.now());
     };
     
     const handleDataUpdate = () => {
-      loadData();
+      console.log('Home: General data update event received');
+      loadAllData();
     };
-    
+
+    // Register all event listeners
+    window.addEventListener('storage', handleStorageChange);
     window.addEventListener('financeUpdate', handleFinanceUpdate as EventListener);
+    window.addEventListener('taskUpdate', handleTaskUpdate as EventListener);
+    window.addEventListener('eventUpdate', handleEventUpdate as EventListener);
+    window.addEventListener('documentUpdate', handleDocumentUpdate as EventListener);
     window.addEventListener('dataUpdate', handleDataUpdate);
 
-    // More frequent updates for better synchronization
-    const intervalId = setInterval(loadData, 500);
+    // Enhanced polling for cross-tab synchronization (more frequent for better UX)
+    const intervalId = setInterval(() => {
+      loadAllData();
+    }, 1000); // Check every second for better responsiveness
+
+    // Focus-based synchronization for when user returns to tab
+    const handleFocus = () => {
+      console.log('Home: Window focus detected, refreshing data');
+      loadAllData();
+    };
+    window.addEventListener('focus', handleFocus);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('financeUpdate', handleFinanceUpdate as EventListener);
+      window.removeEventListener('taskUpdate', handleTaskUpdate as EventListener);
+      window.removeEventListener('eventUpdate', handleEventUpdate as EventListener);
+      window.removeEventListener('documentUpdate', handleDocumentUpdate as EventListener);
       window.removeEventListener('dataUpdate', handleDataUpdate);
+      window.removeEventListener('focus', handleFocus);
       clearInterval(intervalId);
     };
   }, []);
 
-  // Enhanced calculations with better error handling
+  // Enhanced calculations with better error handling and real-time updates
   const calculateCurrentMonthBudgetData = () => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -178,7 +270,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     return updatedBudgets;
   };
 
-  // Enhanced data calculations
+  // Real-time calculations that update automatically
   const completedTasks = tasks.filter((task: any) => task.completed).length;
   const pendingTasks = tasks.length - completedTasks;
   const currentBalance = finances.income - finances.expenses;
@@ -286,9 +378,16 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
           Votre vue d'ensemble personnalisée
         </p>
+        {/* Real-time sync indicator */}
+        <div className="flex items-center justify-center gap-2 mt-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Synchronisé en temps réel
+          </span>
+        </div>
       </div>
 
-      {/* Enhanced Responsive Quick Stats Grid */}
+      {/* Enhanced Responsive Quick Stats Grid with real-time updates */}
       <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-6 sm:mb-8`}>
         <Card 
           className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
@@ -373,9 +472,9 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </Card>
       </div>
 
-      {/* Enhanced Responsive Content Grid - Removed Documents and Cette Semaine blocks */}
+      {/* Enhanced Responsive Content Grid */}
       <div className={`grid ${gridConfig.contentGrid} gap-4 sm:gap-6`}>
-        {/* Enhanced Finance Summary */}
+        {/* Enhanced Finance Summary with real-time updates */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
@@ -423,7 +522,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Enhanced Tasks Overview */}
+        {/* Enhanced Tasks Overview with real-time updates */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
@@ -466,7 +565,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Enhanced Planning Overview */}
+        {/* Enhanced Planning Overview with real-time updates */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
@@ -513,7 +612,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Forum Activity - Enhanced */}
+        {/* Forum Activity - Enhanced with real-time updates */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
