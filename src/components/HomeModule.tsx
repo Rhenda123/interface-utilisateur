@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -618,7 +619,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 {totalBudget > 0 && (
                   <div className="flex justify-center">
                     <div className="w-full max-w-md bg-white dark:bg-gray-900/50 rounded-2xl p-6 border-2 border-gradient-to-r from-[#F6C103] to-[#E5AC00] shadow-lg">
-                      <div className="text-center mb-4">
+                      <div className="text-center mb-6">
                         <h5 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                           Budget utilisé
                         </h5>
@@ -627,7 +628,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                         </p>
                       </div>
                       
-                      <div className="relative mb-4">
+                      <div className="relative mb-3">
                         <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-4 shadow-inner">
                           <div 
                             className="bg-gradient-to-r from-[#F6C103] via-[#E5AC00] to-[#D4A200] h-4 rounded-full transition-all duration-700 ease-in-out shadow-lg relative overflow-hidden" 
@@ -636,12 +637,12 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
                           </div>
                         </div>
-                        
-                        {/* Progress percentage indicator */}
-                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                          <div className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                            {budgetProgress.toFixed(0)}%
-                          </div>
+                      </div>
+                      
+                      {/* Progress percentage indicator - moved below the bar */}
+                      <div className="text-center mb-4">
+                        <div className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] text-white text-sm font-bold px-4 py-1 rounded-full shadow-lg inline-block">
+                          {budgetProgress.toFixed(0)}%
                         </div>
                       </div>
                       
@@ -770,7 +771,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 {/* Centered and Modern Progress Summary */}
                 <div className="flex justify-center">
                   <div className="w-full max-w-md bg-white dark:bg-gray-900/50 rounded-2xl p-6 border-2 border-gradient-to-r from-green-400 to-blue-500 shadow-lg">
-                    <div className="text-center mb-4">
+                    <div className="text-center mb-6">
                       <h5 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                         Progression globale
                       </h5>
@@ -779,7 +780,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                       </p>
                     </div>
                     
-                    <div className="relative mb-4">
+                    <div className="relative mb-3">
                       <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-4 shadow-inner">
                         <div 
                           className="bg-gradient-to-r from-green-500 via-green-400 to-blue-500 h-4 rounded-full transition-all duration-700 ease-in-out shadow-lg relative overflow-hidden" 
@@ -788,12 +789,12 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
                         </div>
                       </div>
-                      
-                      {/* Progress percentage indicator */}
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                        <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                          {tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0}%
-                        </div>
+                    </div>
+                    
+                    {/* Progress percentage indicator - moved below the bar */}
+                    <div className="text-center mb-4">
+                      <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-sm font-bold px-4 py-1 rounded-full shadow-lg inline-block">
+                        {tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0}%
                       </div>
                     </div>
                     
