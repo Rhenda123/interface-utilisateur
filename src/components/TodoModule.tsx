@@ -243,18 +243,18 @@ function TodoModule() {
                           Supprimer
                         </button>
                       </AlertDialogTrigger>
-                      <AlertDialogContent className="mx-4 rounded-2xl">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
-                          <AlertDialogDescription className="text-base">
-                            Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action ne peut pas être annulée.
+                      <AlertDialogContent className="max-w-sm mx-auto rounded-2xl p-6">
+                        <AlertDialogHeader className="text-center">
+                          <AlertDialogTitle className="text-lg font-semibold mb-2">Confirmer la suppression</AlertDialogTitle>
+                          <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+                            Êtes-vous sûr de vouloir supprimer cette tâche ?
                           </AlertDialogDescription>
                         </AlertDialogHeader>
-                        <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-                          <AlertDialogCancel className="w-full sm:w-auto rounded-xl touch-manipulation">Annuler</AlertDialogCancel>
+                        <AlertDialogFooter className="flex gap-2 mt-4">
+                          <AlertDialogCancel className="flex-1 rounded-xl py-2 text-sm">Annuler</AlertDialogCancel>
                           <AlertDialogAction 
                             onClick={() => deleteTask(index)} 
-                            className="w-full sm:w-auto bg-red-500 hover:bg-red-600 rounded-xl touch-manipulation"
+                            className="flex-1 bg-red-500 hover:bg-red-600 rounded-xl py-2 text-sm"
                           >
                             Supprimer
                           </AlertDialogAction>
