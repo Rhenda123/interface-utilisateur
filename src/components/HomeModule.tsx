@@ -554,8 +554,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </Card>
       </div>
 
-      {/* Enhanced Responsive Content Grid - Updated to show only 3 cards */}
-      <div className={`grid ${gridConfig.contentGrid} gap-4 sm:gap-6`}>
+      {/* Enhanced Responsive Content Grid - Updated to show 3 cards in a row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Redesigned Finance Summary with modern clean layout */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
