@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -208,7 +207,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     // Enhanced polling for cross-tab synchronization (more frequent for better UX)
     const intervalId = setInterval(() => {
       loadAllData();
-    }, 1000); // Check every second for better responsiveness
+    }, 2000); // Check every 2 seconds for better responsiveness
 
     // Focus-based synchronization for when user returns to tab
     const handleFocus = () => {
@@ -270,10 +269,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     return updatedBudgets;
   };
 
-  // Get today's day name in French format matching ScheduleModule
+  // Get today's day name in French format matching ScheduleModule exactly
   const getTodayDayName = () => {
     const today = new Date();
-    const dayName = today.toLocaleDateString('fr-FR', { weekday: 'long' });
+    const dayNames = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+    const dayName = dayNames[today.getDay()];
     // Capitalize first letter to match ScheduleModule format
     return dayName.charAt(0).toUpperCase() + dayName.slice(1);
   };
@@ -294,14 +294,17 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
      (task.deadline && new Date(task.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)))
   );
 
-  // Enhanced today's events calculation
+  // Enhanced today's events calculation with better matching
   const todayDayName = getTodayDayName();
   const todaysEvents = events.filter((event: any) => {
-    console.log('Checking event:', event.name, 'Day:', event.day, 'Today:', todayDayName);
-    return event.day === todayDayName;
+    const eventDay = event.day?.toLowerCase();
+    const todayDay = todayDayName.toLowerCase();
+    console.log('Checking event:', event.name, 'Event day:', eventDay, 'Today:', todayDay);
+    return eventDay === todayDay;
   });
   
   console.log('Today is:', todayDayName);
+  console.log('All events:', events);
   console.log('Today\'s events:', todaysEvents);
 
   const thisWeekEvents = events.filter((event: any) => {

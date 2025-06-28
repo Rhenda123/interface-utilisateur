@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Filter, Calendar, Clock, Eye, Trash2 } from "lucide-react";
+import { Plus, Filter, Calendar, Clock, Eye, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { eventTypes, getEventTypeById, Event } from "@/utils/eventTypes";
 import TimeAxis from "@/components/planning/TimeAxis";
 import WeekNavigation from "@/components/planning/WeekNavigation";
@@ -86,6 +87,8 @@ function ScheduleModule() {
 
   useEffect(() => {
     localStorage.setItem("skoolife_events", JSON.stringify(events));
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('eventUpdate', { detail: events }));
   }, [events]);
 
   const getEventsForDay = (dayName: string): Event[] => {
@@ -101,7 +104,7 @@ function ScheduleModule() {
     });
   };
 
-  // Mobile Day View Component
+  // Enhanced Mobile Day View Component with multiple event support
   const MobileDayView = ({ dayName }: { dayName: string }) => {
     const dayEvents = getEventsForDay(dayName);
     const dayInfo = days.find(d => d.name === dayName);
@@ -127,8 +130,33 @@ function ScheduleModule() {
             Vue semaine
           </Button>
         </div>
+
+        {/* Enhanced Add Event Button */}
+        <div className="flex gap-2">
+          <Button
+            onClick={() => handleTimeSlotClick(dayName, 9)}
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-full flex-1"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Ajouter un événement
+          </Button>
+          <Button
+            onClick={() => {
+              setQuickCreateData({
+                day: dayName,
+                startTime: '09:00',
+                endTime: '10:00'
+              });
+              setShowFullCreateModal(true);
+            }}
+            variant="outline"
+            className="rounded-full px-4"
+          >
+            <Calendar className="w-4 h-4" />
+          </Button>
+        </div>
         
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-96 overflow-y-auto">
           {dayEvents.length > 0 ? (
             dayEvents.map((event) => {
               const eventType = getEventTypeById(event.typeId);
@@ -340,6 +368,47 @@ function ScheduleModule() {
         </Card>
       )}
 
+      {/* Enhanced Mobile Week Navigation */}
+      {isMobileView && !selectedDay && (
+        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <Button
+                onClick={handlePreviousWeek}
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              
+              <div className="text-center">
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  Semaine du {days[0]?.date}
+                </h3>
+                <Button
+                  onClick={handleToday}
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-yellow-600 hover:text-yellow-700"
+                >
+                  Aujourd'hui
+                </Button>
+              </div>
+              
+              <Button
+                onClick={handleNextWeek}
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Mobile Week Overview */}
       {isMobileView && !selectedDay && (
         <div className="grid grid-cols-2 gap-3">
@@ -364,7 +433,7 @@ function ScheduleModule() {
                       {day.date}
                     </p>
                     <div className="space-y-1">
-                      {dayEvents.slice(0, 2).map((event) => (
+                      {dayEvents.slice(0, 3).map((event) => (
                         <div 
                           key={event.id} 
                           className="text-xs px-2 py-1 rounded-full text-white truncate"
@@ -373,9 +442,9 @@ function ScheduleModule() {
                           {event.name}
                         </div>
                       ))}
-                      {dayEvents.length > 2 && (
+                      {dayEvents.length > 3 && (
                         <div className="text-xs text-gray-500 dark:text-gray-400">
-                          +{dayEvents.length - 2} autres
+                          +{dayEvents.length - 3} autres
                         </div>
                       )}
                       {dayEvents.length === 0 && (
