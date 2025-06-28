@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -807,11 +808,12 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Forum Activity - Enhanced with real-time updates */}
+        {/* Enhanced Forum Overview with modern clean design */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-green-500" />
                 Forum
               </h3>
               <Button
@@ -823,22 +825,71 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </div>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
-              {posts.slice(0, screenSize === 'mobile' ? 1 : 2).map((post: any, index: number) => (
-                <div key={index} className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700 animate-fade-in hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors cursor-pointer">
-                  <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
-                    {post.title}
+            
+            {/* Modern Forum Overview */}
+            <div className="space-y-4">
+              {/* Forum Statistics Cards */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <MessageSquare className="w-4 h-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-700 dark:text-green-300">Discussions</span>
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {post.author} • {post.replies?.length || 0} réponses
+                  <div className="text-lg font-bold text-green-600 dark:text-green-400">
+                    {posts.length}
                   </div>
                 </div>
-              ))}
-              {posts.length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
-                  Aucune activité récente
-                </p>
-              )}
+                
+                <div className="bg-teal-50 dark:bg-teal-900/20 rounded-xl p-4 border border-teal-200 dark:border-teal-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users className="w-4 h-4 text-teal-600" />
+                    <span className="text-sm font-medium text-teal-700 dark:text-teal-300">Réponses</span>
+                  </div>
+                  <div className="text-lg font-bold text-teal-600 dark:text-teal-400">
+                    {posts.reduce((total: number, post: any) => total + (post.replies?.length || 0), 0)}
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Posts Preview */}
+              <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Discussions récentes</span>
+                </div>
+                <div className="space-y-3 max-h-32 overflow-y-auto">
+                  {posts.slice(0, screenSize === 'mobile' ? 1 : 2).map((post: any, index: number) => (
+                    <div key={index} className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-700 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors cursor-pointer">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-gray-900 dark:text-white truncate mb-1">
+                          {post.title}
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                          <span className="flex items-center gap-1">
+                            <Users className="w-3 h-3" />
+                            {post.author}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MessageSquare className="w-3 h-3" />
+                            {post.replies?.length || 0} réponses
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {posts.length === 0 && (
+                    <div className="text-center py-4">
+                      <MessageSquare className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                      <p className="text-gray-500 dark:text-gray-400 text-sm">
+                        Aucune discussion pour le moment
+                      </p>
+                      <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">
+                        Soyez le premier à créer un post !
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
