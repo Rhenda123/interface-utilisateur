@@ -160,25 +160,19 @@ const HomeModule = () => {
   const budgetSpent = currentBudgets.reduce((sum: number, budget: any) => sum + (budget.spent || 0), 0);
   const budgetProgress = totalBudget > 0 ? (budgetSpent / totalBudget) * 100 : 0;
   
-  // Calculate urgent tasks (high priority and due soon)
-  const urgentTasks = tasks.filter((task: any) => 
+  // Calculate urgent tasks (high priority and due soon) - fix arithmetic issue
+  const urgentTasksArray = tasks.filter((task: any) => 
     !task.completed && 
     (task.priority === "Haute" || 
      (task.deadline && new Date(task.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)))
   );
+  const urgentTasksCount = urgentTasksArray.length;
 
-  // Calculate this week's events
-  const getWeekStart = () => {
-    const now = new Date();
-    const day = now.getDay();
-    const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(now.setDate(diff));
-  };
-
+  // Calculate this week's events - fix date handling
   const thisWeekEvents = events.filter((event: any) => {
     const today = new Date();
-    const todayDay = today.toLocaleDateString('fr-FR', { weekday: 'long' });
-    const todayFrench = todayDay.charAt(0).toUpperCase() + today.slice(1);
+    const todayWeekday = today.toLocaleDateString('fr-FR', { weekday: 'long' });
+    const todayFrench = todayWeekday.charAt(0).toUpperCase() + todayWeekday.slice(1);
     
     const weekDays = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
     const todayIndex = weekDays.indexOf(todayFrench);
@@ -187,10 +181,11 @@ const HomeModule = () => {
     return eventIndex >= todayIndex;
   });
 
-  // Today's events
+  // Today's events - fix date handling
   const todaysEvents = events.filter((event: any) => {
-    const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long' });
-    const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
+    const today = new Date();
+    const todayWeekday = today.toLocaleDateString('fr-FR', { weekday: 'long' });
+    const todayFrench = todayWeekday.charAt(0).toUpperCase() + todayWeekday.slice(1);
     return event.day === todayFrench;
   });
 
@@ -310,7 +305,7 @@ const HomeModule = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Urgent</p>
-                <p className="text-2xl font-bold text-skoolife-red-dark">{urgentTasks}</p>
+                <p className="text-2xl font-bold text-skoolife-red-dark">{urgentTasksCount}</p>
               </div>
               <AlertTriangle className="h-8 w-8 text-skoolife-red" />
             </div>
@@ -433,10 +428,10 @@ const HomeModule = () => {
                   <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div 
                       className="bg-skoolife-red h-2 rounded-full transition-all duration-300" 
-                      style={{ width: `${tasks.length > 0 ? (urgentTasks / tasks.length) * 100 : 0}%` }}
+                      style={{ width: `${tasks.length > 0 ? (urgentTasksCount / tasks.length) * 100 : 0}%` }}
                     ></div>
                   </div>
-                  <span className="text-sm font-medium text-skoolife-red-dark">{urgentTasks}</span>
+                  <span className="text-sm font-medium text-skoolife-red-dark">{urgentTasksCount}</span>
                 </div>
               </div>
             </div>
