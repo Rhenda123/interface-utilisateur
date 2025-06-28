@@ -11,6 +11,7 @@ import TimeAxis from "@/components/planning/TimeAxis";
 import WeekNavigation from "@/components/planning/WeekNavigation";
 import DayColumn from "@/components/planning/DayColumn";
 import EventCreationModal from "@/components/planning/EventCreationModal";
+import EventEditModal from "@/components/planning/EventEditModal";
 
 function ScheduleModule() {
   const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -73,8 +74,9 @@ function ScheduleModule() {
   const [showFilters, setShowFilters] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
 
-  // Quick creation modal states
+  // Modal states - replacing the top form approach
   const [showQuickCreateModal, setShowQuickCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [quickCreateData, setQuickCreateData] = useState<{
     day: string;
     startTime: string;
@@ -111,50 +113,23 @@ function ScheduleModule() {
     });
   };
 
-  const addOrUpdateEvent = () => {
-    if (!eventName.trim()) return;
-    
-    const eventType = getEventTypeById(selectedTypeId);
-    if (!eventType) return;
-    
+  const addOrUpdateEvent = (eventData: Partial<Event>) => {
     if (editingEvent) {
       setEvents(events.map(e => 
         e.id === editingEvent.id 
-          ? { 
-              ...e, 
-              day: selectedDay, 
-              startTime,
-              endTime,
-              name: eventName, 
-              typeId: selectedTypeId,
-              color: eventType.color,
-              isRecurring,
-              recurringPattern: isRecurring ? recurringPattern : undefined,
-              dynamicFields: { ...dynamicFields },
-              reminders: [...customReminders]
-            }
+          ? { ...e, ...eventData }
           : e
       ));
       setEditingEvent(null);
     } else {
       const newEvent: Event = {
         id: Date.now().toString(),
-        day: selectedDay,
-        startTime,
-        endTime,
-        name: eventName,
-        typeId: selectedTypeId,
-        color: eventType.color,
-        isRecurring,
-        recurringPattern: isRecurring ? recurringPattern : undefined,
-        dynamicFields: { ...dynamicFields },
-        reminders: [...customReminders]
+        ...eventData as Event
       };
       setEvents([...events, newEvent]);
     }
     
     resetForm();
-    setShowEventForm(false);
   };
 
   const editEvent = (event: Event) => {
@@ -168,7 +143,7 @@ function ScheduleModule() {
     setRecurringPattern(event.recurringPattern || 'weekly');
     setDynamicFields({ ...event.dynamicFields });
     setCustomReminders([...event.reminders]);
-    setShowEventForm(true);
+    setShowEditModal(true);
   };
 
   const deleteEvent = (eventId: string) => {
@@ -185,6 +160,7 @@ function ScheduleModule() {
     setDynamicFields({});
     setCustomReminders([]);
     setEditingEvent(null);
+    setShowEditModal(false);
   };
 
   const toggleEventTypeVisibility = (typeId: string) => {
@@ -314,191 +290,6 @@ function ScheduleModule() {
         </Card>
       )}
 
-      {/* Add/Edit Event Form */}
-      {showEventForm && (
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-          <CardContent className="p-4 sm:p-6">
-            
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-              {editingEvent ? <Check className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-              {editingEvent ? "Modifier l'Événement" : "Ajouter un Événement"}
-            </h3>
-            
-            {/* Basic Event Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-              <Select value={selectedDay} onValueChange={setSelectedDay}>
-                <SelectTrigger className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {days.map(d => <SelectItem key={d.name} value={d.name}>{d.name}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              
-              <Select value={startTime} onValueChange={setStartTime}>
-                <SelectTrigger className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700">
-                  <SelectValue placeholder="Heure de début" />
-                </SelectTrigger>
-                <SelectContent>
-                  {timeSlots.map(time => <SelectItem key={time} value={time}>{time}</SelectItem>)}
-                </SelectContent>
-              </Select>
-
-              <Select value={endTime} onValueChange={setEndTime}>
-                <SelectTrigger className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700">
-                  <SelectValue placeholder="Heure de fin" />
-                </SelectTrigger>
-                <SelectContent>
-                  {timeSlots.map(time => <SelectItem key={time} value={time}>{time}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              
-              <Input 
-                type="text" 
-                placeholder="Nom de l'événement" 
-                value={eventName} 
-                onChange={(e) => setEventName(e.target.value)} 
-                className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white" 
-              />
-            </div>
-
-            {/* Event Type Selection */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type d'événement</label>
-              <div className="flex gap-2 flex-wrap">
-                {eventTypes.map(type => {
-                  const IconComponent = type.icon;
-                  const isSelected = selectedTypeId === type.id;
-                  return (
-                    <Button
-                      key={type.id}
-                      onClick={() => setSelectedTypeId(type.id)}
-                      variant={isSelected ? "default" : "outline"}
-                      className={`flex items-center gap-2 ${isSelected ? 'shadow-lg' : ''}`}
-                      style={isSelected ? { backgroundColor: type.color } : {}}
-                    >
-                      <IconComponent className="w-4 h-4" />
-                      {type.name}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Dynamic Fields */}
-            {selectedEventType && selectedEventType.fields.length > 0 && (
-              <div className="mb-4">
-                <h4 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Détails spécifiques</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {selectedEventType.fields.map(field => (
-                    <div key={field.id}>
-                      {field.type === 'select' && field.options ? (
-                        <Select value={dynamicFields[field.id] || ''} onValueChange={(value) => updateDynamicField(field.id, value)}>
-                          <SelectTrigger className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700">
-                            <SelectValue placeholder={field.label} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {field.options.map(option => (
-                              <SelectItem key={option} value={option}>{option}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      ) : (
-                        <Input
-                          type={field.type === 'number' ? 'number' : 'text'}
-                          placeholder={field.label}
-                          value={dynamicFields[field.id] || ''}
-                          onChange={(e) => updateDynamicField(field.id, e.target.value)}
-                          className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white"
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Recurring Options */}
-            <div className="mb-4">
-              <div className="flex items-center gap-3 mb-3">
-                <input
-                  type="checkbox"
-                  id="recurring"
-                  checked={isRecurring}
-                  onChange={(e) => setIsRecurring(e.target.checked)}
-                  className="rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                />
-                <label htmlFor="recurring" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Événement récurrent
-                </label>
-              </div>
-              
-              {isRecurring && (
-                <Select value={recurringPattern} onValueChange={(value: 'daily' | 'weekly' | 'monthly') => setRecurringPattern(value)}>
-                  <SelectTrigger className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 w-48">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="daily">Quotidien</SelectItem>
-                    <SelectItem value="weekly">Hebdomadaire</SelectItem>
-                    <SelectItem value="monthly">Mensuel</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
-
-            {/* Reminders */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
-                <Bell className="w-4 h-4" />
-                Rappels (minutes avant)
-              </label>
-              <div className="flex gap-2 flex-wrap">
-                {[5, 10, 15, 30, 60].map(minutes => (
-                  <Button
-                    key={minutes}
-                    type="button"
-                    variant={customReminders.includes(minutes) ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => {
-                      if (customReminders.includes(minutes)) {
-                        setCustomReminders(customReminders.filter(m => m !== minutes));
-                      } else {
-                        setCustomReminders([...customReminders, minutes]);
-                      }
-                    }}
-                  >
-                    {minutes}min
-                  </Button>
-                ))}
-              </div>
-            </div>
-            
-            <div className="flex gap-3">
-              <Button 
-                onClick={addOrUpdateEvent} 
-                className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-semibold shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105 flex items-center gap-2"
-              >
-                {editingEvent ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                {editingEvent ? "Modifier" : "Ajouter"}
-              </Button>
-              
-              <Button 
-                onClick={() => {
-                  resetForm();
-                  setShowEventForm(false);
-                }} 
-                variant="outline"
-                className="px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2"
-              >
-                <X className="w-4 h-4" />
-                Annuler
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Calendar Grid */}
       <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 overflow-hidden">
         <WeekNavigation
@@ -540,6 +331,21 @@ function ScheduleModule() {
           onSave={handleQuickSave}
           initialData={quickCreateData}
           onMoreOptions={handleMoreOptions}
+        />
+      )}
+
+      {/* Edit Event Modal */}
+      {editingEvent && (
+        <EventEditModal
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setEditingEvent(null);
+          }}
+          onSave={addOrUpdateEvent}
+          event={editingEvent}
+          timeSlots={timeSlots}
+          days={days.map(d => d.name)}
         />
       )}
     </div>
