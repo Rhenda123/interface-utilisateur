@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -639,9 +638,9 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                         </div>
                       </div>
                       
-                      {/* Progress percentage indicator - moved below the bar */}
-                      <div className="text-center mb-4">
-                        <div className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] text-white text-sm font-bold px-4 py-1 rounded-full shadow-lg inline-block">
+                      {/* Progress percentage indicator - positioned below the bar */}
+                      <div className="text-center mb-6">
+                        <div className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg inline-block">
                           {budgetProgress.toFixed(0)}%
                         </div>
                       </div>
@@ -791,9 +790,9 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                       </div>
                     </div>
                     
-                    {/* Progress percentage indicator - moved below the bar */}
-                    <div className="text-center mb-4">
-                      <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-sm font-bold px-4 py-1 rounded-full shadow-lg inline-block">
+                    {/* Progress percentage indicator - positioned below the bar */}
+                    <div className="text-center mb-6">
+                      <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg inline-block">
                         {tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0}%
                       </div>
                     </div>
