@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -47,7 +46,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         if (savedEvents) setEvents(JSON.parse(savedEvents));
 
         const savedDocuments = localStorage.getItem("skoolife_documents");
-        if (savedDocuments) setDocuments(JSON.parse(savedDocuments));
+        if (savedDocuments) {
+          const parsedDocs = JSON.parse(savedDocuments);
+          // Ensure unique documents by id
+          const uniqueDocs = parsedDocs.filter((doc: any, index: number, self: any[]) => 
+            index === self.findIndex((d: any) => d.id === doc.id)
+          );
+          setDocuments(uniqueDocs);
+        }
 
         const savedPosts = localStorage.getItem("skoolife_forum_posts");
         if (savedPosts) setPosts(JSON.parse(savedPosts));
@@ -84,7 +90,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               setEvents(JSON.parse(e.newValue));
               break;
             case "skoolife_documents":
-              setDocuments(JSON.parse(e.newValue));
+              const parsedDocs = JSON.parse(e.newValue);
+              const uniqueDocs = parsedDocs.filter((doc: any, index: number, self: any[]) => 
+                index === self.findIndex((d: any) => d.id === doc.id)
+              );
+              setDocuments(uniqueDocs);
               break;
             case "skoolife_forum_posts":
               setPosts(JSON.parse(e.newValue));
@@ -502,7 +512,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Documents Activity - Enhanced */}
+        {/* Documents Activity - Fixed to show unique documents */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
@@ -520,7 +530,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             </div>
             <div className="space-y-3 max-h-48 overflow-y-auto">
               {recentDocuments.slice(0, screenSize === 'mobile' ? 1 : 2).map((doc: any, index: number) => (
-                <div key={index} className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-700 animate-fade-in">
+                <div key={doc.id} className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-700 animate-fade-in">
                   <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
                     {doc.name}
                   </div>
@@ -529,8 +539,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   </div>
                 </div>
               ))}
-              {documents.slice(0, 1).map((doc: any, index: number) => (
-                <div key={`all-${index}`} className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+              {documents.filter(doc => !recentDocuments.includes(doc)).slice(0, 1).map((doc: any, index: number) => (
+                <div key={`older-${doc.id}`} className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                   <div className="font-medium text-xs text-gray-700 dark:text-gray-300 truncate">
                     {doc.name}
                   </div>
