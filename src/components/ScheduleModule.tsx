@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Filter, Calendar, Clock, Eye } from "lucide-react";
+import { Plus, Filter, Calendar, Clock, Eye, Trash2 } from "lucide-react";
 import { eventTypes, getEventTypeById, Event } from "@/utils/eventTypes";
 import TimeAxis from "@/components/planning/TimeAxis";
 import WeekNavigation from "@/components/planning/WeekNavigation";
@@ -161,6 +161,14 @@ function ScheduleModule() {
                           className="text-xs p-2 h-8 rounded-full"
                         >
                           Modifier
+                        </Button>
+                        <Button
+                          onClick={() => deleteEvent(event.id)}
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs p-2 h-8 rounded-full text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        >
+                          <Trash2 className="w-3 h-3" />
                         </Button>
                       </div>
                     </div>
