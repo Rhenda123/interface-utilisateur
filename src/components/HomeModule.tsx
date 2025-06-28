@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -303,17 +302,26 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     return dayName.charAt(0).toUpperCase() + dayName.slice(1);
   };
 
-  // Get current week range (Monday to Sunday)
+  // Fixed getCurrentWeekRange to properly calculate the current week (Monday to Sunday)
   const getCurrentWeekRange = () => {
     const today = new Date();
-    const currentDay = today.getDay();
-    const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // Handle Sunday as 0
+    const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    
+    // Calculate days to Monday (start of week)
+    const daysToMonday = currentDay === 0 ? -6 : 1 - currentDay;
     
     const monday = new Date(today);
-    monday.setDate(today.getDate() + mondayOffset);
+    monday.setDate(today.getDate() + daysToMonday);
+    monday.setHours(0, 0, 0, 0); // Start of day
     
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999); // End of day
+    
+    console.log('Fixed week range calculation:');
+    console.log('Today:', today.toDateString());
+    console.log('Monday start:', monday.toDateString());
+    console.log('Sunday end:', sunday.toDateString());
     
     return { monday, sunday };
   };
@@ -339,7 +347,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   // Enhanced today's events calculation with better matching
   const todayDayName = getTodayDayName();
   const todaysEvents = events.filter((event: any) => {
-    const eventDay = event.day?.toLowerCase();
+    const eventDay = event.day?.toLowerCase?.();
     const todayDay = todayDayName.toLowerCase();
     console.log('Checking event:', event.name, 'Event day:', eventDay, 'Today:', todayDay);
     return eventDay === todayDay;
@@ -349,30 +357,34 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   console.log('All events:', events);
   console.log('Today\'s events:', todaysEvents);
 
-  // Fixed this week events calculation - handle both capitalized and lowercase day names
+  // Fixed this week events calculation with proper date validation
   const thisWeekEvents = events.filter((event: any) => {
+    // Skip events without valid day property
+    if (!event.day || typeof event.day !== 'string') {
+      console.log('Event skipped - invalid day:', event);
+      return false;
+    }
+
     const { monday, sunday } = getCurrentWeekRange();
     
     // Map French day names to their position in the week (Monday = 0, Sunday = 6)
-    // Handle both lowercase and capitalized versions
     const dayNameMap: { [key: string]: number } = {
       'lundi': 0, 'mardi': 1, 'mercredi': 2, 'jeudi': 3, 
-      'vendredi': 4, 'samedi': 5, 'dimanche': 6,
-      'Lundi': 0, 'Mardi': 1, 'Mercredi': 2, 'Jeudi': 3,
-      'Vendredi': 4, 'Samedi': 5, 'Dimanche': 6
+      'vendredi': 4, 'samedi': 5, 'dimanche': 6
     };
     
-    const eventDayName = event.day;
+    const eventDayName = event.day.toLowerCase();
     const eventDayIndex = dayNameMap[eventDayName];
     
     if (eventDayIndex === undefined) {
-      console.log('Event day not found in map:', eventDayName);
+      console.log('Event day not found in map:', eventDayName, 'for event:', event.name);
       return false;
     }
     
     // Calculate the actual date for this event day in the current week
     const eventDate = new Date(monday);
     eventDate.setDate(monday.getDate() + eventDayIndex);
+    eventDate.setHours(12, 0, 0, 0); // Set to noon to avoid timezone issues
     
     // Check if the event date is within the current week range
     const isInCurrentWeek = eventDate >= monday && eventDate <= sunday;
@@ -383,7 +395,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   });
 
   console.log('Current week range:', getCurrentWeekRange());
-  console.log('This week events:', thisWeekEvents);
+  console.log('This week events (fixed):', thisWeekEvents.length, 'events:', thisWeekEvents.map(e => e.name));
 
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
