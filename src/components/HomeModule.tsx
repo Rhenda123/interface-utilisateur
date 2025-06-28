@@ -49,13 +49,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         console.log('Tasks loaded:', parsedTasks.length);
       }
 
-      // Load events
-      const savedEvents = localStorage.getItem("skoolife_events");
-      if (savedEvents) {
-        const parsedEvents = JSON.parse(savedEvents);
-        setEvents(parsedEvents);
-        console.log('Events loaded:', parsedEvents.length);
-      }
+      // Clear all existing events and load fresh empty array
+      console.log('Clearing all existing events...');
+      localStorage.setItem("skoolife_events", JSON.stringify([]));
+      setEvents([]);
+      console.log('Events cleared and reset to empty array');
 
       // Load documents with deduplication
       const savedDocuments = localStorage.getItem("skoolife_documents");
@@ -711,7 +709,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Enhanced Planning Overview with modern clean design */}
+        {/* Enhanced Planning Overview with modern clean design - Fixed to only show when there are events */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-6">
@@ -754,7 +752,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 </div>
               </div>
 
-              {/* Today's Events */}
+              {/* Today's Events - Only show if there are events today */}
               {todaysEvents.length > 0 && (
                 <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
                   <div className="flex items-center gap-2 mb-3">
@@ -780,32 +778,42 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 </div>
               )}
 
-              {/* This Week Preview */}
-              <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochains événements</span>
-                </div>
-                <div className="space-y-2 max-h-24 overflow-y-auto">
-                  {thisWeekEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
-                    <div key={index} className="flex items-center gap-3 text-sm">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                      <div className="flex-1">
-                        <div className="font-medium text-gray-700 dark:text-gray-300 truncate">
-                          {event.day}: {event.name}
-                        </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          {event.startTime}
+              {/* This Week Preview - Only show if there are upcoming events this week */}
+              {thisWeekEvents.length > 0 && (
+                <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochains événements</span>
+                  </div>
+                  <div className="space-y-2 max-h-24 overflow-y-auto">
+                    {thisWeekEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
+                      <div key={index} className="flex items-center gap-3 text-sm">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-700 dark:text-gray-300 truncate">
+                            {event.day}: {event.name}
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {event.startTime}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                  {thisWeekEvents.length === 0 && todaysEvents.length === 0 && (
-                    <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-2">
-                      Aucun événement prévu
-                    </p>
-                  )}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Show empty state only if there are no events at all */}
+              {thisWeekEvents.length === 0 && todaysEvents.length === 0 && (
+                <div className="text-center py-6">
+                  <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                    Aucun événement prévu
+                  </p>
+                  <p className="text-gray-400 dark:text-gray-500 text-xs">
+                    Ajoutez votre premier événement dans Planning
+                  </p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
