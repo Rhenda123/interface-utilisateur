@@ -15,6 +15,7 @@ interface EventCreationModalProps {
     day: string;
     startTime: string;
     endTime: string;
+    date: string;
   };
   onMoreOptions?: () => void;
 }

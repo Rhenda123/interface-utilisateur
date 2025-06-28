@@ -156,10 +156,13 @@ function ScheduleModule() {
           </Button>
           <Button
             onClick={() => {
+              const dayInfo = days.find(d => d.name === dayName);
+              const dayDate = dayInfo ? dayInfo.fullDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
               setQuickCreateData({
                 day: dayName,
                 startTime: '09:00',
-                endTime: '10:00'
+                endTime: '10:00',
+                date: dayDate
               });
               setShowFullCreateModal(true);
             }}
