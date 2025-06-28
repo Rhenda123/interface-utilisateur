@@ -420,33 +420,38 @@ export default function FinanceModule() {
     <div className="space-y-3 sm:space-y-6 p-2 sm:p-4 lg:p-6">
       {/* Mobile-First Header */}
       <div className="flex flex-col gap-3 sm:gap-4">
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center justify-between gap-3">
           <div className="flex-1 min-w-0">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Finances</h2>
-            <div className="flex items-center gap-2 mt-1">
-              <Button
-                onClick={() => navigateMonth('prev')}
-                variant="outline"
-                size="sm"
-                className="h-8 w-8 p-0 sm:h-9 sm:w-9"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </Button>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap">
-                {selectedMonthName}
-              </p>
-              <Button
-                onClick={() => navigateMonth('next')}
-                variant="outline"
-                size="sm"
-                className="h-8 w-8 p-0 sm:h-9 sm:w-9"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </div>
+          </div>
+        </div>
+
+        {/* Aligned Header Controls - Month Selector, Currency, and Settings */}
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
+          {/* Month Navigation */}
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <Button
+              onClick={() => navigateMonth('prev')}
+              variant="outline"
+              size="sm"
+              className="h-8 w-8 p-0 sm:h-9 sm:w-9 flex-shrink-0"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap truncate">
+              {selectedMonthName}
+            </p>
+            <Button
+              onClick={() => navigateMonth('next')}
+              variant="outline"
+              size="sm"
+              className="h-8 w-8 p-0 sm:h-9 sm:w-9 flex-shrink-0"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
           </div>
           
-          {/* Aligned header controls */}
+          {/* Currency and Settings Controls */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <Select value={currency} onValueChange={setCurrency}>
               <SelectTrigger className="w-16 sm:w-20 h-8 sm:h-9">
