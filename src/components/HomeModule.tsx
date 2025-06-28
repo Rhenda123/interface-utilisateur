@@ -730,11 +730,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             
             {/* Modern Planning Overview */}
             <div className="space-y-4">
-              {/* Event Statistics Cards */}
+              {/* Event Statistics Cards - Fixed alignment and icon sizes */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
                   <div className="flex items-center gap-2 mb-2">
-                    <Clock className="w-4 h-4 text-purple-600" />
+                    <Clock className="w-5 h-5 text-purple-600" />
                     <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Aujourd'hui</span>
                   </div>
                   <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
@@ -744,7 +744,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 
                 <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 border border-indigo-200 dark:border-indigo-700">
                   <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-4 h-4 text-indigo-600" />
+                    <Calendar className="w-5 h-5 text-indigo-600" />
                     <span className="text-sm font-medium text-indigo-700 dark:text-indigo-300">Cette semaine</span>
                   </div>
                   <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
@@ -764,8 +764,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   <div className="space-y-2 max-h-24 overflow-y-auto">
                     {todaysEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
                       <div key={index} className="flex items-center gap-3 text-sm">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <div className="flex-1">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0"></div>
+                        <div className="flex-1 min-w-0">
                           <div className="font-medium text-gray-900 dark:text-white truncate">
                             {event.name}
                           </div>
@@ -788,8 +788,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   <div className="space-y-2 max-h-24 overflow-y-auto">
                     {thisWeekEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
                       <div key={index} className="flex items-center gap-3 text-sm">
-                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                        <div className="flex-1">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full flex-shrink-0"></div>
+                        <div className="flex-1 min-w-0">
                           <div className="font-medium text-gray-700 dark:text-gray-300 truncate">
                             {event.day}: {event.name}
                           </div>
