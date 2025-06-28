@@ -18,6 +18,21 @@ export interface EventField {
   options?: string[];
 }
 
+export interface Event {
+  id: string;
+  day: string;
+  startTime: string;
+  endTime: string;
+  name: string;
+  typeId: string;
+  color: string;
+  isRecurring: boolean;
+  recurringPattern?: 'daily' | 'weekly' | 'monthly';
+  recurringEnd?: string;
+  dynamicFields: Record<string, string>;
+  reminders: number[];
+}
+
 export const eventTypes: EventType[] = [
   {
     id: 'class',

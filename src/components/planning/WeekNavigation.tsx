@@ -1,0 +1,76 @@
+
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+
+interface WeekNavigationProps {
+  currentWeek: Date;
+  onPreviousWeek: () => void;
+  onNextWeek: () => void;
+  onToday: () => void;
+}
+
+const WeekNavigation: React.FC<WeekNavigationProps> = ({
+  currentWeek,
+  onPreviousWeek,
+  onNextWeek,
+  onToday
+}) => {
+  const getWeekRange = (date: Date) => {
+    const startOfWeek = new Date(date);
+    const day = startOfWeek.getDay();
+    const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Monday start
+    startOfWeek.setDate(diff);
+    
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    
+    return {
+      start: startOfWeek.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }),
+      end: endOfWeek.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+    };
+  };
+
+  const weekRange = getWeekRange(currentWeek);
+
+  return (
+    <div className="flex items-center justify-between gap-4 p-4 bg-white dark:bg-gray-800 border-b border-yellow-200 dark:border-gray-700">
+      <div className="flex items-center gap-3">
+        <Button
+          onClick={onToday}
+          variant="outline"
+          className="border-yellow-200 dark:border-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
+        >
+          <Calendar className="w-4 h-4 mr-2" />
+          Aujourd'hui
+        </Button>
+        
+        <div className="flex items-center gap-1">
+          <Button
+            onClick={onPreviousWeek}
+            variant="ghost"
+            size="sm"
+            className="hover:bg-yellow-100 dark:hover:bg-yellow-900/20"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </Button>
+          
+          <Button
+            onClick={onNextWeek}
+            variant="ghost"
+            size="sm"
+            className="hover:bg-yellow-100 dark:hover:bg-yellow-900/20"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+      
+      <div className="text-lg font-semibold text-gray-900 dark:text-white">
+        {weekRange.start} - {weekRange.end}
+      </div>
+    </div>
+  );
+};
+
+export default WeekNavigation;
