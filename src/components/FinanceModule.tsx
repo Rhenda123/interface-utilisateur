@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Progress } from "@/components/ui/progress";
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from "recharts";
-import { Search, ArrowUp, ArrowDown, Edit, Trash2, Download, Plus, TrendingUp, TrendingDown, Wallet, Euro, Calendar, Filter, Settings, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ArrowUp, ArrowDown, Edit, Trash2, Download, Plus, TrendingUp, TrendingDown, Wallet, Euro, Calendar, Filter, Settings, ChevronLeft, ChevronRight, Eye, BarChart3 } from "lucide-react";
 import BudgetManager from "@/components/finance/BudgetManager";
 import CategoryManager from "@/components/finance/CategoryManager";
 
@@ -92,6 +92,7 @@ export default function FinanceModule() {
   const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [showManagement, setShowManagement] = useState(false);
+  const [mobileView, setMobileView] = useState<'overview' | 'charts' | 'transactions' | 'budget'>('overview');
   
   // Form states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -114,14 +115,12 @@ export default function FinanceModule() {
   const selectedDate = new Date(selectedMonth + '-01');
   const selectedMonthName = selectedDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
 
-  // Get all available categories
   const allCategories = useMemo(() => {
     const defaultCats = [...defaultCategories.income, ...defaultCategories.expense];
     const customCats = customCategories.map(cat => cat.name);
     return [...defaultCats, ...customCats];
   }, [customCategories]);
 
-  // Update budget spent amounts based on transactions for selected month
   useEffect(() => {
     const selectedYear = selectedDate.getFullYear();
     const selectedMonthNum = selectedDate.getMonth();
@@ -157,7 +156,6 @@ export default function FinanceModule() {
     setBudgets(updatedBudgets);
   }, [transactions, selectedDate]);
 
-  // Save to localStorage
   useEffect(() => {
     localStorage.setItem("skoolife_transactions", JSON.stringify(transactions));
   }, [transactions]);
@@ -170,7 +168,6 @@ export default function FinanceModule() {
     localStorage.setItem("skoolife_custom_categories", JSON.stringify(customCategories));
   }, [customCategories]);
 
-  // Calculate selected month summary
   const selectedMonthData = useMemo(() => {
     const selectedYear = selectedDate.getFullYear();
     const selectedMonthNum = selectedDate.getMonth();
@@ -187,11 +184,9 @@ export default function FinanceModule() {
     return { income, expenses, net };
   }, [transactions, selectedDate]);
 
-  // Calculate monthly data for charts (6 months centered around selected month)
   const monthlyData = useMemo(() => {
     const months: { [key: string]: { month: string; income: number; expenses: number; net: number } } = {};
     
-    // Generate 6 months: 2 before selected, selected month, 3 after selected
     for (let i = -2; i <= 3; i++) {
       const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + i, 1);
       const monthKey = date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
@@ -215,7 +210,6 @@ export default function FinanceModule() {
     return Object.values(months);
   }, [transactions, selectedDate]);
 
-  // Expense breakdown for pie chart (selected month only)
   const expenseBreakdown = useMemo(() => {
     const selectedYear = selectedDate.getFullYear();
     const selectedMonthNum = selectedDate.getMonth();
@@ -237,7 +231,6 @@ export default function FinanceModule() {
       .sort((a, b) => b.value - a.value);
   }, [transactions, selectedDate]);
 
-  // Filter transactions for selected month in the list
   const monthFilteredTransactions = useMemo(() => {
     const selectedYear = selectedDate.getFullYear();
     const selectedMonthNum = selectedDate.getMonth();
@@ -248,7 +241,6 @@ export default function FinanceModule() {
     });
   }, [transactions, selectedDate]);
 
-  // Filter and sort transactions (now using month-filtered transactions)
   const filteredTransactions = useMemo(() => {
     let filtered = monthFilteredTransactions.filter(transaction => {
       const matchesSearch = transaction.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -258,7 +250,7 @@ export default function FinanceModule() {
       let matchesDate = true;
       if (dateFilter !== 'all') {
         const transactionDate = new Date(transaction.date);
-        const now = selectedDate; // Use selected date as reference
+        const now = selectedDate;
         
         switch (dateFilter) {
           case 'thisMonth':
@@ -291,7 +283,6 @@ export default function FinanceModule() {
     return symbols[currency] || currency;
   };
 
-  // Budget management
   const handleAddBudget = (budgetData: Omit<Budget, 'id' | 'spent'>) => {
     const newBudget: Budget = {
       ...budgetData,
@@ -309,7 +300,6 @@ export default function FinanceModule() {
     setBudgets(budgets.filter(b => b.id !== id));
   };
 
-  // Category management
   const handleAddCategory = (categoryData: Omit<CustomCategory, 'id'>) => {
     const newCategory: CustomCategory = {
       ...categoryData,
@@ -326,7 +316,6 @@ export default function FinanceModule() {
     setCustomCategories(customCategories.filter(c => c.id !== id));
   };
 
-  // Transaction management
   const handleAddTransaction = () => {
     const newTransaction: Transaction = {
       id: Date.now().toString(),
@@ -417,68 +406,100 @@ export default function FinanceModule() {
     setSelectedMonth(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
   };
 
+  // Mobile navigation items
+  const mobileNavItems = [
+    { id: 'overview', label: 'Vue d\'ensemble', icon: Eye },
+    { id: 'charts', label: 'Graphiques', icon: BarChart3 },
+    { id: 'transactions', label: 'Transactions', icon: Calendar },
+    { id: 'budget', label: 'Budget', icon: Wallet },
+  ];
+
   return (
-    <div className="space-y-6 p-4 sm:p-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Finances</h2>
-          <div className="flex items-center gap-3 mt-2">
-            <Button
-              onClick={() => navigateMonth('prev')}
-              variant="outline"
-              size="sm"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-            <div className="flex items-center gap-2">
-              <p className="text-gray-600 dark:text-gray-400 font-medium">{selectedMonthName}</p>
-              {selectedMonth !== `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}` && (
-                <Button
-                  onClick={goToCurrentMonth}
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs"
-                >
-                  Aujourd'hui
-                </Button>
-              )}
+    <div className="space-y-3 sm:space-y-6 p-2 sm:p-4 lg:p-6">
+      {/* Mobile-First Header */}
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Finances</h2>
+            <div className="flex items-center gap-2 mt-1">
+              <Button
+                onClick={() => navigateMonth('prev')}
+                variant="outline"
+                size="sm"
+                className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <div className="flex items-center gap-2">
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">{selectedMonthName}</p>
+                {selectedMonth !== `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}` && (
+                  <Button
+                    onClick={goToCurrentMonth}
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs h-6 px-2"
+                  >
+                    Aujourd'hui
+                  </Button>
+                )}
+              </div>
+              <Button
+                onClick={() => navigateMonth('next')}
+                variant="outline"
+                size="sm"
+                className="h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Select value={currency} onValueChange={setCurrency}>
+              <SelectTrigger className="w-16 sm:w-20 h-8 sm:h-9">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {currencies.map(curr => (
+                  <SelectItem key={curr} value={curr}>{curr}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button
-              onClick={() => navigateMonth('next')}
+              onClick={() => setShowManagement(!showManagement)}
               variant="outline"
               size="sm"
+              className="h-8 sm:h-9 px-2 sm:px-3"
             >
-              <ChevronRight className="w-4 h-4" />
+              <Settings className="w-4 h-4" />
+              <span className="ml-1 hidden sm:inline">Gestion</span>
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Button
-            onClick={() => setShowManagement(!showManagement)}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
-            <Settings className="w-4 h-4" />
-            Gestion
-          </Button>
-          <Select value={currency} onValueChange={setCurrency}>
-            <SelectTrigger className="w-24">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {currencies.map(curr => (
-                <SelectItem key={curr} value={curr}>{curr}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+
+        {/* Mobile Navigation Tabs */}
+        <div className="sm:hidden">
+          <div className="flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-sm border border-yellow-200 dark:border-gray-700">
+            {mobileNavItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setMobileView(item.id as any)}
+                className={`flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-md text-xs font-medium transition-all duration-200 ${
+                  mobileView === item.id
+                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-sm"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
+                }`}
+              >
+                <item.icon className="w-4 h-4" />
+                <span className="leading-none">{item.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Management Section */}
       {showManagement && (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <BudgetManager
             budgets={budgets}
             onAddBudget={handleAddBudget}
@@ -496,215 +517,222 @@ export default function FinanceModule() {
         </div>
       )}
 
-      {/* Dashboard Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Solde actuel</p>
-                <p className={`text-2xl font-bold ${selectedMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
-                  {getCurrencySymbol()}{selectedMonthData.net}
-                </p>
-              </div>
-              <div className={`p-3 rounded-full ${selectedMonthData.net >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-red-100 dark:bg-red-900/30'}`}>
-                <Wallet className={`w-6 h-6 ${selectedMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-emerald-200 dark:border-gray-700 shadow-lg">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Revenus</p>
-                <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                  {getCurrencySymbol()}{selectedMonthData.income}
-                </p>
-              </div>
-              <div className="p-3 rounded-full bg-emerald-100 dark:bg-emerald-900/30">
-                <TrendingUp className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-red-200 dark:border-gray-700 shadow-lg">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Dépenses</p>
-                <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-                  {getCurrencySymbol()}{selectedMonthData.expenses}
-                </p>
-              </div>
-              <div className="p-3 rounded-full bg-red-100 dark:bg-red-900/30">
-                <TrendingDown className="w-6 h-6 text-red-600 dark:text-red-400" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-blue-200 dark:border-gray-700 shadow-lg">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Transactions</p>
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  {filteredTransactions.length}
-                </p>
-              </div>
-              <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30">
-                <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* Monthly Evolution Chart */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Évolution mensuelle</CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={monthlyData}>
-                  <defs>
-                    <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0.1}/>
-                    </linearGradient>
-                    <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                  <XAxis 
-                    dataKey="month" 
-                    tick={{ fontSize: 12 }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis 
-                    tick={{ fontSize: 12 }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'var(--card)',
-                      border: '2px solid #fcd34d',
-                      borderRadius: '12px',
-                      boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
-                    }}
-                    formatter={(value: number, name: string) => [
-                      `${getCurrencySymbol()}${value}`,
-                      name === 'income' ? 'Revenus' : name === 'expenses' ? 'Dépenses' : name
-                    ]}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="income" 
-                    stroke="#10b981" 
-                    strokeWidth={3}
-                    fillOpacity={1} 
-                    fill="url(#incomeGradient)" 
-                    name="income"
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="expenses" 
-                    stroke="#ef4444" 
-                    strokeWidth={3}
-                    fillOpacity={1} 
-                    fill="url(#expenseGradient)" 
-                    name="expenses"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Expense Breakdown Donut Chart */}
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Répartition des dépenses</CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={expenseBreakdown}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={120}
-                    paddingAngle={2}
-                    dataKey="value"
-                  >
-                    {expenseBreakdown.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={pieColors[index % pieColors.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    formatter={(value: number) => [`${getCurrencySymbol()}${value}`, 'Montant']}
-                    contentStyle={{ 
-                      backgroundColor: 'var(--card)',
-                      border: '2px solid #fcd34d',
-                      borderRadius: '12px',
-                      boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {expenseBreakdown.slice(0, 6).map((entry, index) => (
-                <div key={entry.name} className="flex items-center gap-2 text-sm">
-                  <div 
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: pieColors[index % pieColors.length] }}
-                  />
-                  <span className="truncate">{entry.name}</span>
-                  <span className="font-medium ml-auto">
-                    {getCurrencySymbol()}{entry.value}
-                  </span>
+      {/* Mobile Overview */}
+      {(mobileView === 'overview' || window.innerWidth >= 640) && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">Solde actuel</p>
+                  <p className={`text-lg sm:text-2xl font-bold truncate ${selectedMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                    {getCurrencySymbol()}{selectedMonthData.net}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                <div className={`p-2 sm:p-3 rounded-full flex-shrink-0 ${selectedMonthData.net >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-red-100 dark:bg-red-900/30'}`}>
+                  <Wallet className={`w-4 h-4 sm:w-6 sm:h-6 ${selectedMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-      {/* Budget Section */}
-      {budgets.length > 0 && (
+          <Card className="border-emerald-200 dark:border-gray-700 shadow-lg">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">Revenus</p>
+                  <p className="text-lg sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 truncate">
+                    {getCurrencySymbol()}{selectedMonthData.income}
+                  </p>
+                </div>
+                <div className="p-2 sm:p-3 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
+                  <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-red-200 dark:border-gray-700 shadow-lg">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">Dépenses</p>
+                  <p className="text-lg sm:text-2xl font-bold text-red-600 dark:text-red-400 truncate">
+                    {getCurrencySymbol()}{selectedMonthData.expenses}
+                  </p>
+                </div>
+                <div className="p-2 sm:p-3 rounded-full bg-red-100 dark:bg-red-900/30 flex-shrink-0">
+                  <TrendingDown className="w-4 h-4 sm:w-6 sm:h-6 text-red-600 dark:text-red-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-blue-200 dark:border-gray-700 shadow-lg">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">Transactions</p>
+                  <p className="text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400 truncate">
+                    {filteredTransactions.length}
+                  </p>
+                </div>
+                <div className="p-2 sm:p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 flex-shrink-0">
+                  <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Mobile Charts Section */}
+      {(mobileView === 'charts' || window.innerWidth >= 640) && (
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+          {/* Monthly Evolution Chart */}
+          <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
+            <CardHeader className="pb-2 sm:pb-4">
+              <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Évolution mensuelle</CardTitle>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6">
+              <div className="h-48 sm:h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={monthlyData}>
+                    <defs>
+                      <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0.1}/>
+                      </linearGradient>
+                      <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <XAxis 
+                      dataKey="month" 
+                      tick={{ fontSize: 10 }}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 10 }}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'var(--card)',
+                        border: '2px solid #fcd34d',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                        fontSize: '12px'
+                      }}
+                      formatter={(value: number, name: string) => [
+                        `${getCurrencySymbol()}${value}`,
+                        name === 'income' ? 'Revenus' : name === 'expenses' ? 'Dépenses' : name
+                      ]}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="income" 
+                      stroke="#10b981" 
+                      strokeWidth={2}
+                      fillOpacity={1} 
+                      fill="url(#incomeGradient)" 
+                      name="income"
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="expenses" 
+                      stroke="#ef4444" 
+                      strokeWidth={2}
+                      fillOpacity={1} 
+                      fill="url(#expenseGradient)" 
+                      name="expenses"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Expense Breakdown Donut Chart */}
+          <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
+            <CardHeader className="pb-2 sm:pb-4">
+              <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Répartition des dépenses</CardTitle>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6">
+              <div className="h-48 sm:h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={expenseBreakdown}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={window.innerWidth < 640 ? 40 : 60}
+                      outerRadius={window.innerWidth < 640 ? 80 : 120}
+                      paddingAngle={2}
+                      dataKey="value"
+                    >
+                      {expenseBreakdown.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={pieColors[index % pieColors.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value: number) => [`${getCurrencySymbol()}${value}`, 'Montant']}
+                      contentStyle={{ 
+                        backgroundColor: 'var(--card)',
+                        border: '2px solid #fcd34d',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                        fontSize: '12px'
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="mt-3 sm:mt-4 grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
+                {expenseBreakdown.slice(0, 6).map((entry, index) => (
+                  <div key={entry.name} className="flex items-center gap-2 text-xs sm:text-sm">
+                    <div 
+                      className="w-2 h-2 sm:w-3 sm:h-3 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: pieColors[index % pieColors.length] }}
+                    />
+                    <span className="truncate flex-1">{entry.name}</span>
+                    <span className="font-medium">
+                      {getCurrencySymbol()}{entry.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Mobile Budget Section */}
+      {(mobileView === 'budget' || window.innerWidth >= 640) && budgets.length > 0 && (
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Budget - {selectedMonthName}</CardTitle>
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Budget - {selectedMonthName}</CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <CardContent className="p-3 sm:p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
               {budgets.map((budget) => {
                 const percentage = (budget.spent / budget.limit) * 100;
                 const isOverBudget = percentage > 100;
                 return (
-                  <div key={budget.category} className="space-y-2">
+                  <div key={budget.category} className="space-y-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {categoryIcons[budget.category]} {budget.category}
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                        <span className="text-base">{categoryIcons[budget.category]}</span>
+                        <span className="truncate">{budget.category}</span>
                       </span>
-                      <span className={`text-sm font-bold ${isOverBudget ? 'text-red-600' : 'text-gray-600'}`}>
+                      <span className={`text-xs sm:text-sm font-bold ${isOverBudget ? 'text-red-600' : 'text-gray-600'}`}>
                         {getCurrencySymbol()}{budget.spent} / {getCurrencySymbol()}{budget.limit}
                       </span>
                     </div>
@@ -723,269 +751,274 @@ export default function FinanceModule() {
         </Card>
       )}
 
-      {/* Transactions Section */}
-      <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Transactions - {selectedMonthName}</CardTitle>
-            <div className="flex gap-2">
-              <Button onClick={exportToCSV} variant="outline" size="sm">
-                <Download className="w-4 h-4 mr-2" />
-                Exporter CSV
-              </Button>
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button size="sm" className="bg-yellow-400 hover:bg-yellow-500 text-gray-900">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Ajouter
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Nouvelle transaction</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Select value={formData.type} onValueChange={(value: 'income' | 'expense') => setFormData({...formData, type: value, category: ''})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="income">Revenu</SelectItem>
-                        <SelectItem value="expense">Dépense</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      placeholder="Nom de la transaction"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    />
-                    <Input
-                      type="number"
-                      placeholder="Montant"
-                      value={formData.amount}
-                      onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                    />
-                    <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Catégorie" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {(formData.type === 'income' ? defaultCategories.income : defaultCategories.expense).map(cat => (
-                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                        ))}
-                        {customCategories
-                          .filter(cat => cat.type === formData.type)
-                          .map(cat => (
-                            <SelectItem key={cat.id} value={cat.name}>
-                              {cat.icon} {cat.name}
-                            </SelectItem>
-                          ))
-                        }
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => setFormData({...formData, date: e.target.value})}
-                    />
-                    <Button onClick={handleAddTransaction} className="w-full">
-                      Ajouter la transaction
+      {/* Mobile Transactions Section */}
+      {(mobileView === 'transactions' || window.innerWidth >= 640) && (
+        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
+          <CardHeader className="pb-3 sm:pb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+              <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Transactions - {selectedMonthName}</CardTitle>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <Button onClick={exportToCSV} variant="outline" size="sm" className="flex-1 sm:flex-none text-xs sm:text-sm">
+                  <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  Export
+                </Button>
+                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 flex-1 sm:flex-none text-xs sm:text-sm">
+                      <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                      Ajouter
                     </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+                  </DialogTrigger>
+                  <DialogContent className="w-[95vw] max-w-md mx-auto">
+                    <DialogHeader>
+                      <DialogTitle>Nouvelle transaction</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <Select value={formData.type} onValueChange={(value: 'income' | 'expense') => setFormData({...formData, type: value, category: ''})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="income">Revenu</SelectItem>
+                          <SelectItem value="expense">Dépense</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        placeholder="Nom de la transaction"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      />
+                      <Input
+                        type="number"
+                        placeholder="Montant"
+                        value={formData.amount}
+                        onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                      />
+                      <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Catégorie" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(formData.type === 'income' ? defaultCategories.income : defaultCategories.expense).map(cat => (
+                            <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                          ))}
+                          {customCategories
+                            .filter(cat => cat.type === formData.type)
+                            .map(cat => (
+                              <SelectItem key={cat.id} value={cat.name}>
+                                {cat.icon} {cat.name}
+                              </SelectItem>
+                            ))
+                          }
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        type="date"
+                        value={formData.date}
+                        onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      />
+                      <Button onClick={handleAddTransaction} className="w-full">
+                        Ajouter la transaction
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent className="p-6">
-          {/* Advanced Filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Rechercher..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={filterType} onValueChange={(value: 'all' | 'income' | 'expense') => setFilterType(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tous</SelectItem>
-                <SelectItem value="income">Revenus</SelectItem>
-                <SelectItem value="expense">Dépenses</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filterCategory} onValueChange={setFilterCategory}>
-              <SelectTrigger>
-                <SelectValue placeholder="Catégorie" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Toutes</SelectItem>
-                {allCategories.map(cat => (
-                  <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Période" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Toutes</SelectItem>
-                <SelectItem value="thisMonth">Ce mois</SelectItem>
-                <SelectItem value="lastMonth">Mois dernier</SelectItem>
-                <SelectItem value="thisYear">Cette année</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={sortBy} onValueChange={(value: 'date' | 'amount') => setSortBy(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Trier par" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="date">Date</SelectItem>
-                <SelectItem value="amount">Montant</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button
-              variant="outline"
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="flex items-center gap-2"
-            >
-              {sortOrder === 'asc' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />}
-              {sortOrder === 'asc' ? 'Croissant' : 'Décroissant'}
-            </Button>
-          </div>
-
-          {/* Timeline-style Transactions List */}
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {filteredTransactions.map((transaction, index) => (
-              <div 
-                key={transaction.id} 
-                className="group relative flex items-center gap-4 p-4 bg-gradient-to-r from-yellow-50 to-white dark:from-gray-800 dark:to-gray-700 rounded-lg border border-yellow-200 dark:border-gray-600 hover:shadow-lg transition-all duration-200"
+          </CardHeader>
+          <CardContent className="p-3 sm:p-6">
+            {/* Mobile-optimized Filters */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="relative sm:col-span-2 lg:col-span-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
+                <Input
+                  placeholder="Rechercher..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-8 sm:pl-10 text-sm h-9"
+                />
+              </div>
+              <Select value={filterType} onValueChange={(value: 'all' | 'income' | 'expense') => setFilterType(value)}>
+                <SelectTrigger className="h-9 text-sm">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tous</SelectItem>
+                  <SelectItem value="income">Revenus</SelectItem>
+                  <SelectItem value="expense">Dépenses</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={filterCategory} onValueChange={setFilterCategory}>
+                <SelectTrigger className="h-9 text-sm">
+                  <SelectValue placeholder="Catégorie" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Toutes</SelectItem>
+                  {allCategories.map(cat => (
+                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={sortBy} onValueChange={(value: 'date' | 'amount') => setSortBy(value)}>
+                <SelectTrigger className="h-9 text-sm">
+                  <SelectValue placeholder="Trier par" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="date">Date</SelectItem>
+                  <SelectItem value="amount">Montant</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                variant="outline"
+                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                className="flex items-center gap-1 sm:gap-2 h-9 text-sm"
               >
-                {/* Timeline dot */}
-                <div className={`w-3 h-3 rounded-full flex-shrink-0 ${transaction.type === 'income' ? 'bg-emerald-500' : 'bg-red-500'}`} />
-                
-                {/* Transaction content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-xl">{transaction.icon}</span>
-                      <div>
-                        <h4 className="font-medium text-gray-900 dark:text-white truncate">{transaction.name}</h4>
-                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span>{transaction.category}</span>
-                          <span>•</span>
-                          <span>{new Date(transaction.date).toLocaleDateString('fr-FR')}</span>
+                {sortOrder === 'asc' ? <ArrowUp className="w-3 h-3 sm:w-4 sm:h-4" /> : <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4" />}
+                <span className="hidden sm:inline">{sortOrder === 'asc' ? 'Croissant' : 'Décroissant'}</span>
+              </Button>
+            </div>
+
+            {/* Mobile-optimized Transactions List */}
+            <div className="space-y-2 sm:space-y-3 max-h-80 sm:max-h-96 overflow-y-auto">
+              {filteredTransactions.map((transaction, index) => (
+                <div 
+                  key={transaction.id} 
+                  className="group relative flex items-center gap-3 p-3 sm:p-4 bg-gradient-to-r from-yellow-50 to-white dark:from-gray-800 dark:to-gray-700 rounded-lg border border-yellow-200 dark:border-gray-600 hover:shadow-lg transition-all duration-200 touch-manipulation"
+                >
+                  {/* Timeline dot */}
+                  <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${transaction.type === 'income' ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                  
+                  {/* Transaction content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                        <span className="text-base sm:text-xl flex-shrink-0">{transaction.icon}</span>
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-medium text-gray-900 dark:text-white truncate text-sm sm:text-base">{transaction.name}</h4>
+                          <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                            <span className="truncate">{transaction.category}</span>
+                            <span>•</span>
+                            <span className="flex-shrink-0">{new Date(transaction.date).toLocaleDateString('fr-FR')}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <span className={`font-bold text-lg ${
-                        transaction.type === 'income' 
-                          ? 'text-emerald-600 dark:text-emerald-400' 
-                          : 'text-red-600 dark:text-red-400'
-                      }`}>
-                        {transaction.type === 'income' ? '+' : '-'}{getCurrencySymbol()}{transaction.amount}
-                      </span>
                       
-                      {/* Floating action buttons */}
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                        <Dialog open={editingTransaction?.id === transaction.id} onOpenChange={(open) => !open && setEditingTransaction(null)}>
-                          <DialogTrigger asChild>
-                            <Button variant="ghost" size="sm" onClick={() => startEdit(transaction)}>
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Modifier la transaction</DialogTitle>
-                            </DialogHeader>
-                            <div className="space-y-4">
-                              <Select value={formData.type} onValueChange={(value: 'income' | 'expense') => setFormData({...formData, type: value})}>
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="income">Revenu</SelectItem>
-                                  <SelectItem value="expense">Dépense</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <Input
-                                placeholder="Nom"
-                                value={formData.name}
-                                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                              />
-                              <Input
-                                type="number"
-                                placeholder="Montant"
-                                value={formData.amount}
-                                onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                              />
-                              <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {(formData.type === 'income' ? defaultCategories.income : defaultCategories.expense).map(cat => (
-                                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                                  ))}
-                                  {customCategories
-                                    .filter(cat => cat.type === formData.type)
-                                    .map(cat => (
-                                      <SelectItem key={cat.id} value={cat.name}>
-                                        {cat.icon} {cat.name}
-                                      </SelectItem>
-                                    ))
-                                  }
-                                </SelectContent>
-                              </Select>
-                              <Input
-                                type="date"
-                                value={formData.date}
-                                onChange={(e) => setFormData({...formData, date: e.target.value})}
-                              />
-                              <Button onClick={handleEditTransaction} className="w-full">
-                                Mettre à jour
+                      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                        <span className={`font-bold text-sm sm:text-lg ${
+                          transaction.type === 'income' 
+                            ? 'text-emerald-600 dark:text-emerald-400' 
+                            : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          {transaction.type === 'income' ? '+' : '-'}{getCurrencySymbol()}{transaction.amount}
+                        </span>
+                        
+                        {/* Mobile-friendly action buttons */}
+                        <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                          <Dialog open={editingTransaction?.id === transaction.id} onOpenChange={(open) => !open && setEditingTransaction(null)}>
+                            <DialogTrigger asChild>
+                              <Button variant="ghost" size="sm" onClick={() => startEdit(transaction)} className="h-8 w-8 p-0">
+                                <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                               </Button>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <Trash2 className="w-4 h-4 text-red-500" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Supprimer la transaction</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Êtes-vous sûr de vouloir supprimer cette transaction ? Cette action ne peut pas être annulée.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDeleteTransaction(transaction.id)}>
-                                Supprimer
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                            </DialogTrigger>
+                            <DialogContent className="w-[95vw] max-w-md mx-auto">
+                              <DialogHeader>
+                                <DialogTitle>Modifier la transaction</DialogTitle>
+                              </DialogHeader>
+                              <div className="space-y-4">
+                                <Select value={formData.type} onValueChange={(value: 'income' | 'expense') => setFormData({...formData, type: value})}>
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="income">Revenu</SelectItem>
+                                    <SelectItem value="expense">Dépense</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <Input
+                                  placeholder="Nom"
+                                  value={formData.name}
+                                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                />
+                                <Input
+                                  type="number"
+                                  placeholder="Montant"
+                                  value={formData.amount}
+                                  onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                                />
+                                <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {(formData.type === 'income' ? defaultCategories.income : defaultCategories.expense).map(cat => (
+                                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                                    ))}
+                                    {customCategories
+                                      .filter(cat => cat.type === formData.type)
+                                      .map(cat => (
+                                        <SelectItem key={cat.id} value={cat.name}>
+                                          {cat.icon} {cat.name}
+                                        </SelectItem>
+                                      ))
+                                    }
+                                  </SelectContent>
+                                </Select>
+                                <Input
+                                  type="date"
+                                  value={formData.date}
+                                  onChange={(e) => setFormData({...formData, date: e.target.value})}
+                                />
+                                <Button onClick={handleEditTransaction} className="w-full">
+                                  Mettre à jour
+                                </Button>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="w-[95vw] max-w-md mx-auto">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Supprimer la transaction</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Êtes-vous sûr de vouloir supprimer cette transaction ? Cette action ne peut pas être annulée.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDeleteTransaction(transaction.id)}>
+                                  Supprimer
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Floating Action Button for Mobile */}
+      <div className="sm:hidden fixed bottom-6 right-6 z-50">
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogTrigger asChild>
+            <Button
+              size="lg"
+              className="h-14 w-14 rounded-full bg-gradient-to-r from-[#F6C103] to-[#E5AD03] hover:from-[#E5AD03] hover:to-[#D4A103] text-gray-900 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+            >
+              <Plus className="w-6 h-6" />
+            </Button>
+          </DialogTrigger>
+        </Dialog>
+      </div>
     </div>
   );
 }
