@@ -33,12 +33,12 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-[#F6C103] dark:border-gray-700 shadow-sm">
+      {/* Sticky Header - Enhanced for native mobile feel */}
+      <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-[#F6C103] dark:border-gray-700 shadow-lg lg:shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Left: Brand */}
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AD03] dark:from-[#F6C103] dark:to-[#E5AD03] bg-clip-text text-transparent">
+          <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
+            {/* Left: Brand - Optimized for mobile */}
+            <h1 className="text-lg sm:text-xl lg:text-3xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AD03] dark:from-[#F6C103] dark:to-[#E5AD03] bg-clip-text text-transparent">
               SKOOLIFE
             </h1>
             
@@ -61,46 +61,46 @@ export default function Index() {
               </div>
             </nav>
 
-            {/* Mobile Navigation Controls - Home button + Menu button */}
-            <div className="lg:hidden flex items-center gap-2">
+            {/* Mobile Navigation Controls - Enhanced native feel */}
+            <div className="lg:hidden flex items-center gap-1">
               <button
                 onClick={() => handleNavigation("home")}
-                className={`p-2 rounded-md transition-colors ${
+                className={`p-3 rounded-xl transition-all duration-200 touch-manipulation ${
                   view === "home"
-                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900"
-                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-lg scale-105"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95"
                 }`}
               >
-                <Home className="h-6 w-6" />
+                <Home className="h-5 w-5" />
               </button>
               
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="p-3 rounded-xl text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 touch-manipulation"
               >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
             </div>
             
-            {/* Right: User Controls - Hidden on small mobile, visible on larger screens */}
+            {/* Right: User Controls - Enhanced for mobile */}
             <div className="hidden sm:flex items-center gap-2 lg:gap-3">
               <ThemeToggle />
               <UserAccountMenu />
             </div>
           </div>
 
-          {/* Mobile Navigation Menu */}
+          {/* Mobile Navigation Menu - Native app style */}
           {mobileMenuOpen && (
-            <div className="lg:hidden border-t border-[#F6C103] dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-lg shadow-lg">
-              <div className="px-2 py-3 space-y-1">
+            <div className="lg:hidden border-t border-[#F6C103]/20 dark:border-gray-700/50 bg-white/98 dark:bg-gray-800/98 backdrop-blur-xl rounded-b-2xl shadow-2xl mx-2 mb-2">
+              <div className="px-4 py-4 space-y-2">
                 {mobileNavigationItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleNavigation(item.id)}
-                    className={`block w-full text-left px-3 py-2 rounded-md font-medium transition-colors ${
+                    className={`flex w-full text-left px-4 py-4 rounded-xl font-medium transition-all duration-200 touch-manipulation active:scale-95 ${
                       view === item.id
-                        ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900"
-                        : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-[#FEF7D6] dark:hover:bg-gray-700"
+                        ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-lg transform scale-[1.02]"
+                        : "text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-[#FEF7D6]/50 dark:hover:bg-gray-700/50"
                     }`}
                   >
                     {item.label}
@@ -108,8 +108,8 @@ export default function Index() {
                 ))}
               </div>
               
-              {/* Mobile User Controls */}
-              <div className="sm:hidden border-t border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-center gap-3 bg-gray-50 dark:bg-gray-750">
+              {/* Mobile User Controls - Native style */}
+              <div className="sm:hidden border-t border-gray-200/30 dark:border-gray-700/30 px-4 py-4 flex items-center justify-center gap-4 bg-gray-50/80 dark:bg-gray-750/80 rounded-b-2xl">
                 <ThemeToggle />
                 <UserAccountMenu />
               </div>
@@ -118,8 +118,8 @@ export default function Index() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      {/* Main Content - Enhanced mobile spacing */}
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-8">
         <div className="w-full">
           {view === "home" && <HomeModule onNavigate={handleNavigation} />}
           {view === "finances" && <FinanceModule />}
