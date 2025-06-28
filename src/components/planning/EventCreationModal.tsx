@@ -28,9 +28,21 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
 }) => {
   const [eventName, setEventName] = useState("");
   const [selectedTypeId, setSelectedTypeId] = useState("class");
+  const [selectedDay, setSelectedDay] = useState(initialData.day);
   const [startTime, setStartTime] = useState(initialData.startTime);
   const [endTime, setEndTime] = useState(initialData.endTime);
   const [dynamicFields, setDynamicFields] = useState<Record<string, string>>({});
+
+  // Days of the week in French
+  const daysOfWeek = [
+    'lundi',
+    'mardi', 
+    'mercredi',
+    'jeudi',
+    'vendredi',
+    'samedi',
+    'dimanche'
+  ];
 
   // Generate 15-minute intervals from 7:00 to 22:00
   const generateTimeSlots = () => {
@@ -48,6 +60,7 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      setSelectedDay(initialData.day);
       setStartTime(initialData.startTime);
       setEndTime(initialData.endTime);
       setEventName("");
@@ -75,7 +88,7 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
     if (!eventType) return;
     
     const eventData: Partial<Event> = {
-      day: initialData.day,
+      day: selectedDay,
       startTime,
       endTime,
       name: eventName,
@@ -119,6 +132,25 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
             autoFocus
           />
           
+          {/* Day Selection */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Jour
+            </label>
+            <Select value={selectedDay} onValueChange={setSelectedDay}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {daysOfWeek.map(day => (
+                  <SelectItem key={day} value={day} className="capitalize">
+                    {day}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
           {/* Time Selection */}
           <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center gap-2">
@@ -146,8 +178,6 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
                 </SelectContent>
               </Select>
             </div>
-            
-            <span className="ml-2">{initialData.day}</span>
           </div>
 
           {/* Event Type Selection */}
