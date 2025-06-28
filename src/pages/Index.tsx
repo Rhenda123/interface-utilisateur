@@ -8,7 +8,7 @@ import ScheduleModule from "@/components/ScheduleModule";
 import DocumentsModule from "@/components/DocumentsModule";
 import ForumModule from "@/components/ForumModule";
 import FinanceModule from "@/components/FinanceModule";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Home } from "lucide-react";
 
 export default function Index() {
   const [view, setView] = useState("home");
@@ -27,6 +27,9 @@ export default function Index() {
     { id: "documents", label: "Documents" },
     { id: "forum", label: "Forum" }
   ];
+
+  // Navigation items for mobile menu (excluding home)
+  const mobileNavigationItems = navigationItems.filter(item => item.id !== "home");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
@@ -58,13 +61,26 @@ export default function Index() {
               </div>
             </nav>
 
-            {/* Mobile Menu Button - Visible on mobile/tablet */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            {/* Mobile Navigation Controls - Home button + Menu button */}
+            <div className="lg:hidden flex items-center gap-2">
+              <button
+                onClick={() => handleNavigation("home")}
+                className={`p-2 rounded-md transition-colors ${
+                  view === "home"
+                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                <Home className="h-6 w-6" />
+              </button>
+              
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
             
             {/* Right: User Controls - Hidden on small mobile, visible on larger screens */}
             <div className="hidden sm:flex items-center gap-2 lg:gap-3">
@@ -77,7 +93,7 @@ export default function Index() {
           {mobileMenuOpen && (
             <div className="lg:hidden border-t border-[#F6C103] dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-lg shadow-lg">
               <div className="px-2 py-3 space-y-1">
-                {navigationItems.map((item) => (
+                {mobileNavigationItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleNavigation(item.id)}
