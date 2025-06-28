@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -72,14 +71,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   }).length;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3 font-display tracking-tight">
             Tableau de bord
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-lg text-gray-600 dark:text-gray-400 font-medium">
             Vue d'ensemble de vos activités
           </p>
         </div>
@@ -92,7 +91,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Wallet className="w-6 h-6 text-blue-600" />
-                  <span className="text-xl font-bold text-gray-900 dark:text-white">Finances</span>
+                  <span className="text-2xl font-bold text-gray-900 dark:text-white font-display tracking-tight">Finances</span>
                 </div>
                 <ArrowRight className="w-5 h-5 text-gray-400" />
               </CardTitle>
@@ -100,33 +99,33 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <CardContent className="space-y-6">
               {/* Balance */}
               <div className="text-center">
-                <div className={`text-3xl font-bold mb-2 ${netBalance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <div className={`text-4xl font-bold mb-2 font-display tracking-tight ${netBalance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   €{Math.abs(netBalance).toLocaleString()}
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Solde ce mois</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Solde ce mois</p>
               </div>
 
               {/* Income/Expenses */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                   <TrendingUp className="w-5 h-5 text-green-600 mx-auto mb-1" />
-                  <p className="text-sm font-semibold text-green-700 dark:text-green-400">
+                  <p className="text-sm font-semibold text-green-700 dark:text-green-400 font-display">
                     €{monthlyIncome.toLocaleString()}
                   </p>
-                  <p className="text-xs text-green-600 dark:text-green-500">Revenus</p>
+                  <p className="text-xs text-green-600 dark:text-green-500 font-medium">Revenus</p>
                 </div>
                 <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
                   <TrendingDown className="w-5 h-5 text-red-600 mx-auto mb-1" />
-                  <p className="text-sm font-semibold text-red-700 dark:text-red-400">
+                  <p className="text-sm font-semibold text-red-700 dark:text-red-400 font-display">
                     €{monthlyExpenses.toLocaleString()}
                   </p>
-                  <p className="text-xs text-red-600 dark:text-red-500">Dépenses</p>
+                  <p className="text-xs text-red-600 dark:text-red-500 font-medium">Dépenses</p>
                 </div>
               </div>
 
               <Button 
                 variant="outline" 
-                className="w-full" 
+                className="w-full font-medium" 
                 onClick={(e) => {
                   e.stopPropagation();
                   onNavigate?.('finances');
@@ -144,7 +143,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <CheckCircle2 className="w-6 h-6 text-purple-600" />
-                  <span className="text-xl font-bold text-gray-900 dark:text-white">Tâches</span>
+                  <span className="text-2xl font-bold text-gray-900 dark:text-white font-display tracking-tight">Tâches</span>
                 </div>
                 <ArrowRight className="w-5 h-5 text-gray-400" />
               </CardTitle>
@@ -152,30 +151,30 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <CardContent className="space-y-6">
               {/* Progress */}
               <div className="text-center">
-                <div className="text-3xl font-bold mb-2 text-purple-600">
+                <div className="text-4xl font-bold mb-2 text-purple-600 font-display tracking-tight">
                   {Math.round(taskProgress)}%
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Progression</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Progression</p>
               </div>
 
               {/* Progress Bar */}
               <div className="space-y-2">
                 <Progress value={taskProgress} className="h-3" />
-                <p className="text-sm text-gray-500 text-center">
+                <p className="text-sm text-gray-500 text-center font-medium">
                   {completedTasks} sur {totalTasks} tâches terminées
                 </p>
               </div>
 
               {/* Tasks Summary */}
               <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                <p className="text-sm font-semibold text-purple-700 dark:text-purple-400">
+                <p className="text-sm font-semibold text-purple-700 dark:text-purple-400 font-display">
                   {totalTasks - completedTasks} tâches restantes
                 </p>
               </div>
 
               <Button 
                 variant="outline" 
-                className="w-full" 
+                className="w-full font-medium" 
                 onClick={(e) => {
                   e.stopPropagation();
                   onNavigate?.('todo');
@@ -193,7 +192,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-6 h-6 text-cyan-600" />
-                  <span className="text-xl font-bold text-gray-900 dark:text-white">Planning</span>
+                  <span className="text-2xl font-bold text-gray-900 dark:text-white font-display tracking-tight">Planning</span>
                 </div>
                 <ArrowRight className="w-5 h-5 text-gray-400" />
               </CardTitle>
@@ -201,16 +200,16 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <CardContent className="space-y-6">
               {/* Today's Events */}
               <div className="text-center">
-                <div className="text-3xl font-bold mb-2 text-cyan-600">
+                <div className="text-4xl font-bold mb-2 text-cyan-600 font-display tracking-tight">
                   {todayEvents}
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Événements aujourd'hui</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Événements aujourd'hui</p>
               </div>
 
               {/* Calendar Visual */}
               <div className="text-center p-4 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg">
                 <Calendar className="w-12 h-12 text-cyan-600 mx-auto mb-2" />
-                <p className="text-sm text-cyan-700 dark:text-cyan-400">
+                <p className="text-sm text-cyan-700 dark:text-cyan-400 font-medium">
                   {new Date().toLocaleDateString('fr-FR', { 
                     weekday: 'long', 
                     day: 'numeric', 
@@ -221,7 +220,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
               <Button 
                 variant="outline" 
-                className="w-full" 
+                className="w-full font-medium" 
                 onClick={(e) => {
                   e.stopPropagation();
                   onNavigate?.('planning');
