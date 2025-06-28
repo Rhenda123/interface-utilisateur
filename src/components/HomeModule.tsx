@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -615,58 +614,88 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   </div>
                 </div>
 
-                {/* Centered and Modern Budget Progress Bar */}
-                {totalBudget > 0 && (
-                  <div className="flex justify-center">
-                    <div className="w-full max-w-md bg-white dark:bg-gray-900/50 rounded-2xl p-6 border-2 border-gradient-to-r from-[#F6C103] to-[#E5AC00] shadow-lg">
-                      <div className="text-center mb-6">
-                        <h5 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                          Budget utilisé
-                        </h5>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          Ce mois-ci
-                        </p>
-                      </div>
-                      
-                      <div className="relative mb-3">
-                        <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-4 shadow-inner">
-                          <div 
-                            className="bg-gradient-to-r from-[#F6C103] via-[#E5AC00] to-[#D4A200] h-4 rounded-full transition-all duration-700 ease-in-out shadow-lg relative overflow-hidden" 
-                            style={{ width: `${Math.min(budgetProgress, 100)}%` }}
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Progress percentage indicator - moved below the bar */}
-                      <div className="text-center mb-4">
-                        <div className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] text-white text-sm font-bold px-4 py-1 rounded-full shadow-lg inline-block">
-                          {budgetProgress.toFixed(0)}%
-                        </div>
-                      </div>
-                      
-                      <div className="flex justify-between items-center text-sm">
-                        <div className="text-center">
-                          <div className="font-bold text-red-600 dark:text-red-400">
-                            €{budgetSpent.toFixed(0)}
-                          </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
-                            Dépensé
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <div className="font-bold text-gray-600 dark:text-gray-300">
-                            €{totalBudget.toFixed(0)}
-                          </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
-                            Budget total
-                          </div>
-                        </div>
-                      </div>
+                {/* Always show Budget Progress Section */}
+                <div className="flex justify-center">
+                  <div className="w-full max-w-md bg-white dark:bg-gray-900/50 rounded-2xl p-6 border-2 border-gradient-to-r from-[#F6C103] to-[#E5AC00] shadow-lg">
+                    <div className="text-center mb-6">
+                      <h5 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+                        Budget utilisé
+                      </h5>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Ce mois-ci
+                      </p>
                     </div>
+                    
+                    {totalBudget > 0 ? (
+                      <>
+                        <div className="relative mb-3">
+                          <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-4 shadow-inner">
+                            <div 
+                              className="bg-gradient-to-r from-[#F6C103] via-[#E5AC00] to-[#D4A200] h-4 rounded-full transition-all duration-700 ease-in-out shadow-lg relative overflow-hidden" 
+                              style={{ width: `${Math.min(budgetProgress, 100)}%` }}
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Progress percentage indicator - moved below the bar */}
+                        <div className="text-center mb-4">
+                          <div className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] text-white text-sm font-bold px-4 py-1 rounded-full shadow-lg inline-block">
+                            {budgetProgress.toFixed(0)}%
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between items-center text-sm">
+                          <div className="text-center">
+                            <div className="font-bold text-red-600 dark:text-red-400">
+                              €{budgetSpent.toFixed(0)}
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              Dépensé
+                            </div>
+                          </div>
+                          <div className="text-center">
+                            <div className="font-bold text-gray-600 dark:text-gray-300">
+                              €{totalBudget.toFixed(0)}
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              Budget total
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="relative mb-3">
+                          <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-4 shadow-inner">
+                            <div className="bg-gray-300 dark:bg-gray-600 h-4 rounded-full w-0"></div>
+                          </div>
+                        </div>
+                        
+                        {/* Progress percentage indicator - moved below the bar */}
+                        <div className="text-center mb-4">
+                          <div className="bg-gray-400 dark:bg-gray-600 text-white text-sm font-bold px-4 py-1 rounded-full shadow-lg inline-block">
+                            0%
+                          </div>
+                        </div>
+                        
+                        <div className="text-center text-sm text-gray-500 dark:text-gray-400 mb-3">
+                          Aucun budget configuré
+                        </div>
+                        <div className="flex justify-center">
+                          <Button
+                            onClick={() => onNavigate?.('finances')}
+                            size="sm"
+                            className="text-xs px-4 py-2 rounded-full bg-gradient-to-r from-[#F6C103] to-[#E5AC00] text-white hover:from-[#E5AC00] hover:to-[#D4A200]"
+                          >
+                            Créer un budget
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </CardContent>
