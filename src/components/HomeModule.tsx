@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
-import { Calendar, Clock, FileText, MessageSquare, TrendingUp, AlertCircle, CheckCircle, ArrowRight, Eye, Users, BookOpen, Target } from "lucide-react";
+import { Calendar, Clock, FileText, MessageSquare, TrendingUp, TrendingDown, AlertCircle, CheckCircle, ArrowRight, Eye, Users, BookOpen, Target, DollarSign, Wallet } from "lucide-react";
 
 interface HomeModuleProps {
   onNavigate?: (view: string) => void;
@@ -554,11 +554,12 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
       {/* Enhanced Responsive Content Grid */}
       <div className={`grid ${gridConfig.contentGrid} gap-4 sm:gap-6`}>
-        {/* Enhanced Finance Summary with real-time updates */}
+        {/* Redesigned Finance Summary with modern clean layout */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <Wallet className="w-5 h-5 text-[#F6C103]" />
                 Finances
               </h3>
               <Button
@@ -570,34 +571,78 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </div>
+            
+            {/* Modern Financial Overview */}
             <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600 dark:text-gray-300">Ce mois</span>
-                <span className="font-semibold text-red-600 dark:text-red-400">€{monthlySpending.toFixed(2)}</span>
-              </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div 
-                  className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] h-2 rounded-full transition-all duration-500" 
-                  style={{ width: `${Math.min(budgetProgress, 100)}%` }}
-                ></div>
-              </div>
-              {gridConfig.showCharts && (
-                <div className={gridConfig.chartHeight}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={financeData}>
-                      <Bar dataKey="amount" fill="#F6C103" radius={[4, 4, 0, 0]} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'var(--card)',
-                          border: '2px solid #F6C103',
-                          borderRadius: '8px',
-                          color: 'var(--card-foreground)'
-                        }}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
+              {/* Income/Expense Cards */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="w-4 h-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-700 dark:text-green-300">Revenus</span>
+                  </div>
+                  <div className="text-lg font-bold text-green-600 dark:text-green-400">
+                    €{currentMonthData.income.toFixed(0)}
+                  </div>
                 </div>
-              )}
+                
+                <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 border border-red-200 dark:border-red-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingDown className="w-4 h-4 text-red-600" />
+                    <span className="text-sm font-medium text-red-700 dark:text-red-300">Dépenses</span>
+                  </div>
+                  <div className="text-lg font-bold text-red-600 dark:text-red-400">
+                    €{currentMonthData.expenses.toFixed(0)}
+                  </div>
+                </div>
+              </div>
+
+              {/* Budget Progress */}
+              <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Budget ce mois</span>
+                  <span className="text-sm font-semibold text-[#F6C103]">
+                    {budgetProgress.toFixed(0)}%
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
+                  <div 
+                    className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] h-3 rounded-full transition-all duration-500 relative overflow-hidden" 
+                    style={{ width: `${Math.min(budgetProgress, 100)}%` }}
+                  >
+                    <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                  </div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
+                  <span>€{budgetSpent.toFixed(0)} utilisé</span>
+                  <span>€{totalBudget.toFixed(0)} total</span>
+                </div>
+              </div>
+
+              {/* Net Balance Indicator */}
+              <div className={`rounded-xl p-4 border-2 ${
+                currentBalance >= 0 
+                  ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700' 
+                  : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className={`w-5 h-5 ${
+                      currentBalance >= 0 ? 'text-green-600' : 'text-red-600'
+                    }`} />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Solde net
+                    </span>
+                  </div>
+                  <div className={`text-xl font-bold ${
+                    currentBalance >= 0 
+                      ? 'text-green-600 dark:text-green-400' 
+                      : 'text-red-600 dark:text-red-400'
+                  }`}>
+                    €{currentBalance.toFixed(0)}
+                  </div>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
