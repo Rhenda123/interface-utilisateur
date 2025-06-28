@@ -1,12 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, X, Check, Filter, Bell } from "lucide-react";
+import { Plus, Filter } from "lucide-react";
 import { eventTypes, getEventTypeById, Event } from "@/utils/eventTypes";
-import EventDetailsPopover from "@/components/EventDetailsPopover";
 import TimeAxis from "@/components/planning/TimeAxis";
 import WeekNavigation from "@/components/planning/WeekNavigation";
 import DayColumn from "@/components/planning/DayColumn";
@@ -19,7 +16,7 @@ function ScheduleModule() {
   const getDaysOfWeek = (date: Date) => {
     const startOfWeek = new Date(date);
     const day = startOfWeek.getDay();
-    const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Monday start
+    const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
     startOfWeek.setDate(diff);
     
     const days = [];
@@ -37,7 +34,6 @@ function ScheduleModule() {
 
   const days = getDaysOfWeek(currentWeek);
   
-  // Generate 15-minute intervals from 7:00 to 22:00
   const generateTimeSlots = () => {
     const slots = [];
     for (let hour = 7; hour <= 22; hour++) {
@@ -56,15 +52,6 @@ function ScheduleModule() {
     return saved ? JSON.parse(saved) : [];
   });
   
-  const [selectedDay, setSelectedDay] = useState("Lundi");
-  const [startTime, setStartTime] = useState("08:00");
-  const [endTime, setEndTime] = useState("09:00");
-  const [eventName, setEventName] = useState("");
-  const [selectedTypeId, setSelectedTypeId] = useState("class");
-  const [isRecurring, setIsRecurring] = useState(false);
-  const [recurringPattern, setRecurringPattern] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
-  const [dynamicFields, setDynamicFields] = useState<Record<string, string>>({});
-  const [customReminders, setCustomReminders] = useState<number[]>([]);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   
   // Filter states
@@ -72,11 +59,11 @@ function ScheduleModule() {
     new Set(eventTypes.map(type => type.id))
   );
   const [showFilters, setShowFilters] = useState(false);
-  const [showEventForm, setShowEventForm] = useState(false);
 
-  // Modal states - replacing the top form approach
+  // Modal states
   const [showQuickCreateModal, setShowQuickCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showFullCreateModal, setShowFullCreateModal] = useState(false);
   const [quickCreateData, setQuickCreateData] = useState<{
     day: string;
     startTime: string;
@@ -86,19 +73,6 @@ function ScheduleModule() {
   useEffect(() => {
     localStorage.setItem("skoolife_events", JSON.stringify(events));
   }, [events]);
-
-  useEffect(() => {
-    // Reset dynamic fields when event type changes
-    const eventType = getEventTypeById(selectedTypeId);
-    if (eventType) {
-      const newFields: Record<string, string> = {};
-      eventType.fields.forEach(field => {
-        newFields[field.id] = "";
-      });
-      setDynamicFields(newFields);
-      setCustomReminders([...eventType.reminderDefaults]);
-    }
-  }, [selectedTypeId]);
 
   const getEventsForDay = (dayName: string): Event[] => {
     return events.filter(e => 
@@ -121,6 +95,7 @@ function ScheduleModule() {
           : e
       ));
       setEditingEvent(null);
+      setShowEditModal(false);
     } else {
       const newEvent: Event = {
         id: Date.now().toString(),
@@ -128,21 +103,10 @@ function ScheduleModule() {
       };
       setEvents([...events, newEvent]);
     }
-    
-    resetForm();
   };
 
   const editEvent = (event: Event) => {
     setEditingEvent(event);
-    setSelectedDay(event.day);
-    setStartTime(event.startTime);
-    setEndTime(event.endTime);
-    setEventName(event.name);
-    setSelectedTypeId(event.typeId);
-    setIsRecurring(event.isRecurring);
-    setRecurringPattern(event.recurringPattern || 'weekly');
-    setDynamicFields({ ...event.dynamicFields });
-    setCustomReminders([...event.reminders]);
     setShowEditModal(true);
   };
 
@@ -150,17 +114,6 @@ function ScheduleModule() {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
       setEvents(events.filter(e => e.id !== eventId));
     }
-  };
-
-  const resetForm = () => {
-    setEventName("");
-    setStartTime("08:00");
-    setEndTime("09:00");
-    setIsRecurring(false);
-    setDynamicFields({});
-    setCustomReminders([]);
-    setEditingEvent(null);
-    setShowEditModal(false);
   };
 
   const toggleEventTypeVisibility = (typeId: string) => {
@@ -171,13 +124,6 @@ function ScheduleModule() {
       newVisible.add(typeId);
     }
     setVisibleEventTypes(newVisible);
-  };
-
-  const updateDynamicField = (fieldId: string, value: string) => {
-    setDynamicFields(prev => ({
-      ...prev,
-      [fieldId]: value
-    }));
   };
 
   const handleTimeSlotClick = (day: string, hour: number) => {
@@ -213,12 +159,8 @@ function ScheduleModule() {
 
   const handleMoreOptions = () => {
     if (quickCreateData) {
-      setSelectedDay(quickCreateData.day);
-      setStartTime(quickCreateData.startTime);
-      setEndTime(quickCreateData.endTime);
       setShowQuickCreateModal(false);
-      setShowEventForm(true);
-      resetForm();
+      setShowFullCreateModal(true);
     }
   };
 
@@ -238,15 +180,13 @@ function ScheduleModule() {
     setCurrentWeek(new Date());
   };
 
-  const selectedEventType = getEventTypeById(selectedTypeId);
-
   return (
     <div className="space-y-6 p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Mon Planning</h2>
         <div className="flex items-center gap-3">
           <Button
-            onClick={() => setShowEventForm(!showEventForm)}
+            onClick={() => setShowFullCreateModal(true)}
             className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
@@ -301,10 +241,8 @@ function ScheduleModule() {
         
         <CardContent className="p-0">
           <div className="flex">
-            {/* Time Column */}
             <TimeAxis className="w-20 flex-shrink-0" />
 
-            {/* Days Columns */}
             <div className="flex-1 overflow-x-auto">
               <div className="flex min-w-[1000px]">
                 {days.map((day) => (
@@ -333,6 +271,15 @@ function ScheduleModule() {
           onMoreOptions={handleMoreOptions}
         />
       )}
+
+      {/* Full Create Modal */}
+      <EventCreationModal
+        isOpen={showFullCreateModal}
+        onClose={() => setShowFullCreateModal(false)}
+        onSave={addOrUpdateEvent}
+        initialData={quickCreateData || { day: days[0]?.name || 'Lundi', startTime: '08:00', endTime: '09:00' }}
+        onMoreOptions={() => {}}
+      />
 
       {/* Edit Event Modal */}
       {editingEvent && (
