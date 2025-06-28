@@ -270,6 +270,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     return updatedBudgets;
   };
 
+  // Get today's day name in French format matching ScheduleModule
+  const getTodayDayName = () => {
+    const today = new Date();
+    const dayName = today.toLocaleDateString('fr-FR', { weekday: 'long' });
+    // Capitalize first letter to match ScheduleModule format
+    return dayName.charAt(0).toUpperCase() + dayName.slice(1);
+  };
+
   // Real-time calculations that update automatically
   const completedTasks = tasks.filter((task: any) => task.completed).length;
   const pendingTasks = tasks.length - completedTasks;
@@ -286,11 +294,15 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
      (task.deadline && new Date(task.deadline) <= new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)))
   );
 
+  // Enhanced today's events calculation
+  const todayDayName = getTodayDayName();
   const todaysEvents = events.filter((event: any) => {
-    const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long' });
-    const todayFrench = today.charAt(0).toUpperCase() + today.slice(1);
-    return event.day === todayFrench;
+    console.log('Checking event:', event.name, 'Day:', event.day, 'Today:', todayDayName);
+    return event.day === todayDayName;
   });
+  
+  console.log('Today is:', todayDayName);
+  console.log('Today\'s events:', todaysEvents);
 
   const thisWeekEvents = events.filter((event: any) => {
     const today = new Date();
