@@ -556,7 +556,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
       {/* Enhanced Responsive Content Grid - Updated to show 3 cards in a row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {/* Redesigned Finance Summary with modern clean layout */}
+        {/* NEW Modern Finance Overview with timeline design */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-6">
@@ -574,57 +574,95 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               </Button>
             </div>
             
-            {/* Modern Financial Overview */}
-            <div className="space-y-4">
-              {/* Income/Expense Cards */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <TrendingUp className="w-4 h-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-700 dark:text-green-300">Revenus</span>
+            {/* Modern Financial Timeline Design */}
+            <div className="space-y-6">
+              {/* Income Section with Timeline Design */}
+              <div className="relative">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full shadow-lg">
+                    <TrendingUp className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-lg font-bold text-green-600 dark:text-green-400">
-                    €{currentMonthData.income.toFixed(0)}
+                  <div className="flex-1">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">Revenus</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Ce mois-ci</p>
                   </div>
-                </div>
-                
-                <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 border border-red-200 dark:border-red-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <TrendingDown className="w-4 h-4 text-red-600" />
-                    <span className="text-sm font-medium text-red-700 dark:text-red-300">Dépenses</span>
-                  </div>
-                  <div className="text-lg font-bold text-red-600 dark:text-red-400">
-                    €{currentMonthData.expenses.toFixed(0)}
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                      €{currentMonthData.income.toFixed(0)}
+                    </div>
                   </div>
                 </div>
+
+                {/* Vertical line connector */}
+                <div className="absolute left-6 top-16 bottom-0 w-0.5 bg-gradient-to-b from-green-300 to-red-300 dark:from-green-600 dark:to-red-600"></div>
               </div>
 
-              {/* Budget Progress */}
-              <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Budget ce mois</span>
-                  <span className="text-sm font-semibold text-[#F6C103]">
-                    {budgetProgress.toFixed(0)}%
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
-                  <div 
-                    className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] h-3 rounded-full transition-all duration-500 relative overflow-hidden" 
-                    style={{ width: `${Math.min(budgetProgress, 100)}%` }}
-                  >
-                    <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+              {/* Expenses Section */}
+              <div className="relative">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-lg">
+                    <TrendingDown className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">Dépenses</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Ce mois-ci</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+                      €{currentMonthData.expenses.toFixed(0)}
+                    </div>
                   </div>
                 </div>
-                <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
-                  <span>€{budgetSpent.toFixed(0)} utilisé</span>
-                  <span>€{totalBudget.toFixed(0)} total</span>
+
+                {/* Budget Progress Bar */}
+                {totalBudget > 0 && (
+                  <div className="ml-16">
+                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Budget utilisé</span>
+                        <span className="text-sm font-semibold text-[#F6C103]">
+                          {budgetProgress.toFixed(0)}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] h-2 rounded-full transition-all duration-500" 
+                          style={{ width: `${Math.min(budgetProgress, 100)}%` }}
+                        ></div>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <span>€{budgetSpent.toFixed(0)}</span>
+                        <span>€{totalBudget.toFixed(0)}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Balance Summary */}
+                <div className="ml-16 mt-4">
+                  <div className={`p-4 rounded-lg border-2 ${
+                    currentBalance >= 0 
+                      ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700' 
+                      : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
+                  }`}>
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 dark:text-gray-300 mb-1">Solde net</div>
+                      <div className={`text-xl font-bold ${
+                        currentBalance >= 0 
+                          ? 'text-green-600 dark:text-green-400' 
+                          : 'text-red-600 dark:text-red-400'
+                      }`}>
+                        €{currentBalance.toFixed(0)}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Enhanced Tasks Overview with modern clean design */}
+        {/* NEW Modern Tasks Overview with timeline design */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-6">
@@ -642,75 +680,107 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               </Button>
             </div>
             
-            {/* Modern Task Overview */}
-            <div className="space-y-4">
-              {/* Task Statistics Cards */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Target className="w-4 h-4 text-blue-600" />
-                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">À faire</span>
+            {/* Modern Tasks Timeline Design */}
+            <div className="space-y-6">
+              {/* Pending Tasks Section */}
+              <div className="relative">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full shadow-lg">
+                    <Target className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
-                    {pendingTasks}
+                  <div className="flex-1">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">À faire</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Tâches en attente</p>
                   </div>
-                </div>
-                
-                <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-700 dark:text-green-300">Terminées</span>
-                  </div>
-                  <div className="text-lg font-bold text-green-600 dark:text-green-400">
-                    {completedTasks}
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {pendingTasks}
+                    </div>
                   </div>
                 </div>
+
+                {/* Urgent Tasks Alert */}
+                {urgentTasks.length > 0 && (
+                  <div className="ml-16 mb-4">
+                    <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 border-l-4 border-red-500">
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 text-red-500" />
+                        <span className="text-sm font-medium text-red-700 dark:text-red-300">
+                          {urgentTasks.length} tâche{urgentTasks.length !== 1 ? 's' : ''} urgente{urgentTasks.length !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Recent Tasks Preview */}
+                {tasks.filter((task: any) => !task.completed).length > 0 && (
+                  <div className="ml-16">
+                    <div className="space-y-2">
+                      {tasks.filter((task: any) => !task.completed).slice(0, 2).map((task: any, index: number) => (
+                        <div key={index} className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                          <div className={`w-3 h-3 rounded-full ${
+                            task.priority === "Haute" ? "bg-red-500" : 
+                            task.priority === "Moyenne" ? "bg-yellow-500" : "bg-green-500"
+                          }`}></div>
+                          <div className="flex-1">
+                            <div className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                              {task.text}
+                            </div>
+                            <div className="text-xs text-blue-600 dark:text-blue-400">
+                              Priorité {task.priority?.toLowerCase() || 'normale'}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Vertical line connector */}
+                <div className="absolute left-6 top-16 bottom-0 w-0.5 bg-gradient-to-b from-blue-300 to-green-300 dark:from-blue-600 dark:to-green-600"></div>
               </div>
 
-              {/* Urgent Tasks Alert */}
-              {urgentTasks.length > 0 && (
-                <div className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl p-4 border border-red-200 dark:border-red-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertCircle className="w-4 h-4 text-red-500" />
-                    <span className="text-sm font-medium text-red-700 dark:text-red-300">
-                      Tâches urgentes
-                    </span>
+              {/* Completed Tasks Section */}
+              <div className="relative">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full shadow-lg">
+                    <CheckCircle className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-lg font-bold text-red-600 dark:text-red-400">
-                    {urgentTasks.length}
+                  <div className="flex-1">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">Terminées</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Tâches accomplies</p>
                   </div>
-                </div>
-              )}
-
-              {/* Recent Tasks Preview */}
-              <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochaines tâches</span>
-                </div>
-                <div className="space-y-2 max-h-24 overflow-y-auto">
-                  {tasks.filter((task: any) => !task.completed).slice(0, screenSize === 'mobile' ? 1 : 2).map((task: any, index: number) => (
-                    <div key={index} className="flex items-center gap-2 text-sm">
-                      <div className={`w-2 h-2 rounded-full ${
-                        task.priority === "Haute" ? "bg-red-500" : 
-                        task.priority === "Moyenne" ? "bg-yellow-500" : "bg-green-500"
-                      }`}></div>
-                      <span className="text-gray-700 dark:text-gray-300 truncate flex-1">
-                        {task.text}
-                      </span>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                      {completedTasks}
                     </div>
-                  ))}
-                  {tasks.filter((task: any) => !task.completed).length === 0 && (
-                    <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-2">
-                      Aucune tâche en attente
-                    </p>
-                  )}
+                  </div>
+                </div>
+
+                {/* Progress Summary */}
+                <div className="ml-16">
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-4 border border-green-200 dark:border-green-700">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">Progression globale</div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
+                        <div 
+                          className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500" 
+                          style={{ width: `${tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0}%` }}
+                        ></div>
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0}% complété
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* NEW Enhanced Planning Overview with fresh, modern design */}
+        {/* Planning Overview - Keep existing modern design */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-6">
