@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Progress } from "@/components/ui/progress";
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from "recharts";
-import { Search, ArrowUp, ArrowDown, Edit, Trash2, Download, Plus, TrendingUp, TrendingDown, Wallet, Euro, Calendar, Filter, MoreHorizontal } from "lucide-react";
+import { Search, ArrowUp, ArrowDown, Edit, Trash2, Download, Plus, TrendingUp, TrendingDown, Wallet, Euro, Calendar, Filter, Settings } from "lucide-react";
+import BudgetManager from "@/components/finance/BudgetManager";
+import CategoryManager from "@/components/finance/CategoryManager";
 
 interface Transaction {
   id: string;
@@ -20,12 +21,23 @@ interface Transaction {
 }
 
 interface Budget {
+  id: string;
   category: string;
   limit: number;
   spent: number;
+  period: 'monthly' | 'quarterly' | 'yearly';
+  alertThreshold: number;
 }
 
-const categories = {
+interface CustomCategory {
+  id: string;
+  name: string;
+  type: 'income' | 'expense';
+  icon: string;
+  color: string;
+}
+
+const defaultCategories = {
   income: ['Bourse', 'Travail', 'Famille', 'Autre revenu'],
   expense: ['Alimentation', 'Transport', 'Logement', 'Loisirs', 'Éducation', 'Autre dépense']
 };
@@ -44,21 +56,32 @@ const categoryIcons: { [key: string]: string } = {
 };
 
 const currencies = ['EUR', 'USD', 'GBP', 'CAD'];
-const pieColors = ['#fbbf24', '#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f', '#10b981', '#059669'];
+const pieColors = ['#fbbf24', '#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f', '#10b981', '#059669', '#3b82f6', '#8b5cf6'];
 
 export default function FinanceModule() {
-  const [transactions, setTransactions] = useState<Transaction[]>([
-    { id: '1', icon: "🎓", name: "Bourse d'études", amount: 500, type: 'income', category: 'Bourse', date: '2024-01-15' },
-    { id: '2', icon: "🛒", name: "Courses", amount: 50, type: 'expense', category: 'Alimentation', date: '2024-01-18' },
-    { id: '3', icon: "🏠", name: "Loyer", amount: 400, type: 'expense', category: 'Logement', date: '2024-01-20' },
-    { id: '4', icon: "🚗", name: "Transport", amount: 30, type: 'expense', category: 'Transport', date: '2024-01-22' },
-  ]);
+  const [transactions, setTransactions] = useState<Transaction[]>(() => {
+    const saved = localStorage.getItem("skoolife_transactions");
+    return saved ? JSON.parse(saved) : [
+      { id: '1', icon: "🎓", name: "Bourse d'études", amount: 500, type: 'income', category: 'Bourse', date: '2024-01-15' },
+      { id: '2', icon: "🛒", name: "Courses", amount: 50, type: 'expense', category: 'Alimentation', date: '2024-01-18' },
+      { id: '3', icon: "🏠", name: "Loyer", amount: 400, type: 'expense', category: 'Logement', date: '2024-01-20' },
+      { id: '4', icon: "🚗", name: "Transport", amount: 30, type: 'expense', category: 'Transport', date: '2024-01-22' },
+    ];
+  });
 
-  const [budgets, setBudgets] = useState<Budget[]>([
-    { category: 'Alimentation', limit: 200, spent: 50 },
-    { category: 'Transport', limit: 100, spent: 30 },
-    { category: 'Loisirs', limit: 150, spent: 0 },
-  ]);
+  const [budgets, setBudgets] = useState<Budget[]>(() => {
+    const saved = localStorage.getItem("skoolife_budgets");
+    return saved ? JSON.parse(saved) : [
+      { id: '1', category: 'Alimentation', limit: 200, spent: 0, period: 'monthly', alertThreshold: 80 },
+      { id: '2', category: 'Transport', limit: 100, spent: 0, period: 'monthly', alertThreshold: 80 },
+      { id: '3', category: 'Loisirs', limit: 150, spent: 0, period: 'monthly', alertThreshold: 80 },
+    ];
+  });
+
+  const [customCategories, setCustomCategories] = useState<CustomCategory[]>(() => {
+    const saved = localStorage.getItem("skoolife_custom_categories");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const [currency, setCurrency] = useState('EUR');
   const [searchTerm, setSearchTerm] = useState('');
@@ -67,6 +90,7 @@ export default function FinanceModule() {
   const [dateFilter, setDateFilter] = useState('all');
   const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [showManagement, setShowManagement] = useState(false);
   
   // Form states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -82,6 +106,62 @@ export default function FinanceModule() {
 
   const currentDate = new Date();
   const currentMonth = currentDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+
+  // Get all available categories
+  const allCategories = useMemo(() => {
+    const defaultCats = [...defaultCategories.income, ...defaultCategories.expense];
+    const customCats = customCategories.map(cat => cat.name);
+    return [...defaultCats, ...customCats];
+  }, [customCategories]);
+
+  // Update budget spent amounts based on transactions
+  useEffect(() => {
+    const currentYear = currentDate.getFullYear();
+    const currentMonthNum = currentDate.getMonth();
+    
+    const updatedBudgets = budgets.map(budget => {
+      const relevantTransactions = transactions.filter(t => {
+        const tDate = new Date(t.date);
+        const isExpense = t.type === 'expense';
+        const isCategory = t.category === budget.category;
+        
+        let isInPeriod = false;
+        switch (budget.period) {
+          case 'monthly':
+            isInPeriod = tDate.getFullYear() === currentYear && tDate.getMonth() === currentMonthNum;
+            break;
+          case 'quarterly':
+            const quarter = Math.floor(currentMonthNum / 3);
+            const tQuarter = Math.floor(tDate.getMonth() / 3);
+            isInPeriod = tDate.getFullYear() === currentYear && tQuarter === quarter;
+            break;
+          case 'yearly':
+            isInPeriod = tDate.getFullYear() === currentYear;
+            break;
+        }
+        
+        return isExpense && isCategory && isInPeriod;
+      });
+      
+      const spent = relevantTransactions.reduce((sum, t) => sum + t.amount, 0);
+      return { ...budget, spent };
+    });
+    
+    setBudgets(updatedBudgets);
+  }, [transactions, currentDate]);
+
+  // Save to localStorage
+  useEffect(() => {
+    localStorage.setItem("skoolife_transactions", JSON.stringify(transactions));
+  }, [transactions]);
+
+  useEffect(() => {
+    localStorage.setItem("skoolife_budgets", JSON.stringify(budgets));
+  }, [budgets]);
+
+  useEffect(() => {
+    localStorage.setItem("skoolife_custom_categories", JSON.stringify(customCategories));
+  }, [customCategories]);
 
   // Calculate current month summary
   const currentMonthData = useMemo(() => {
@@ -100,28 +180,33 @@ export default function FinanceModule() {
     return { income, expenses, net };
   }, [transactions, currentDate]);
 
-  // Calculate monthly data for charts
+  // Calculate monthly data for charts (last 6 months)
   const monthlyData = useMemo(() => {
     const months: { [key: string]: { month: string; income: number; expenses: number; net: number } } = {};
+    
+    // Generate last 6 months
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+      const monthKey = date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+      months[monthKey] = { month: monthKey, income: 0, expenses: 0, net: 0 };
+    }
     
     transactions.forEach(transaction => {
       const date = new Date(transaction.date);
       const monthKey = date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
       
-      if (!months[monthKey]) {
-        months[monthKey] = { month: monthKey, income: 0, expenses: 0, net: 0 };
+      if (months[monthKey]) {
+        if (transaction.type === 'income') {
+          months[monthKey].income += transaction.amount;
+        } else {
+          months[monthKey].expenses += transaction.amount;
+        }
+        months[monthKey].net = months[monthKey].income - months[monthKey].expenses;
       }
-      
-      if (transaction.type === 'income') {
-        months[monthKey].income += transaction.amount;
-      } else {
-        months[monthKey].expenses += transaction.amount;
-      }
-      months[monthKey].net = months[monthKey].income - months[monthKey].expenses;
     });
     
-    return Object.values(months).sort((a, b) => new Date(a.month + ' 01').getTime() - new Date(b.month + ' 01').getTime());
-  }, [transactions]);
+    return Object.values(months);
+  }, [transactions, currentDate]);
 
   // Expense breakdown for pie chart
   const expenseBreakdown = useMemo(() => {
@@ -129,7 +214,9 @@ export default function FinanceModule() {
     transactions.filter(t => t.type === 'expense').forEach(t => {
       breakdown[t.category] = (breakdown[t.category] || 0) + t.amount;
     });
-    return Object.entries(breakdown).map(([name, value]) => ({ name, value }));
+    return Object.entries(breakdown)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
   }, [transactions]);
 
   // Filter and sort transactions
@@ -163,7 +250,7 @@ export default function FinanceModule() {
 
     filtered.sort((a, b) => {
       const aValue = sortBy === 'date' ? new Date(a.date).getTime() : a.amount;
-      const bValue = sortBy === 'date' ? new Date(b.date).getTime() : a.amount;
+      const bValue = sortBy === 'date' ? new Date(b.date).getTime() : b.amount;
       return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
     });
 
@@ -175,6 +262,42 @@ export default function FinanceModule() {
     return symbols[currency] || currency;
   };
 
+  // Budget management
+  const handleAddBudget = (budgetData: Omit<Budget, 'id' | 'spent'>) => {
+    const newBudget: Budget = {
+      ...budgetData,
+      id: Date.now().toString(),
+      spent: 0
+    };
+    setBudgets([...budgets, newBudget]);
+  };
+
+  const handleUpdateBudget = (id: string, updates: Partial<Budget>) => {
+    setBudgets(budgets.map(b => b.id === id ? { ...b, ...updates } : b));
+  };
+
+  const handleDeleteBudget = (id: string) => {
+    setBudgets(budgets.filter(b => b.id !== id));
+  };
+
+  // Category management
+  const handleAddCategory = (categoryData: Omit<CustomCategory, 'id'>) => {
+    const newCategory: CustomCategory = {
+      ...categoryData,
+      id: Date.now().toString()
+    };
+    setCustomCategories([...customCategories, newCategory]);
+  };
+
+  const handleUpdateCategory = (id: string, updates: Partial<CustomCategory>) => {
+    setCustomCategories(customCategories.map(c => c.id === id ? { ...c, ...updates } : c));
+  };
+
+  const handleDeleteCategory = (id: string) => {
+    setCustomCategories(customCategories.filter(c => c.id !== id));
+  };
+
+  // Transaction management
   const handleAddTransaction = () => {
     const newTransaction: Transaction = {
       id: Date.now().toString(),
@@ -262,17 +385,48 @@ export default function FinanceModule() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Finances</h2>
           <p className="text-gray-600 dark:text-gray-400">{currentMonth}</p>
         </div>
-        <Select value={currency} onValueChange={setCurrency}>
-          <SelectTrigger className="w-24">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {currencies.map(curr => (
-              <SelectItem key={curr} value={curr}>{curr}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={() => setShowManagement(!showManagement)}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2"
+          >
+            <Settings className="w-4 h-4" />
+            Gestion
+          </Button>
+          <Select value={currency} onValueChange={setCurrency}>
+            <SelectTrigger className="w-24">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {currencies.map(curr => (
+                <SelectItem key={curr} value={curr}>{curr}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+
+      {/* Management Section */}
+      {showManagement && (
+        <div className="space-y-6">
+          <BudgetManager
+            budgets={budgets}
+            onAddBudget={handleAddBudget}
+            onUpdateBudget={handleUpdateBudget}
+            onDeleteBudget={handleDeleteBudget}
+            categories={allCategories}
+            getCurrencySymbol={getCurrencySymbol}
+          />
+          <CategoryManager
+            categories={customCategories}
+            onAddCategory={handleAddCategory}
+            onUpdateCategory={handleUpdateCategory}
+            onDeleteCategory={handleDeleteCategory}
+          />
+        </div>
+      )}
 
       {/* Dashboard Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -349,44 +503,60 @@ export default function FinanceModule() {
             <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Évolution mensuelle</CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="h-64">
+            <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={monthlyData}>
                   <defs>
                     <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0.1}/>
                     </linearGradient>
                     <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                  <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
+                  <XAxis 
+                    dataKey="month" 
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: 'var(--card)',
                       border: '2px solid #fcd34d',
-                      borderRadius: '8px'
+                      borderRadius: '12px',
+                      boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
                     }}
+                    formatter={(value: number, name: string) => [
+                      `${getCurrencySymbol()}${value}`,
+                      name === 'income' ? 'Revenus' : name === 'expenses' ? 'Dépenses' : name
+                    ]}
                   />
                   <Area 
                     type="monotone" 
                     dataKey="income" 
                     stroke="#10b981" 
+                    strokeWidth={3}
                     fillOpacity={1} 
                     fill="url(#incomeGradient)" 
-                    name="Revenus" 
+                    name="income"
                   />
                   <Area 
                     type="monotone" 
                     dataKey="expenses" 
                     stroke="#ef4444" 
+                    strokeWidth={3}
                     fillOpacity={1} 
                     fill="url(#expenseGradient)" 
-                    name="Dépenses" 
+                    name="expenses"
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -394,30 +564,56 @@ export default function FinanceModule() {
           </CardContent>
         </Card>
 
-        {/* Expense Breakdown Pie Chart */}
+        {/* Expense Breakdown Donut Chart */}
         <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
           <CardHeader>
             <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Répartition des dépenses</CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="h-64">
+            <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={expenseBreakdown}
                     cx="50%"
                     cy="50%"
-                    outerRadius={80}
+                    innerRadius={60}
+                    outerRadius={120}
+                    paddingAngle={2}
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
                     {expenseBreakdown.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={pieColors[index % pieColors.length]}
+                      />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    formatter={(value: number) => [`${getCurrencySymbol()}${value}`, 'Montant']}
+                    contentStyle={{ 
+                      backgroundColor: 'var(--card)',
+                      border: '2px solid #fcd34d',
+                      borderRadius: '12px',
+                      boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {expenseBreakdown.slice(0, 6).map((entry, index) => (
+                <div key={entry.name} className="flex items-center gap-2 text-sm">
+                  <div 
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: pieColors[index % pieColors.length] }}
+                  />
+                  <span className="truncate">{entry.name}</span>
+                  <span className="font-medium ml-auto">
+                    {getCurrencySymbol()}{entry.value}
+                  </span>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
@@ -506,9 +702,17 @@ export default function FinanceModule() {
                         <SelectValue placeholder="Catégorie" />
                       </SelectTrigger>
                       <SelectContent>
-                        {categories[formData.type].map(cat => (
+                        {(formData.type === 'income' ? defaultCategories.income : defaultCategories.expense).map(cat => (
                           <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                         ))}
+                        {customCategories
+                          .filter(cat => cat.type === formData.type)
+                          .map(cat => (
+                            <SelectItem key={cat.id} value={cat.name}>
+                              {cat.icon} {cat.name}
+                            </SelectItem>
+                          ))
+                        }
                       </SelectContent>
                     </Select>
                     <Input
@@ -553,7 +757,7 @@ export default function FinanceModule() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Toutes</SelectItem>
-                {[...categories.income, ...categories.expense].map(cat => (
+                {allCategories.map(cat => (
                   <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                 ))}
               </SelectContent>
@@ -660,9 +864,17 @@ export default function FinanceModule() {
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {categories[formData.type].map(cat => (
+                                  {(formData.type === 'income' ? defaultCategories.income : defaultCategories.expense).map(cat => (
                                     <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                                   ))}
+                                  {customCategories
+                                    .filter(cat => cat.type === formData.type)
+                                    .map(cat => (
+                                      <SelectItem key={cat.id} value={cat.name}>
+                                        {cat.icon} {cat.name}
+                                      </SelectItem>
+                                    ))
+                                  }
                                 </SelectContent>
                               </Select>
                               <Input

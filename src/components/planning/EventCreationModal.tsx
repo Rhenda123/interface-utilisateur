@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { X, Plus, MoreHorizontal } from "lucide-react";
+import { Plus, MoreHorizontal } from "lucide-react";
 import { eventTypes, getEventTypeById, Event } from "@/utils/eventTypes";
 
 interface EventCreationModalProps {
@@ -102,18 +102,10 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md p-0 gap-0 bg-white dark:bg-gray-800 border-yellow-200 dark:border-gray-700">
-        <DialogHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
+        <DialogHeader className="p-4 pb-2">
           <DialogTitle className="text-lg font-semibold text-gray-900 dark:text-white">
             Nouvel événement
           </DialogTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="h-6 w-6 p-0 hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            <X className="h-4 w-4" />
-          </Button>
         </DialogHeader>
         
         <div className="p-4 space-y-4">
