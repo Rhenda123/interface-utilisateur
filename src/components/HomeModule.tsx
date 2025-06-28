@@ -710,7 +710,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Enhanced Planning Overview with modern clean design */}
+        {/* NEW Enhanced Planning Overview with fresh, modern design */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-6">
@@ -728,89 +728,146 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               </Button>
             </div>
             
-            {/* Modern Planning Overview */}
-            <div className="space-y-4">
-              {/* Event Statistics Cards */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="w-4 h-4 text-purple-600" />
-                    <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Aujourd'hui</span>
+            {/* Modern Timeline Design */}
+            <div className="space-y-6">
+              {/* Today Section with Timeline Design */}
+              <div className="relative">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full shadow-lg">
+                    <Clock className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
-                    {todaysEvents.length}
+                  <div className="flex-1">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">Aujourd'hui</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {new Date().toLocaleDateString('fr-FR', { 
+                        weekday: 'long', 
+                        day: 'numeric', 
+                        month: 'long' 
+                      })}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                      {todaysEvents.length}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      événement{todaysEvents.length !== 1 ? 's' : ''}
+                    </div>
                   </div>
                 </div>
-                
-                <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 border border-indigo-200 dark:border-indigo-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-4 h-4 text-indigo-600" />
-                    <span className="text-sm font-medium text-indigo-700 dark:text-indigo-300">Cette semaine</span>
-                  </div>
-                  <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
-                    {thisWeekEvents.length}
-                  </div>
-                </div>
-              </div>
 
-              {/* Today's Events */}
-              {todaysEvents.length > 0 && (
-                <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
-                      Événements d'aujourd'hui
-                    </span>
-                  </div>
-                  <div className="space-y-2 max-h-24 overflow-y-auto">
-                    {todaysEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
-                      <div key={index} className="flex items-center gap-3 text-sm">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                {/* Today's Events Preview */}
+                {todaysEvents.length > 0 ? (
+                  <div className="ml-16 space-y-2">
+                    {todaysEvents.slice(0, 2).map((event: any, index: number) => (
+                      <div key={index} className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700">
+                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                         <div className="flex-1">
-                          <div className="font-medium text-gray-900 dark:text-white truncate">
+                          <div className="font-medium text-gray-900 dark:text-white text-sm">
                             {event.name}
                           </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                          <div className="text-xs text-purple-600 dark:text-purple-400">
                             {event.startTime} - {event.endTime}
                           </div>
                         </div>
                       </div>
                     ))}
-                  </div>
-                </div>
-              )}
-
-              {/* This Week Preview - Only show if there are upcoming events */}
-              {thisWeekEvents.length > 0 && (
-                <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochains événements</span>
-                  </div>
-                  <div className="space-y-2 max-h-24 overflow-y-auto">
-                    {thisWeekEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
-                      <div key={index} className="flex items-center gap-3 text-sm">
-                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                        <div className="flex-1">
-                          <div className="font-medium text-gray-700 dark:text-gray-300 truncate">
-                            {event.day}: {event.name}
-                          </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
-                            {event.startTime}
-                          </div>
-                        </div>
+                    {todaysEvents.length > 2 && (
+                      <div className="ml-6 text-xs text-gray-500 dark:text-gray-400">
+                        +{todaysEvents.length - 2} autre{todaysEvents.length - 2 !== 1 ? 's' : ''}
                       </div>
-                    ))}
+                    )}
+                  </div>
+                ) : (
+                  <div className="ml-16 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+                      Aucun événement prévu
+                    </p>
+                  </div>
+                )}
+
+                {/* Vertical line connector */}
+                <div className="absolute left-6 top-16 bottom-0 w-0.5 bg-gradient-to-b from-purple-300 to-indigo-300 dark:from-purple-600 dark:to-indigo-600"></div>
+              </div>
+
+              {/* This Week Section */}
+              <div className="relative">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full shadow-lg">
+                    <Calendar className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">Cette semaine</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Du {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })} au {new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                      {thisWeekEvents.length}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      événement{thisWeekEvents.length !== 1 ? 's' : ''}
+                    </div>
                   </div>
                 </div>
-              )}
 
-              {/* Show message when no events */}
-              {thisWeekEvents.length === 0 && todaysEvents.length === 0 && (
-                <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
-                  <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-2">
-                    Aucun événement prévu
-                  </p>
-                </div>
-              )}
+                {/* Weekly Events Summary */}
+                {thisWeekEvents.length > 0 ? (
+                  <div className="ml-16">
+                    <div className="grid grid-cols-7 gap-1 mb-3">
+                      {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((day, index) => {
+                        const dayEvents = thisWeekEvents.filter(event => {
+                          const eventDate = new Date(event.date);
+                          const weekStart = new Date();
+                          weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1 + index);
+                          return eventDate.toDateString() === weekStart.toDateString();
+                        });
+                        
+                        return (
+                          <div key={day} className="text-center">
+                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">{day}</div>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
+                              dayEvents.length > 0 
+                                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border-2 border-indigo-300 dark:border-indigo-600' 
+                                : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+                            }`}>
+                              {dayEvents.length || ''}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Quick Action */}
+                    <div className="flex items-center justify-center">
+                      <Button
+                        onClick={() => onNavigate?.('planning')}
+                        variant="outline"
+                        size="sm"
+                        className="text-xs px-4 py-2 rounded-full border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
+                      >
+                        Voir le planning complet
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="ml-16 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-3">
+                      Semaine libre
+                    </p>
+                    <div className="flex justify-center">
+                      <Button
+                        onClick={() => onNavigate?.('planning')}
+                        size="sm"
+                        className="text-xs px-4 py-2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:from-purple-600 hover:to-indigo-600"
+                      >
+                        Planifier un événement
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
