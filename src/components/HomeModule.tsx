@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, TrendingUp, TrendingDown, AlertCircle, CheckCircle, ArrowRight, Target, Wallet, FileText } from "lucide-react";
 
 interface HomeModuleProps {
@@ -592,10 +593,10 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                     </div>
                   </div>
                 </div>
-
-                {/* Vertical line connector */}
-                <div className="absolute left-6 top-16 bottom-0 w-0.5 bg-gradient-to-b from-green-300 to-red-300 dark:from-green-600 dark:to-red-600"></div>
               </div>
+
+              {/* Divider between Revenus and Dépenses */}
+              <Separator className="my-4" />
 
               {/* Expenses Section */}
               <div className="relative">
