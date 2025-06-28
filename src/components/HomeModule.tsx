@@ -599,7 +599,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
               {/* Expenses Section */}
               <div className="relative">
-                <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center gap-4 mb-6">
                   <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-lg">
                     <TrendingDown className="w-6 h-6 text-white" />
                   </div>
@@ -614,49 +614,58 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   </div>
                 </div>
 
-                {/* Budget Progress Bar */}
+                {/* Centered and Modern Budget Progress Bar */}
                 {totalBudget > 0 && (
-                  <div className="ml-16">
-                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Budget utilisé</span>
-                        <span className="text-sm font-semibold text-[#F6C103]">
-                          {budgetProgress.toFixed(0)}%
-                        </span>
+                  <div className="flex justify-center">
+                    <div className="w-full max-w-md bg-white dark:bg-gray-900/50 rounded-2xl p-6 border-2 border-gradient-to-r from-[#F6C103] to-[#E5AC00] shadow-lg">
+                      <div className="text-center mb-4">
+                        <h5 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+                          Budget utilisé
+                        </h5>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Ce mois-ci
+                        </p>
                       </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] h-2 rounded-full transition-all duration-500" 
-                          style={{ width: `${Math.min(budgetProgress, 100)}%` }}
-                        ></div>
+                      
+                      <div className="relative mb-4">
+                        <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-4 shadow-inner">
+                          <div 
+                            className="bg-gradient-to-r from-[#F6C103] via-[#E5AC00] to-[#D4A200] h-4 rounded-full transition-all duration-700 ease-in-out shadow-lg relative overflow-hidden" 
+                            style={{ width: `${Math.min(budgetProgress, 100)}%` }}
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                          </div>
+                        </div>
+                        
+                        {/* Progress percentage indicator */}
+                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                          <div className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                            {budgetProgress.toFixed(0)}%
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <span>€{budgetSpent.toFixed(0)}</span>
-                        <span>€{totalBudget.toFixed(0)}</span>
+                      
+                      <div className="flex justify-between items-center text-sm">
+                        <div className="text-center">
+                          <div className="font-bold text-red-600 dark:text-red-400">
+                            €{budgetSpent.toFixed(0)}
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            Dépensé
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="font-bold text-gray-600 dark:text-gray-300">
+                            €{totalBudget.toFixed(0)}
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            Budget total
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 )}
-
-                {/* Balance Summary */}
-                <div className="ml-16 mt-4">
-                  <div className={`p-4 rounded-lg border-2 ${
-                    currentBalance >= 0 
-                      ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700' 
-                      : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
-                  }`}>
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600 dark:text-gray-300 mb-1">Solde net</div>
-                      <div className={`text-xl font-bold ${
-                        currentBalance >= 0 
-                          ? 'text-green-600 dark:text-green-400' 
-                          : 'text-red-600 dark:text-red-400'
-                      }`}>
-                        €{currentBalance.toFixed(0)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </CardContent>
@@ -743,7 +752,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
               {/* Completed Tasks Section */}
               <div className="relative">
-                <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center gap-4 mb-6">
                   <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full shadow-lg">
                     <CheckCircle className="w-6 h-6 text-white" />
                   </div>
@@ -758,19 +767,52 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   </div>
                 </div>
 
-                {/* Progress Summary */}
-                <div className="ml-16">
-                  <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-4 border border-green-200 dark:border-green-700">
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">Progression globale</div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
+                {/* Centered and Modern Progress Summary */}
+                <div className="flex justify-center">
+                  <div className="w-full max-w-md bg-white dark:bg-gray-900/50 rounded-2xl p-6 border-2 border-gradient-to-r from-green-400 to-blue-500 shadow-lg">
+                    <div className="text-center mb-4">
+                      <h5 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+                        Progression globale
+                      </h5>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Toutes vos tâches
+                      </p>
+                    </div>
+                    
+                    <div className="relative mb-4">
+                      <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-4 shadow-inner">
                         <div 
-                          className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500" 
+                          className="bg-gradient-to-r from-green-500 via-green-400 to-blue-500 h-4 rounded-full transition-all duration-700 ease-in-out shadow-lg relative overflow-hidden" 
                           style={{ width: `${tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0}%` }}
-                        ></div>
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                        </div>
                       </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        {tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0}% complété
+                      
+                      {/* Progress percentage indicator */}
+                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                        <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                          {tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0}%
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center text-sm">
+                      <div className="text-center">
+                        <div className="font-bold text-green-600 dark:text-green-400">
+                          {completedTasks}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Terminées
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-bold text-gray-600 dark:text-gray-300">
+                          {tasks.length}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Total
+                        </div>
                       </div>
                     </div>
                   </div>
