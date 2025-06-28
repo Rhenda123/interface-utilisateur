@@ -17,12 +17,15 @@ export default function Index() {
       {/* Sticky Header */}
       <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-yellow-200 dark:border-gray-700 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div className="flex items-center justify-between gap-4">
+            {/* Left: Brand */}
             <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-700 dark:from-yellow-400 dark:to-yellow-500 bg-clip-text text-transparent">
               SKOOLIFE
             </h1>
-            <div className="flex items-center gap-4">
-              <nav className="inline-flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-lg border border-yellow-200 dark:border-gray-700 overflow-x-auto">
+            
+            {/* Center: Navigation */}
+            <nav className="flex-1 flex justify-center">
+              <div className="inline-flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-lg border border-yellow-200 dark:border-gray-700 overflow-x-auto">
                 <button 
                   onClick={() => setView("home")} 
                   className={`px-3 sm:px-4 py-2 rounded-md font-medium transition-all duration-200 whitespace-nowrap hover:shadow-md ${
@@ -83,11 +86,13 @@ export default function Index() {
                 >
                   Forum
                 </button>
-              </nav>
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <UserAccountMenu />
               </div>
+            </nav>
+            
+            {/* Right: User Controls */}
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <UserAccountMenu />
             </div>
           </div>
         </div>
