@@ -622,11 +622,12 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </CardContent>
         </Card>
 
-        {/* Enhanced Tasks Overview with real-time updates */}
+        {/* Enhanced Tasks Overview with modern clean design */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-blue-500" />
                 Tâches
               </h3>
               <Button
@@ -638,38 +639,81 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </div>
+            
+            {/* Modern Task Overview */}
             <div className="space-y-4">
+              {/* Task Statistics Cards */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Target className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">À faire</span>
+                  </div>
+                  <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                    {pendingTasks}
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-700 dark:text-green-300">Terminées</span>
+                  </div>
+                  <div className="text-lg font-bold text-green-600 dark:text-green-400">
+                    {completedTasks}
+                  </div>
+                </div>
+              </div>
+
+              {/* Urgent Tasks Alert */}
               {urgentTasks.length > 0 && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-1">
+                <div className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl p-4 border border-red-200 dark:border-red-700">
+                  <div className="flex items-center gap-2 mb-2">
                     <AlertCircle className="w-4 h-4 text-red-500" />
                     <span className="text-sm font-medium text-red-700 dark:text-red-300">
-                      {urgentTasks.length} urgente{urgentTasks.length > 1 ? 's' : ''}
+                      Tâches urgentes
                     </span>
+                  </div>
+                  <div className="text-lg font-bold text-red-600 dark:text-red-400">
+                    {urgentTasks.length}
                   </div>
                 </div>
               )}
-              <div className="space-y-2 max-h-32 overflow-y-auto">
-                {tasks.filter((task: any) => !task.completed).slice(0, screenSize === 'mobile' ? 2 : 3).map((task: any, index: number) => (
-                  <div key={index} className="p-2 bg-[#FEF7D6] dark:bg-yellow-900/20 rounded-lg border border-[#F6C103] dark:border-yellow-700 animate-fade-in">
-                    <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
-                      {task.text}
+
+              {/* Recent Tasks Preview */}
+              <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochaines tâches</span>
+                </div>
+                <div className="space-y-2 max-h-24 overflow-y-auto">
+                  {tasks.filter((task: any) => !task.completed).slice(0, screenSize === 'mobile' ? 1 : 2).map((task: any, index: number) => (
+                    <div key={index} className="flex items-center gap-2 text-sm">
+                      <div className={`w-2 h-2 rounded-full ${
+                        task.priority === "Haute" ? "bg-red-500" : 
+                        task.priority === "Moyenne" ? "bg-yellow-500" : "bg-green-500"
+                      }`}></div>
+                      <span className="text-gray-700 dark:text-gray-300 truncate flex-1">
+                        {task.text}
+                      </span>
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      {task.priority}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                  {tasks.filter((task: any) => !task.completed).length === 0 && (
+                    <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-2">
+                      Aucune tâche en attente
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Enhanced Planning Overview with real-time updates */}
+        {/* Enhanced Planning Overview with modern clean design */}
         <Card className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4 sm:p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-purple-500" />
                 Planning
               </h3>
               <Button
@@ -681,33 +725,84 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </div>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
-              {todaysEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
-                <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700 animate-fade-in">
-                  <div className="font-medium text-sm text-gray-900 dark:text-white truncate">
-                    {event.name}
+            
+            {/* Modern Planning Overview */}
+            <div className="space-y-4">
+              {/* Event Statistics Cards */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="w-4 h-4 text-purple-600" />
+                    <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Aujourd'hui</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    <Clock className="w-3 h-3" />
-                    {event.startTime} - {event.endTime}
-                  </div>
-                </div>
-              ))}
-              {thisWeekEvents.slice(0, 1).map((event: any, index: number) => (
-                <div key={`week-${index}`} className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <div className="font-medium text-xs text-gray-700 dark:text-gray-300 truncate">
-                    {event.day}: {event.name}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {event.startTime}
+                  <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
+                    {todaysEvents.length}
                   </div>
                 </div>
-              ))}
-              {todaysEvents.length === 0 && thisWeekEvents.length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4 text-sm">
-                  Aucun événement prévu
-                </p>
+                
+                <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 border border-indigo-200 dark:border-indigo-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Calendar className="w-4 h-4 text-indigo-600" />
+                    <span className="text-sm font-medium text-indigo-700 dark:text-indigo-300">Cette semaine</span>
+                  </div>
+                  <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
+                    {thisWeekEvents.length}
+                  </div>
+                </div>
+              </div>
+
+              {/* Today's Events */}
+              {todaysEvents.length > 0 && (
+                <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-700">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
+                      Événements d'aujourd'hui
+                    </span>
+                  </div>
+                  <div className="space-y-2 max-h-24 overflow-y-auto">
+                    {todaysEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
+                      <div key={index} className="flex items-center gap-3 text-sm">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-900 dark:text-white truncate">
+                            {event.name}
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {event.startTime} - {event.endTime}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
+
+              {/* This Week Preview */}
+              <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochains événements</span>
+                </div>
+                <div className="space-y-2 max-h-24 overflow-y-auto">
+                  {thisWeekEvents.slice(0, screenSize === 'mobile' ? 1 : 2).map((event: any, index: number) => (
+                    <div key={index} className="flex items-center gap-3 text-sm">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      <div className="flex-1">
+                        <div className="font-medium text-gray-700 dark:text-gray-300 truncate">
+                          {event.day}: {event.name}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          {event.startTime}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {thisWeekEvents.length === 0 && todaysEvents.length === 0 && (
+                    <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-2">
+                      Aucun événement prévu
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
