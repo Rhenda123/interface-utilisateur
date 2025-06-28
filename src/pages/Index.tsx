@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
+import UserAccountMenu from "@/components/UserAccountMenu";
 import HomeModule from "@/components/HomeModule";
 import TodoModule from "@/components/TodoModule";
 import ScheduleModule from "@/components/ScheduleModule";
@@ -83,7 +84,10 @@ export default function Index() {
                   Forum
                 </button>
               </nav>
-              <ThemeToggle />
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <UserAccountMenu />
+              </div>
             </div>
           </div>
         </div>
