@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -408,7 +409,7 @@ export default function FinanceModule() {
 
   // Mobile navigation items
   const mobileNavItems = [
-    { id: 'overview', label: 'Vue d\'ensemble', icon: Eye },
+    { id: 'overview', label: 'Aperçu', icon: Eye },
     { id: 'charts', label: 'Graphiques', icon: BarChart3 },
     { id: 'transactions', label: 'Transactions', icon: Calendar },
     { id: 'budget', label: 'Budget', icon: Wallet },
