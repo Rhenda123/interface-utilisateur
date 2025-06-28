@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Plus, Filter, CheckCircle2, Clock, AlertTriangle } from "lucide-react";
 
 function TodoModule() {
   const [tasks, setTasks] = useState(() => {
@@ -15,6 +16,7 @@ function TodoModule() {
   const [deadline, setDeadline] = useState("");
   const [filter, setFilter] = useState("Toutes");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("skoolife_tasks", JSON.stringify(tasks));
@@ -45,6 +47,7 @@ function TodoModule() {
       setInput("");
       setPriority("Moyenne");
       setDeadline("");
+      setShowAddForm(false);
     }
   };
 
@@ -65,6 +68,7 @@ function TodoModule() {
     setPriority(task.priority);
     setDeadline(task.deadline);
     setEditingIndex(index);
+    setShowAddForm(true);
   };
 
   const cancelEdit = () => {
@@ -72,6 +76,7 @@ function TodoModule() {
     setPriority("Moyenne");
     setDeadline("");
     setEditingIndex(null);
+    setShowAddForm(false);
   };
 
   const filteredTasks = tasks.filter((task: any) => {
@@ -86,141 +91,199 @@ function TodoModule() {
     Faible: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-700",
   };
 
+  const getPriorityIcon = (priority: string) => {
+    switch (priority) {
+      case "Haute": return <AlertTriangle className="w-3 h-3" />;
+      case "Moyenne": return <Clock className="w-3 h-3" />;
+      case "Faible": return <CheckCircle2 className="w-3 h-3" />;
+      default: return null;
+    }
+  };
+
   return (
-    <div className="max-w-4xl mx-auto p-2 sm:p-4">
-      <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-        <CardContent className="p-4 sm:p-6">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8">Ma To-Do List</h2>
-          
-          <div className="mb-6 sm:mb-8 space-y-3 sm:space-y-4">
-            <Input 
-              type="text" 
-              value={input} 
-              onChange={(e) => setInput(e.target.value)} 
-              placeholder="Ajouter une tâche..." 
-              className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base sm:text-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400" 
-            />
-            
-            {/* Centered form controls */}
-            <div className="flex flex-col sm:flex-row gap-3 items-center">
-              <select 
-                value={priority} 
-                onChange={(e) => setPriority(e.target.value)} 
-                className="w-full sm:flex-1 border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 rounded-lg px-3 sm:px-4 py-2 sm:py-3 font-medium text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 focus:outline-none"
-              >
-                <option>Haute</option>
-                <option>Moyenne</option>
-                <option>Faible</option>
-              </select>
+    <div className="max-w-4xl mx-auto p-3 sm:p-4">
+      {/* Mobile Header */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Ma To-Do List</h2>
+        <Button 
+          onClick={() => setShowAddForm(!showAddForm)}
+          className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-full w-12 h-12 sm:w-auto sm:h-auto sm:rounded-lg sm:px-4 sm:py-2 shadow-lg active:scale-95 transition-all touch-manipulation"
+        >
+          <Plus className="w-5 h-5 sm:mr-2" />
+          <span className="hidden sm:inline">Ajouter</span>
+        </Button>
+      </div>
+
+      {/* Mobile Filter Pills */}
+      <div className="flex justify-center mb-6">
+        <div className="inline-flex bg-yellow-100 dark:bg-gray-700 rounded-full p-1 border border-yellow-200 dark:border-gray-600">
+          {["Toutes", "À faire", "Faites"].map((f) => (
+            <button 
+              key={f} 
+              onClick={() => setFilter(f)} 
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 touch-manipulation active:scale-95 ${
+                filter === f 
+                  ? "bg-yellow-400 text-gray-900 shadow-sm transform scale-105" 
+                  : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Add/Edit Form - Mobile Optimized */}
+      {showAddForm && (
+        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 mb-6">
+          <CardContent className="p-4">
+            <div className="space-y-4">
               <Input 
-                type="date" 
-                value={deadline} 
-                onChange={(e) => setDeadline(e.target.value)} 
-                className="w-full sm:flex-1 border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400" 
+                type="text" 
+                value={input} 
+                onChange={(e) => setInput(e.target.value)} 
+                placeholder="Nouvelle tâche..." 
+                className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 touch-manipulation" 
               />
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                onClick={addOrUpdateTask} 
-                className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105"
-              >
-                {editingIndex !== null ? "Modifier" : "Ajouter"}
-              </Button>
-              {editingIndex !== null && (
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <select 
+                  value={priority} 
+                  onChange={(e) => setPriority(e.target.value)} 
+                  className="w-full border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 rounded-xl px-4 py-3 font-medium text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 focus:outline-none touch-manipulation"
+                >
+                  <option>Haute</option>
+                  <option>Moyenne</option>
+                  <option>Faible</option>
+                </select>
+                <Input 
+                  type="date" 
+                  value={deadline} 
+                  onChange={(e) => setDeadline(e.target.value)} 
+                  className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 touch-manipulation" 
+                />
+              </div>
+              
+              <div className="flex gap-3">
+                <Button 
+                  onClick={addOrUpdateTask} 
+                  className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-6 py-3 rounded-xl font-semibold shadow-md transition-all duration-200 hover:shadow-lg active:scale-95 touch-manipulation"
+                >
+                  {editingIndex !== null ? "Modifier" : "Ajouter"}
+                </Button>
                 <Button 
                   onClick={cancelEdit} 
-                  className="flex-1 bg-gray-400 hover:bg-gray-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold shadow-md transition-all duration-200"
+                  variant="outline"
+                  className="px-6 py-3 rounded-xl font-semibold shadow-md transition-all duration-200 active:scale-95 touch-manipulation border-2"
                 >
                   Annuler
                 </Button>
-              )}
+              </div>
             </div>
-          </div>
-          
-          <div className="flex justify-center mb-6 sm:mb-8">
-            <div className="inline-flex bg-yellow-100 dark:bg-gray-700 rounded-lg p-1 border border-yellow-200 dark:border-gray-600">
-              {["Toutes", "À faire", "Faites"].map((f) => (
-                <button 
-                  key={f} 
-                  onClick={() => setFilter(f)} 
-                  className={`px-3 sm:px-4 py-2 rounded-md font-medium transition-all duration-200 ${
-                    filter === f 
-                      ? "bg-yellow-400 text-gray-900 shadow-sm" 
-                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-yellow-200 dark:hover:bg-gray-600"
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Tasks List - Mobile Optimized */}
+      <div className="space-y-3">
+        {filteredTasks.map((task: any, index: number) => (
+          <Card 
+            key={index} 
+            className={`border-2 transition-all duration-200 hover:shadow-md active:scale-[0.98] touch-manipulation ${
+              task.completed 
+                ? "bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 opacity-75" 
+                : "bg-white dark:bg-gray-800 border-yellow-200 dark:border-gray-700 hover:border-yellow-300 dark:hover:border-gray-600 shadow-sm"
+            }`}
+          >
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                {/* Custom Checkbox */}
+                <button
+                  onClick={() => toggleTask(index)}
+                  className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 touch-manipulation active:scale-90 ${
+                    task.completed 
+                      ? "bg-green-500 border-green-500 text-white" 
+                      : "border-yellow-400 hover:border-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
                   }`}
                 >
-                  {f}
+                  {task.completed && <CheckCircle2 className="w-4 h-4" />}
                 </button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="space-y-3 sm:space-y-4">
-            {filteredTasks.map((task: any, index: number) => (
-              <div 
-                key={index} 
-                className={`p-3 sm:p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-md hover:scale-[1.01] ${
-                  task.completed 
-                    ? "bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 opacity-75" 
-                    : "bg-white dark:bg-gray-800 border-yellow-200 dark:border-gray-700 hover:border-yellow-300 dark:hover:border-gray-600"
-                }`}
-              >
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
-                  <div className="flex-1">
-                    <div 
-                      className={`font-medium text-base sm:text-lg cursor-pointer transition-all duration-200 ${
-                        task.completed ? "line-through text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white hover:text-yellow-600 dark:hover:text-yellow-400"
-                      }`}
-                      onClick={() => toggleTask(index)}
-                    >
-                      {task.text}
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                      Date limite : {task.deadline || "aucune"}
-                    </div>
+
+                <div className="flex-1 min-w-0">
+                  <div 
+                    className={`font-medium text-base mb-2 transition-all duration-200 ${
+                      task.completed ? "line-through text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white"
+                    }`}
+                  >
+                    {task.text}
                   </div>
                   
-                  <div className="flex flex-row sm:flex-col items-start sm:items-end gap-3">
-                    <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${priorityColor[task.priority as keyof typeof priorityColor]}`}>
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${priorityColor[task.priority as keyof typeof priorityColor]}`}>
+                      {getPriorityIcon(task.priority)}
                       {task.priority}
                     </span>
-                    <div className="flex gap-3">
-                      <button 
-                        onClick={() => editTask(index)} 
-                        className="text-sm text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300 font-medium transition-colors duration-200"
-                      >
-                        Modifier
-                      </button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <button className="text-sm text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium transition-colors duration-200">
+                    {task.deadline && (
+                      <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                        {task.deadline}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => editTask(index)} 
+                      className="text-sm text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300 font-medium transition-colors duration-200 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-1 rounded-full touch-manipulation active:scale-95"
+                    >
+                      Modifier
+                    </button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button className="text-sm text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium transition-colors duration-200 bg-red-50 dark:bg-red-900/20 px-3 py-1 rounded-full touch-manipulation active:scale-95">
+                          Supprimer
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="mx-4 rounded-2xl">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                          <AlertDialogDescription className="text-base">
+                            Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action ne peut pas être annulée.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                          <AlertDialogCancel className="w-full sm:w-auto rounded-xl touch-manipulation">Annuler</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={() => deleteTask(index)} 
+                            className="w-full sm:w-auto bg-red-500 hover:bg-red-600 rounded-xl touch-manipulation"
+                          >
                             Supprimer
-                          </button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action ne peut pas être annulée.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Annuler</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => deleteTask(index)} className="bg-red-500 hover:bg-red-600">
-                              Supprimer
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        ))}
+        
+        {filteredTasks.length === 0 && (
+          <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
+            <CardContent className="p-8 text-center">
+              <div className="text-gray-400 mb-4">
+                <CheckCircle2 className="w-12 h-12 mx-auto mb-2" />
+              </div>
+              <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
+                {filter === "Toutes" ? "Aucune tâche" : `Aucune tâche ${filter.toLowerCase()}`}
+              </p>
+              <p className="text-gray-400 dark:text-gray-500 text-sm">
+                {filter === "Toutes" && "Commencez par ajouter votre première tâche !"}
+              </p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MessageCircle, Reply, User, Clock } from "lucide-react";
+import { MessageCircle, Reply, User, Clock, Plus, Search, ArrowLeft, Send } from "lucide-react";
 
 interface Post {
   id: string;
@@ -54,11 +54,11 @@ const initialPosts: Post[] = [
 const categories = ["Toutes", "Études", "Logement", "Social", "Jobs", "Divers"];
 
 const categoryColors = {
-  "Études": "bg-blue-100 text-blue-800 border-blue-200",
-  "Logement": "bg-green-100 text-green-800 border-green-200",
-  "Social": "bg-purple-100 text-purple-800 border-purple-200",
-  "Jobs": "bg-orange-100 text-orange-800 border-orange-200",
-  "Divers": "bg-gray-100 text-gray-800 border-gray-200"
+  "Études": "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400",
+  "Logement": "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400",
+  "Social": "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/20 dark:text-purple-400",
+  "Jobs": "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400",
+  "Divers": "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-300"
 };
 
 const ForumModule = () => {
@@ -71,6 +71,7 @@ const ForumModule = () => {
   const [selectedCategory, setSelectedCategory] = useState("Toutes");
   const [showNewPostForm, setShowNewPostForm] = useState(false);
   const [expandedPost, setExpandedPost] = useState<string | null>(null);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   
   // New post form state
   const [newPostTitle, setNewPostTitle] = useState("");
@@ -146,38 +147,142 @@ const ForumModule = () => {
     setReplyingTo(null);
   };
 
+  // Mobile Post Detail View
+  const PostDetailView = ({ post }: { post: Post }) => (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <Button
+          onClick={() => setSelectedPost(null)}
+          variant="ghost"
+          size="sm"
+          className="rounded-full p-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+        </Button>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white">Discussion</h2>
+      </div>
+
+      <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${categoryColors[post.category] || categoryColors["Divers"]}`}>
+              {post.category}
+            </span>
+            <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+              <User className="h-4 w-4" />
+              <span>{post.author}</span>
+            </div>
+            <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+              <Clock className="h-4 w-4" />
+              <span>{formatDate(post.createdAt)}</span>
+            </div>
+          </div>
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4">{post.title}</h3>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{post.content}</p>
+        </CardContent>
+      </Card>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Réponses ({post.replies.length})
+        </h3>
+        
+        {post.replies.map(reply => (
+          <Card key={reply.id} className="border-yellow-200 dark:border-gray-700 bg-yellow-50 dark:bg-gray-700">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                <span className="font-medium text-gray-900 dark:text-white">{reply.author}</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">{formatDate(reply.createdAt)}</span>
+              </div>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{reply.content}</p>
+            </CardContent>
+          </Card>
+        ))}
+        
+        {/* Reply Form */}
+        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
+          <CardContent className="p-4">
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Répondre à cette discussion</h4>
+            <div className="space-y-3">
+              <Input
+                type="text"
+                placeholder="Votre nom ou pseudo"
+                value={replyAuthor}
+                onChange={(e) => setReplyAuthor(e.target.value)}
+                className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-xl px-4 py-3 touch-manipulation"
+              />
+              <Textarea
+                placeholder="Votre réponse..."
+                value={replyContent}
+                onChange={(e) => setReplyContent(e.target.value)}
+                className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-xl px-4 py-3 min-h-[100px] touch-manipulation"
+              />
+              <Button
+                onClick={() => addReply(post.id)}
+                className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl py-3 font-semibold active:scale-95 transition-all touch-manipulation"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Publier la réponse
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+
+  if (selectedPost) {
+    return (
+      <div className="max-w-4xl mx-auto p-3 sm:p-4 lg:p-6">
+        <PostDetailView post={selectedPost} />
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+    <div className="max-w-4xl mx-auto p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Forum Étudiant</h2>
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Forum Étudiant</h2>
         <Button 
           onClick={() => setShowNewPostForm(!showNewPostForm)}
-          className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold shadow-md transition-all duration-200"
+          className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold shadow-lg transition-all duration-200 rounded-full sm:rounded-lg px-6 py-3 active:scale-95 touch-manipulation"
         >
+          <Plus className="w-4 h-4 mr-2" />
           {showNewPostForm ? "Annuler" : "Nouveau Post"}
         </Button>
       </div>
 
-      {/* Search and Filter */}
+      {/* Mobile-Optimized Search and Filter */}
       <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
         <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Input
-              type="text"
-              placeholder="Rechercher dans le forum..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white"
-            />
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-gray-200 rounded-lg px-4 py-2 font-medium focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-            >
+          <div className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                type="text"
+                placeholder="Rechercher dans le forum..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-xl py-3 touch-manipulation"
+              />
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
               {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 touch-manipulation active:scale-95 ${
+                    selectedCategory === category
+                      ? "bg-yellow-400 text-gray-900 shadow-md"
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  }`}
+                >
+                  {category}
+                </button>
               ))}
-            </select>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -194,20 +299,20 @@ const ForumModule = () => {
               placeholder="Votre nom ou pseudo"
               value={newPostAuthor}
               onChange={(e) => setNewPostAuthor(e.target.value)}
-              className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white"
+              className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-xl py-3 touch-manipulation"
             />
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Input
                 type="text"
                 placeholder="Titre du post"
                 value={newPostTitle}
                 onChange={(e) => setNewPostTitle(e.target.value)}
-                className="flex-1 border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white"
+                className="sm:col-span-2 border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white rounded-xl py-3 touch-manipulation"
               />
               <select
                 value={newPostCategory}
                 onChange={(e) => setNewPostCategory(e.target.value)}
-                className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-gray-200 rounded-lg px-4 py-2 font-medium focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+                className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-gray-200 rounded-xl px-4 py-3 font-medium focus:ring-2 focus:ring-yellow-400 focus:outline-none touch-manipulation"
               >
                 {categories.slice(1).map(category => (
                   <option key={category} value={category}>{category}</option>
@@ -218,119 +323,65 @@ const ForumModule = () => {
               placeholder="Contenu de votre message..."
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
-              className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white min-h-[120px]"
+              className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 dark:text-white min-h-[120px] rounded-xl touch-manipulation"
             />
             <Button 
               onClick={createPost}
-              className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold"
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-xl py-3 active:scale-95 transition-all touch-manipulation"
             >
+              <Send className="w-4 h-4 mr-2" />
               Publier
             </Button>
           </CardContent>
         </Card>
       )}
 
-      {/* Posts List */}
+      {/* Mobile-Optimized Posts List */}
       <div className="space-y-4">
         {filteredPosts.map(post => (
-          <Card key={post.id} className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
-            <CardContent className="p-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${categoryColors[post.category] || categoryColors["Divers"]}`}>
-                      {post.category}
-                    </span>
-                    <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                      <User className="h-4 w-4" />
-                      <span>{post.author}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                      <Clock className="h-4 w-4" />
-                      <span>{formatDate(post.createdAt)}</span>
-                    </div>
+          <Card 
+            key={post.id} 
+            className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all cursor-pointer active:scale-[0.98] touch-manipulation"
+            onClick={() => setSelectedPost(post)}
+          >
+            <CardContent className="p-4 sm:p-6">
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium border ${categoryColors[post.category] || categoryColors["Divers"]}`}>
+                    {post.category}
+                  </span>
+                  <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+                    <User className="h-3 w-3" />
+                    <span>{post.author}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{post.title}</h3>
-                  <p className="text-gray-700 dark:text-gray-300">{post.content}</p>
+                  <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+                    <Clock className="h-3 w-3" />
+                    <span>{formatDate(post.createdAt)}</span>
+                  </div>
+                </div>
+                
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white line-clamp-2">
+                  {post.title}
+                </h3>
+                
+                <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base line-clamp-2">
+                  {post.content}
+                </p>
+                
+                <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-600">
+                  <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+                    <MessageCircle className="h-4 w-4" />
+                    <span>{post.replies.length} réponse{post.replies.length !== 1 ? 's' : ''}</span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-full px-4 py-2"
+                  >
+                    Voir plus
+                  </Button>
                 </div>
               </div>
-              
-              <div className="flex items-center justify-between border-t border-gray-200 dark:border-gray-600 pt-4">
-                <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                  <MessageCircle className="h-4 w-4" />
-                  <span>{post.replies.length} réponse{post.replies.length !== 1 ? 's' : ''}</span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
-                  className="border-yellow-300 text-yellow-700 hover:bg-yellow-50 dark:border-yellow-600 dark:text-yellow-400"
-                >
-                  {expandedPost === post.id ? "Masquer" : "Voir plus"}
-                </Button>
-              </div>
-
-              {/* Replies */}
-              {expandedPost === post.id && (
-                <div className="mt-4 space-y-4">
-                  {post.replies.map(reply => (
-                    <div key={reply.id} className="bg-yellow-50 dark:bg-gray-700 p-4 rounded-lg border border-yellow-200 dark:border-gray-600 ml-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                        <span className="font-medium text-gray-900 dark:text-white">{reply.author}</span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">{formatDate(reply.createdAt)}</span>
-                      </div>
-                      <p className="text-gray-700 dark:text-gray-300">{reply.content}</p>
-                    </div>
-                  ))}
-                  
-                  {/* Reply Form */}
-                  {replyingTo === post.id ? (
-                    <div className="bg-yellow-50 dark:bg-gray-700 p-4 rounded-lg border border-yellow-200 dark:border-gray-600 ml-4 space-y-3">
-                      <Input
-                        type="text"
-                        placeholder="Votre nom ou pseudo"
-                        value={replyAuthor}
-                        onChange={(e) => setReplyAuthor(e.target.value)}
-                        className="border-yellow-300 dark:border-gray-500 bg-white dark:bg-gray-600"
-                      />
-                      <Textarea
-                        placeholder="Votre réponse..."
-                        value={replyContent}
-                        onChange={(e) => setReplyContent(e.target.value)}
-                        className="border-yellow-300 dark:border-gray-500 bg-white dark:bg-gray-600"
-                      />
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => addReply(post.id)}
-                          className="bg-yellow-400 hover:bg-yellow-500 text-gray-900"
-                        >
-                          Répondre
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setReplyingTo(null)}
-                          className="border-gray-300"
-                        >
-                          Annuler
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setReplyingTo(post.id)}
-                      className="ml-4 border-yellow-300 text-yellow-700 hover:bg-yellow-50 dark:border-yellow-600 dark:text-yellow-400"
-                    >
-                      <Reply className="h-4 w-4 mr-2" />
-                      Répondre
-                    </Button>
-                  )}
-                </div>
-              )}
             </CardContent>
           </Card>
         ))}
@@ -338,7 +389,18 @@ const ForumModule = () => {
         {filteredPosts.length === 0 && (
           <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
             <CardContent className="p-8 text-center">
-              <p className="text-gray-500 dark:text-gray-400">Aucun post trouvé. Soyez le premier à créer un post !</p>
+              <MessageCircle className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+              <p className="text-gray-500 dark:text-gray-400 text-lg mb-4">Aucun post trouvé</p>
+              <p className="text-gray-400 dark:text-gray-500 text-sm mb-6">
+                Soyez le premier à créer un post dans cette catégorie !
+              </p>
+              <Button
+                onClick={() => setShowNewPostForm(true)}
+                className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-full px-6 py-3"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Créer un post
+              </Button>
             </CardContent>
           </Card>
         )}
