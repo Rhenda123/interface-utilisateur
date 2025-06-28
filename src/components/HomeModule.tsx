@@ -10,20 +10,9 @@ import {
   CheckCircle2, 
   Calendar, 
   FileText, 
-  ArrowUpRight, 
   Plus,
-  Target,
   Clock,
-  AlertTriangle,
-  Sparkles,
-  BarChart3,
-  PieChart,
-  Activity,
-  Zap,
-  Users,
-  Award,
-  Star,
-  ChevronRight
+  AlertTriangle
 } from "lucide-react";
 
 interface HomeModuleProps {
@@ -31,12 +20,10 @@ interface HomeModuleProps {
 }
 
 const HomeModule = ({ onNavigate }: HomeModuleProps) => {
-  const [finances, setFinances] = useState({ income: 0, expenses: 0 });
   const [tasks, setTasks] = useState([]);
   const [events, setEvents] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [transactions, setTransactions] = useState([]);
-  const [budgets, setBudgets] = useState([]);
 
   // Data loading logic
   useEffect(() => {
@@ -53,9 +40,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
         const savedTransactions = localStorage.getItem("skoolife_transactions");
         if (savedTransactions) setTransactions(JSON.parse(savedTransactions));
-
-        const savedBudgets = localStorage.getItem("skoolife_budgets");
-        if (savedBudgets) setBudgets(JSON.parse(savedBudgets));
       } catch (error) {
         console.error('Error loading data:', error);
       }
@@ -96,182 +80,133 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   }).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-      {/* Hero Header */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-cyan-600/5"></div>
-        <div className="relative max-w-7xl mx-auto px-6 py-12">
-          <div className="flex items-center justify-between">
-            <div className="space-y-2">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
-                    Bonjour ! 👋
-                  </h1>
-                  <p className="text-slate-600 dark:text-slate-400 text-lg">
-                    Voici votre vue d'ensemble aujourd'hui
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="hidden md:flex items-center space-x-4">
-              <div className="flex items-center space-x-2 px-4 py-2 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-full border border-white/20">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Temps réel</span>
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Simple Header */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-6xl mx-auto px-6 py-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Tableau de bord
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Vue d'ensemble de vos activités
+          </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 pb-12">
-        {/* Key Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {/* Balance */}
-          <Card className="group relative overflow-hidden border-0 shadow-lg shadow-blue-500/10 bg-gradient-to-br from-white to-blue-50/50 dark:from-slate-800 dark:to-blue-950/20 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer" onClick={() => onNavigate?.('finances')}>
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent"></div>
-            <CardContent className="relative p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Wallet className="w-6 h-6 text-white" />
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all duration-300" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Solde actuel</p>
-                <p className={`text-2xl font-bold ${netBalance >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Main Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Balance Card */}
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNavigate?.('finances')}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <Wallet className="w-8 h-8 text-blue-600" />
+                <span className={`text-2xl font-bold ${netBalance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   €{Math.abs(netBalance).toLocaleString()}
-                </p>
-                <div className="flex items-center space-x-1">
+                </span>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Solde</p>
+                <div className="flex items-center text-sm text-gray-500">
                   {netBalance >= 0 ? (
-                    <TrendingUp className="w-4 h-4 text-emerald-500" />
+                    <TrendingUp className="w-4 h-4 mr-1 text-green-500" />
                   ) : (
-                    <TrendingDown className="w-4 h-4 text-red-500" />
+                    <TrendingDown className="w-4 h-4 mr-1 text-red-500" />
                   )}
-                  <span className="text-xs text-slate-500">Ce mois</span>
+                  Ce mois
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Tasks */}
-          <Card className="group relative overflow-hidden border-0 shadow-lg shadow-purple-500/10 bg-gradient-to-br from-white to-purple-50/50 dark:from-slate-800 dark:to-purple-950/20 hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer" onClick={() => onNavigate?.('todo')}>
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
-            <CardContent className="relative p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-white" />
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-purple-500 group-hover:translate-x-1 transition-all duration-300" />
+          {/* Tasks Card */}
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNavigate?.('todo')}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <CheckCircle2 className="w-8 h-8 text-purple-600" />
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {Math.round(taskProgress)}%
+                </span>
               </div>
-              <div className="space-y-3">
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Progression des tâches</p>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-slate-900 dark:text-white">{Math.round(taskProgress)}%</span>
-                    <span className="text-sm text-slate-500">{completedTasks}/{totalTasks}</span>
-                  </div>
-                  <Progress value={taskProgress} className="h-2" />
-                </div>
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Tâches</p>
+                <Progress value={taskProgress} className="h-2" />
+                <p className="text-sm text-gray-500">{completedTasks}/{totalTasks} terminées</p>
               </div>
             </CardContent>
           </Card>
 
-          {/* Events */}
-          <Card className="group relative overflow-hidden border-0 shadow-lg shadow-cyan-500/10 bg-gradient-to-br from-white to-cyan-50/50 dark:from-slate-800 dark:to-cyan-950/20 hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 cursor-pointer" onClick={() => onNavigate?.('planning')}>
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent"></div>
-            <CardContent className="relative p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Calendar className="w-6 h-6 text-white" />
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all duration-300" />
+          {/* Events Card */}
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNavigate?.('planning')}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <Calendar className="w-8 h-8 text-cyan-600" />
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {todayEvents}
+                </span>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Aujourd'hui</p>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">{todayEvents}</p>
-                <p className="text-xs text-slate-500">événement{todayEvents !== 1 ? 's' : ''} planifié{todayEvents !== 1 ? 's' : ''}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Événements</p>
+                <p className="text-sm text-gray-500">Aujourd'hui</p>
               </div>
             </CardContent>
           </Card>
 
-          {/* Documents */}
-          <Card className="group relative overflow-hidden border-0 shadow-lg shadow-orange-500/10 bg-gradient-to-br from-white to-orange-50/50 dark:from-slate-800 dark:to-orange-950/20 hover:shadow-xl hover:shadow-orange-500/20 transition-all duration-300 cursor-pointer" onClick={() => onNavigate?.('documents')}>
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent"></div>
-            <CardContent className="relative p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <FileText className="w-6 h-6 text-white" />
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all duration-300" />
+          {/* Documents Card */}
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNavigate?.('documents')}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <FileText className="w-8 h-8 text-orange-600" />
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {documents.length}
+                </span>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Documents</p>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">{documents.length}</p>
-                <p className="text-xs text-slate-500">fichier{documents.length !== 1 ? 's' : ''} stocké{documents.length !== 1 ? 's' : ''}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Documents</p>
+                <p className="text-sm text-gray-500">Fichiers stockés</p>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        {/* Main Content Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Financial Overview */}
           <div className="lg:col-span-2">
-            <Card className="border-0 shadow-xl bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-              <CardContent className="p-8">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-emerald-500 to-blue-500 flex items-center justify-center">
-                      <BarChart3 className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Aperçu financier</h3>
-                      <p className="text-sm text-slate-500">Performances de ce mois</p>
-                    </div>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={() => onNavigate?.('finances')} className="hover:bg-blue-50 dark:hover:bg-slate-700">
-                    Voir tout <ArrowUpRight className="w-4 h-4 ml-1" />
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    Finances du mois
+                  </h3>
+                  <Button variant="ghost" size="sm" onClick={() => onNavigate?.('finances')}>
+                    Voir tout
                   </Button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Income */}
-                  <div className="relative p-6 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/20 dark:to-emerald-900/10 border border-emerald-200/50 dark:border-emerald-800/30">
-                    <div className="flex items-center justify-between mb-3">
-                      <TrendingUp className="w-8 h-8 text-emerald-600" />
-                      <div className="text-right">
-                        <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">€{monthlyIncome.toLocaleString()}</p>
-                        <p className="text-sm text-emerald-600 dark:text-emerald-500">Revenus</p>
-                      </div>
-                    </div>
+                  <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <TrendingUp className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-green-700 dark:text-green-400">
+                      €{monthlyIncome.toLocaleString()}
+                    </p>
+                    <p className="text-sm text-green-600 dark:text-green-500">Revenus</p>
                   </div>
 
-                  {/* Expenses */}
-                  <div className="relative p-6 rounded-2xl bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/20 dark:to-red-900/10 border border-red-200/50 dark:border-red-800/30">
-                    <div className="flex items-center justify-between mb-3">
-                      <TrendingDown className="w-8 h-8 text-red-600" />
-                      <div className="text-right">
-                        <p className="text-2xl font-bold text-red-700 dark:text-red-400">€{monthlyExpenses.toLocaleString()}</p>
-                        <p className="text-sm text-red-600 dark:text-red-500">Dépenses</p>
-                      </div>
-                    </div>
+                  <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                    <TrendingDown className="w-8 h-8 text-red-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold text-red-700 dark:text-red-400">
+                      €{monthlyExpenses.toLocaleString()}
+                    </p>
+                    <p className="text-sm text-red-600 dark:text-red-500">Dépenses</p>
                   </div>
 
-                  {/* Net */}
-                  <div className="relative p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/20 dark:to-blue-900/10 border border-blue-200/50 dark:border-blue-800/30">
-                    <div className="flex items-center justify-between mb-3">
-                      <Activity className="w-8 h-8 text-blue-600" />
-                      <div className="text-right">
-                        <p className={`text-2xl font-bold ${netBalance >= 0 ? 'text-blue-700 dark:text-blue-400' : 'text-red-700 dark:text-red-400'}`}>
-                          €{Math.abs(netBalance).toLocaleString()}
-                        </p>
-                        <p className="text-sm text-blue-600 dark:text-blue-500">Net</p>
-                      </div>
-                    </div>
+                  <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <Wallet className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                    <p className={`text-2xl font-bold ${netBalance >= 0 ? 'text-blue-700 dark:text-blue-400' : 'text-red-700 dark:text-red-400'}`}>
+                      €{Math.abs(netBalance).toLocaleString()}
+                    </p>
+                    <p className="text-sm text-blue-600 dark:text-blue-500">Net</p>
                   </div>
                 </div>
               </CardContent>
@@ -280,18 +215,22 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
           {/* Quick Actions */}
           <div className="space-y-6">
-            {/* Task Alert */}
+            {/* Urgent Alert */}
             {urgentTasks > 0 && (
-              <Card className="border-0 shadow-lg bg-gradient-to-r from-red-500 to-pink-500 text-white">
+              <Card className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
                 <CardContent className="p-6">
-                  <div className="flex items-center space-x-3">
-                    <AlertTriangle className="w-8 h-8" />
+                  <div className="flex items-center space-x-3 mb-4">
+                    <AlertTriangle className="w-6 h-6 text-red-600" />
                     <div>
-                      <h4 className="font-semibold">Attention requise</h4>
-                      <p className="text-sm opacity-90">{urgentTasks} tâche{urgentTasks !== 1 ? 's' : ''} urgente{urgentTasks !== 1 ? 's' : ''}</p>
+                      <h4 className="font-semibold text-red-900 dark:text-red-100">
+                        Tâches urgentes
+                      </h4>
+                      <p className="text-sm text-red-700 dark:text-red-300">
+                        {urgentTasks} tâche{urgentTasks !== 1 ? 's' : ''} à traiter
+                      </p>
                     </div>
                   </div>
-                  <Button variant="secondary" size="sm" className="mt-4 w-full" onClick={() => onNavigate?.('todo')}>
+                  <Button size="sm" className="w-full" onClick={() => onNavigate?.('todo')}>
                     Voir les tâches
                   </Button>
                 </CardContent>
@@ -299,16 +238,15 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             )}
 
             {/* Quick Actions */}
-            <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+            <Card>
               <CardContent className="p-6">
-                <h4 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center">
-                  <Zap className="w-5 h-5 mr-2 text-yellow-500" />
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
                   Actions rapides
                 </h4>
                 <div className="space-y-3">
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start hover:bg-blue-50 dark:hover:bg-slate-700" 
+                    className="w-full justify-start" 
                     onClick={() => onNavigate?.('finances')}
                   >
                     <Plus className="w-4 h-4 mr-3" />
@@ -316,15 +254,15 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start hover:bg-purple-50 dark:hover:bg-slate-700" 
+                    className="w-full justify-start" 
                     onClick={() => onNavigate?.('todo')}
                   >
-                    <Target className="w-4 h-4 mr-3" />
+                    <CheckCircle2 className="w-4 h-4 mr-3" />
                     Nouvelle tâche
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start hover:bg-cyan-50 dark:hover:bg-slate-700" 
+                    className="w-full justify-start" 
                     onClick={() => onNavigate?.('planning')}
                   >
                     <Calendar className="w-4 h-4 mr-3" />
@@ -333,103 +271,49 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Recent Activity */}
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-2 mb-4">
+                  <Clock className="w-5 h-5 text-gray-600" />
+                  <h4 className="font-semibold text-gray-900 dark:text-white">
+                    Activité récente
+                  </h4>
+                </div>
+                <div className="space-y-3">
+                  {transactions.slice(0, 3).map((transaction: any, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                          transaction.type === 'income' ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'
+                        }`}>
+                          {transaction.type === 'income' ? (
+                            <TrendingUp className="w-4 h-4 text-green-600" />
+                          ) : (
+                            <TrendingDown className="w-4 h-4 text-red-600" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm text-gray-900 dark:text-white">
+                            {transaction.description}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {transaction.category}
+                          </p>
+                        </div>
+                      </div>
+                      <span className={`font-semibold ${
+                        transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {transaction.type === 'income' ? '+' : '-'}€{transaction.amount}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </div>
-
-        {/* Bottom Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Recent Activity */}
-          <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-                  <Clock className="w-4 h-4 text-white" />
-                </div>
-                <h4 className="font-semibold text-slate-900 dark:text-white">Activité récente</h4>
-              </div>
-              <div className="space-y-4">
-                {transactions.slice(0, 3).map((transaction: any, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${transaction.type === 'income' ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-red-100 dark:bg-red-900/30'}`}>
-                        {transaction.type === 'income' ? (
-                          <TrendingUp className="w-4 h-4 text-emerald-600" />
-                        ) : (
-                          <TrendingDown className="w-4 h-4 text-red-600" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm text-slate-900 dark:text-white">{transaction.description}</p>
-                        <p className="text-xs text-slate-500">{transaction.category}</p>
-                      </div>
-                    </div>
-                    <span className={`font-semibold ${transaction.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
-                      {transaction.type === 'income' ? '+' : '-'}€{transaction.amount}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Progress Overview */}
-          <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
-                  <PieChart className="w-4 h-4 text-white" />
-                </div>
-                <h4 className="font-semibold text-slate-900 dark:text-white">Vue d'ensemble</h4>
-              </div>
-              <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Tâches complétées</span>
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">{completedTasks}/{totalTasks}</span>
-                  </div>
-                  <Progress value={taskProgress} className="h-2" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20">
-                    <p className="text-lg font-bold text-blue-600 dark:text-blue-400">{todayEvents}</p>
-                    <p className="text-xs text-slate-500">Événements</p>
-                  </div>
-                  <div className="text-center p-3 rounded-lg bg-orange-50 dark:bg-orange-950/20">
-                    <p className="text-lg font-bold text-orange-600 dark:text-orange-400">{documents.length}</p>
-                    <p className="text-xs text-slate-500">Documents</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Performance */}
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
-                  <Award className="w-4 h-4 text-white" />
-                </div>
-                <h4 className="font-semibold">Performance</h4>
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm opacity-80">Productivité</span>
-                  <div className="flex items-center space-x-2">
-                    <div className="flex space-x-1">
-                      {[1,2,3,4,5].map((star) => (
-                        <Star key={star} className={`w-4 h-4 ${star <= Math.ceil(taskProgress / 20) ? 'text-yellow-400' : 'text-gray-600'}`} fill="currentColor" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-center py-4">
-                  <p className="text-2xl font-bold mb-1">{Math.round(taskProgress)}%</p>
-                  <p className="text-sm opacity-80">Objectifs atteints</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
