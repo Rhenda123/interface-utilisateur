@@ -440,17 +440,6 @@ const DocumentsModule = () => {
           )}
         </CardContent>
       </Card>
-
-      {/* Floating Action Button for Mobile Upload */}
-      <div className="sm:hidden fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => fileInputRef.current?.click()}
-          size="lg"
-          className="h-14 w-14 rounded-full bg-gradient-to-r from-[#F6C103] to-[#E5AD03] hover:from-[#E5AD03] hover:to-[#D4A103] text-gray-900 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-        >
-          <Plus className="w-6 h-6" />
-        </Button>
-      </div>
     </div>
   );
 };
