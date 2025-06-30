@@ -8,6 +8,8 @@ import WeekNavigation from "@/components/planning/WeekNavigation";
 import DayColumn from "@/components/planning/DayColumn";
 import EventCreationModal from "@/components/planning/EventCreationModal";
 import EventEditModal from "@/components/planning/EventEditModal";
+import GoogleCalendarSync from "@/components/planning/GoogleCalendarSync";
+import { useGoogleCalendar } from "@/hooks/useGoogleCalendar";
 
 function ScheduleModule() {
   const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -58,18 +60,24 @@ function ScheduleModule() {
 
   const timeSlots = generateTimeSlots();
 
-  const [events, setEvents] = useState<Event[]>(() => {
+  const { syncGoogleEvents } = useGoogleCalendar();
+
+  // Enhanced event loading with Google Calendar sync
+  const [allEvents, setAllEvents] = useState<Event[]>(() => {
     const saved = localStorage.getItem("skoolife_events");
     if (saved) {
       const parsedEvents = JSON.parse(saved);
-      // Migrate old events without date to include date
       return parsedEvents.map((event: any) => ({
         ...event,
-        date: event.date || new Date().toISOString().split('T')[0] // Add current date if missing
+        date: event.date || new Date().toISOString().split('T')[0]
       }));
     }
     return [];
   });
+
+  // Update events state to use allEvents
+  const events = allEvents;
+  const setEvents = setAllEvents;
   
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   
@@ -92,6 +100,30 @@ function ScheduleModule() {
 
   // Mobile view state
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
+
+  // Add Google Calendar events sync handler
+  const handleGoogleEventsSync = async (googleEvents: Event[]) => {
+    const localEvents = allEvents.filter(e => !e.id.startsWith('google_'));
+    const combinedEvents = [...localEvents, ...googleEvents];
+    setAllEvents(combinedEvents);
+    localStorage.setItem("skoolife_events", JSON.stringify(combinedEvents));
+  };
+
+  // Enhanced useEffect to sync Google events on load
+  useEffect(() => {
+    const syncOnLoad = async () => {
+      try {
+        const googleEvents = await syncGoogleEvents();
+        if (googleEvents.length > 0) {
+          handleGoogleEventsSync(googleEvents);
+        }
+      } catch (error) {
+        console.log('Google Calendar sync not available or failed');
+      }
+    };
+
+    syncOnLoad();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("skoolife_events", JSON.stringify(events));
@@ -365,32 +397,49 @@ function ScheduleModule() {
         </div>
       </div>
 
-      {/* Event Type Filters */}
+      {/* Google Calendar Integration - Show after filters */}
       {showFilters && (
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-900 rounded-xl">
-          <CardContent className="p-5">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Filtrer par type d'événement</h3>
-            <div className="flex flex-wrap gap-3">
-              {eventTypes.map(type => {
-                const IconComponent = type.icon;
-                const isVisible = visibleEventTypes.has(type.id);
-                return (
-                  <Button
-                    key={type.id}
-                    onClick={() => toggleEventTypeVisibility(type.id)}
-                    variant={isVisible ? "default" : "outline"}
-                    size="sm"
-                    className={`flex items-center gap-2 rounded-full touch-manipulation active:scale-95 transition-all shadow-sm hover:shadow-md font-medium ${isVisible ? '' : 'opacity-50'}`}
-                    style={isVisible ? { backgroundColor: type.color } : {}}
-                  >
-                    <IconComponent className="w-4 h-4" />
-                    <span className="text-xs sm:text-sm">{type.name}</span>
-                  </Button>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+        <>
+          {/* Event Type Filters */}
+          <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-900 rounded-xl">
+            <CardContent className="p-5">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Filtrer par type d'événement</h3>
+              <div className="flex flex-wrap gap-3">
+                {eventTypes.map(type => {
+                  const IconComponent = type.icon;
+                  const isVisible = visibleEventTypes.has(type.id);
+                  return (
+                    <Button
+                      key={type.id}
+                      onClick={() => toggleEventTypeVisibility(type.id)}
+                      variant={isVisible ? "default" : "outline"}
+                      size="sm"
+                      className={`flex items-center gap-2 rounded-full touch-manipulation active:scale-95 transition-all shadow-sm hover:shadow-md font-medium ${isVisible ? '' : 'opacity-50'}`}
+                      style={isVisible ? { backgroundColor: type.color } : {}}
+                    >
+                      <IconComponent className="w-4 h-4" />
+                      <span className="text-xs sm:text-sm">{type.name}</span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Google Calendar Sync */}
+          <GoogleCalendarSync 
+            onEventsSync={handleGoogleEventsSync}
+            isMobile={isMobileView}
+          />
+        </>
+      )}
+
+      {/* Mobile Google Calendar Sync - Compact version */}
+      {isMobileView && !selectedDay && (
+        <GoogleCalendarSync 
+          onEventsSync={handleGoogleEventsSync}
+          isMobile={true}
+        />
       )}
 
       {/* Enhanced Mobile Week Navigation - More compact */}

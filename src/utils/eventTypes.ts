@@ -1,4 +1,3 @@
-
 import { Calendar, Users, Dumbbell, User } from "lucide-react";
 
 export interface EventType {
@@ -34,6 +33,20 @@ export interface Event {
   reminders: number[];
 }
 
+// Add Google Calendar event type
+const googleEventType: EventType = {
+  id: 'google',
+  name: 'Google Calendar',
+  icon: Calendar,
+  color: '#4285f4',
+  fields: [
+    { id: 'location', label: 'Lieu', type: 'text' },
+    { id: 'description', label: 'Description', type: 'text' }
+  ],
+  reminderDefaults: []
+};
+
+// Update the eventTypes array to include the Google event type
 export const eventTypes: EventType[] = [
   {
     id: 'class',
@@ -81,7 +94,8 @@ export const eventTypes: EventType[] = [
       { id: 'priority', label: 'Priorité', type: 'select', options: ['Basse', 'Moyenne', 'Haute'] }
     ],
     reminderDefaults: [30]
-  }
+  },
+  googleEventType
 ];
 
 export const getEventTypeById = (id: string): EventType | undefined => {
