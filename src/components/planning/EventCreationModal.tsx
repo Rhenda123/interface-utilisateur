@@ -115,36 +115,38 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md p-0 gap-0 bg-white dark:bg-gray-800 border-yellow-200 dark:border-gray-700">
-        <DialogHeader className="p-4 pb-2">
-          <DialogTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+      <DialogContent className="sm:max-w-md w-[95vw] max-w-[95vw] sm:w-full p-0 gap-0 bg-white dark:bg-gray-800 border-yellow-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="p-4 sm:p-6 pb-3 sm:pb-4 sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+          <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             Nouvel événement
           </DialogTitle>
         </DialogHeader>
         
-        <div className="p-4 space-y-4">
+        <div className="p-4 sm:p-6 space-y-6 sm:space-y-4">
           {/* Event Name */}
-          <Input
-            type="text"
-            placeholder="Ajouter un titre"
-            value={eventName}
-            onChange={(e) => setEventName(e.target.value)}
-            className="text-lg font-medium border-0 shadow-none px-0 focus-visible:ring-0 placeholder:text-gray-400"
-            autoFocus
-          />
+          <div className="space-y-3 sm:space-y-2">
+            <Input
+              type="text"
+              placeholder="Ajouter un titre"
+              value={eventName}
+              onChange={(e) => setEventName(e.target.value)}
+              className="text-lg font-medium border-0 shadow-none px-0 focus-visible:ring-0 placeholder:text-gray-400 h-12 sm:h-10"
+              autoFocus
+            />
+          </div>
           
           {/* Day Selection */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="space-y-3 sm:space-y-2">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block">
               Jour
             </label>
             <Select value={selectedDay} onValueChange={setSelectedDay}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full h-12 sm:h-10 text-base sm:text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {daysOfWeek.map(day => (
-                  <SelectItem key={day} value={day} className="capitalize">
+                  <SelectItem key={day} value={day} className="capitalize text-base sm:text-sm py-3 sm:py-2">
                     {day}
                   </SelectItem>
                 ))}
@@ -153,28 +155,31 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
           </div>
           
           {/* Time Selection */}
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-            <div className="flex items-center gap-2">
+          <div className="space-y-3 sm:space-y-2">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block">
+              Horaire
+            </label>
+            <div className="flex items-center gap-3 sm:gap-2">
               <Select value={startTime} onValueChange={setStartTime}>
-                <SelectTrigger className="w-20 h-8 border-0 shadow-none px-2">
+                <SelectTrigger className="flex-1 h-12 sm:h-8 sm:w-20 border-0 shadow-none px-3 sm:px-2 text-base sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {timeSlots.map(time => (
-                    <SelectItem key={time} value={time}>{time}</SelectItem>
+                    <SelectItem key={time} value={time} className="text-base sm:text-sm py-3 sm:py-2">{time}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               
-              <span>-</span>
+              <span className="text-gray-500 text-base sm:text-sm">-</span>
               
               <Select value={endTime} onValueChange={setEndTime}>
-                <SelectTrigger className="w-20 h-8 border-0 shadow-none px-2">
+                <SelectTrigger className="flex-1 h-12 sm:h-8 sm:w-20 border-0 shadow-none px-3 sm:px-2 text-base sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {timeSlots.map(time => (
-                    <SelectItem key={time} value={time}>{time}</SelectItem>
+                    <SelectItem key={time} value={time} className="text-base sm:text-sm py-3 sm:py-2">{time}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -182,8 +187,11 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
           </div>
 
           {/* Event Type Selection */}
-          <div className="space-y-2">
-            <div className="flex gap-2 flex-wrap">
+          <div className="space-y-3 sm:space-y-2">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block">
+              Type d'événement
+            </label>
+            <div className="flex gap-3 sm:gap-2 flex-wrap">
               {eventTypes.map(type => {
                 const IconComponent = type.icon;
                 const isSelected = selectedTypeId === type.id;
@@ -193,10 +201,10 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
                     onClick={() => setSelectedTypeId(type.id)}
                     variant={isSelected ? "default" : "outline"}
                     size="sm"
-                    className={`flex items-center gap-1 h-8 text-xs ${isSelected ? 'shadow-sm' : ''}`}
+                    className={`flex items-center gap-2 sm:gap-1 h-12 sm:h-8 px-4 sm:px-3 text-sm sm:text-xs touch-manipulation ${isSelected ? 'shadow-sm' : ''}`}
                     style={isSelected ? { backgroundColor: type.color } : { borderColor: type.color, color: type.color }}
                   >
-                    <IconComponent className="w-3 h-3" />
+                    <IconComponent className="w-4 h-4 sm:w-3 sm:h-3" />
                     {type.name}
                   </Button>
                 );
@@ -206,49 +214,54 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
 
           {/* Dynamic Fields - Show only the first 2 most important ones */}
           {selectedEventType && selectedEventType.fields.length > 0 && (
-            <div className="space-y-2">
-              {selectedEventType.fields.slice(0, 2).map(field => (
-                <Input
-                  key={field.id}
-                  type={field.type === 'number' ? 'number' : 'text'}
-                  placeholder={field.label}
-                  value={dynamicFields[field.id] || ''}
-                  onChange={(e) => updateDynamicField(field.id, e.target.value)}
-                  className="h-8 text-sm"
-                />
-              ))}
+            <div className="space-y-4 sm:space-y-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block">
+                Détails supplémentaires
+              </label>
+              <div className="space-y-3 sm:space-y-2">
+                {selectedEventType.fields.slice(0, 2).map(field => (
+                  <Input
+                    key={field.id}
+                    type={field.type === 'number' ? 'number' : 'text'}
+                    placeholder={field.label}
+                    value={dynamicFields[field.id] || ''}
+                    onChange={(e) => updateDynamicField(field.id, e.target.value)}
+                    className="h-12 sm:h-8 text-base sm:text-sm"
+                  />
+                ))}
+              </div>
             </div>
           )}
         </div>
         
         {/* Actions */}
-        <div className="flex items-center justify-between p-4 pt-0 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 pt-4 sm:pt-0 border-t border-gray-100 dark:border-gray-700 gap-4 sm:gap-2 sticky bottom-0 bg-white dark:bg-gray-800">
           <Button
             variant="ghost"
             size="sm"
             onClick={onMoreOptions}
-            className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white h-12 sm:h-auto w-full sm:w-auto touch-manipulation"
           >
-            <MoreHorizontal className="w-4 h-4 mr-1" />
+            <MoreHorizontal className="w-4 h-4 mr-2" />
             Plus d'options
           </Button>
           
-          <div className="flex gap-2">
+          <div className="flex gap-3 sm:gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={onClose}
-              className="text-sm"
+              className="text-sm flex-1 sm:flex-none h-12 sm:h-auto touch-manipulation"
             >
               Annuler
             </Button>
             <Button
               onClick={handleSave}
               size="sm"
-              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 text-sm"
+              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 text-sm flex-1 sm:flex-none h-12 sm:h-auto touch-manipulation"
               disabled={!eventName.trim()}
             >
-              <Plus className="w-3 h-3 mr-1" />
+              <Plus className="w-4 h-4 sm:w-3 sm:h-3 mr-2 sm:mr-1" />
               Enregistrer
             </Button>
           </div>
