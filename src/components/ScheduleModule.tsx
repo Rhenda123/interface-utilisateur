@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,6 @@ import DayColumn from "@/components/planning/DayColumn";
 import EventCreationModal from "@/components/planning/EventCreationModal";
 import EventEditModal from "@/components/planning/EventEditModal";
 import GoogleCalendarSync from "@/components/planning/GoogleCalendarSync";
-import { useGoogleCalendar } from "@/hooks/useGoogleCalendar";
 
 function ScheduleModule() {
   const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -61,9 +59,7 @@ function ScheduleModule() {
 
   const timeSlots = generateTimeSlots();
 
-  const { syncGoogleEvents } = useGoogleCalendar();
-
-  // Enhanced event loading with Google Calendar sync
+  // Enhanced event loading
   const [allEvents, setAllEvents] = useState<Event[]>(() => {
     const saved = localStorage.getItem("skoolife_events");
     if (saved) {
@@ -101,30 +97,6 @@ function ScheduleModule() {
 
   // Mobile view state
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
-
-  // Add Google Calendar events sync handler
-  const handleGoogleEventsSync = async (googleEvents: Event[]) => {
-    const localEvents = allEvents.filter(e => !e.id.startsWith('google_'));
-    const combinedEvents = [...localEvents, ...googleEvents];
-    setAllEvents(combinedEvents);
-    localStorage.setItem("skoolife_events", JSON.stringify(combinedEvents));
-  };
-
-  // Enhanced useEffect to sync Google events on load
-  useEffect(() => {
-    const syncOnLoad = async () => {
-      try {
-        const googleEvents = await syncGoogleEvents();
-        if (googleEvents.length > 0) {
-          handleGoogleEventsSync(googleEvents);
-        }
-      } catch (error) {
-        console.log('Google Calendar sync not available or failed');
-      }
-    };
-
-    syncOnLoad();
-  }, []);
 
   useEffect(() => {
     localStorage.setItem("skoolife_events", JSON.stringify(events));
@@ -398,11 +370,8 @@ function ScheduleModule() {
         </div>
       </div>
 
-      {/* Always show Google Calendar Sync - positioned prominently */}
-      <GoogleCalendarSync 
-        onEventsSync={handleGoogleEventsSync}
-        isMobile={isMobileView}
-      />
+      {/* Google Calendar Connection Button */}
+      <GoogleCalendarSync isMobile={isMobileView} />
 
       {/* Event Type Filters - only show when filters are toggled */}
       {showFilters && (
