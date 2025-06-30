@@ -14,7 +14,6 @@ interface UseGoogleCalendarReturn {
   syncGoogleEvents: () => Promise<Event[]>;
 }
 
-const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
 
@@ -27,7 +26,8 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
   useEffect(() => {
     const checkConnection = () => {
       const token = localStorage.getItem('google_calendar_token');
-      if (token) {
+      const clientId = localStorage.getItem('google_client_id');
+      if (token && clientId) {
         setIsConnected(true);
         googleCalendarService.setConfig({ accessToken: token });
       }
@@ -40,6 +40,11 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
     try {
       setIsLoading(true);
       
+      const clientId = localStorage.getItem('google_client_id');
+      if (!clientId) {
+        throw new Error('Google Client ID not configured');
+      }
+      
       // Initialize Google API
       if (!window.gapi) {
         await new Promise<void>((resolve) => {
@@ -50,12 +55,14 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
         });
       }
 
-      await new Promise<void>((resolve) => window.gapi.load('auth2', () => resolve()));
+      await new Promise<void>((resolve) => {
+        window.gapi.load('auth2', () => resolve());
+      });
       
       const authInstance = window.gapi.auth2.getAuthInstance();
       if (!authInstance) {
         await window.gapi.auth2.init({
-          client_id: CLIENT_ID,
+          client_id: clientId,
           scope: SCOPES
         });
       }
@@ -75,7 +82,7 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
       console.error('Google Calendar connection failed:', error);
       toast({
         title: "Erreur de connexion",
-        description: "Impossible de se connecter à Google Calendar",
+        description: error instanceof Error ? error.message : "Impossible de se connecter à Google Calendar",
         variant: "destructive"
       });
     } finally {
