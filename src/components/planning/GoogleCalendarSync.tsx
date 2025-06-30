@@ -13,7 +13,7 @@ const GoogleCalendarSync: React.FC<GoogleCalendarSyncProps> = ({ onEventsSync, i
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center gap-2 w-full justify-center">
+        <Button className="bg-white hover:bg-green-50 text-green-600 border border-green-500 hover:border-green-600 font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center gap-2 w-full justify-center">
           <CreditCard className="w-4 h-4" />
           Connecter votre Google Agenda
         </Button>
