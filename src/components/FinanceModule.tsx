@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -425,8 +426,35 @@ export default function FinanceModule() {
           <div className="flex-1 min-w-0">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Finances</h2>
           </div>
-          {/* Connect Bank Button - Desktop */}
-          <div className="hidden sm:block">
+        </div>
+
+        {/* Aligned Header Controls - Month Selector, Connect Bank, Currency, and Settings */}
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
+          {/* Month Navigation */}
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <Button
+              onClick={() => navigateMonth('prev')}
+              variant="outline"
+              size="sm"
+              className="h-8 w-8 p-0 sm:h-9 sm:w-9 flex-shrink-0"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap truncate">
+              {selectedMonthName}
+            </p>
+            <Button
+              onClick={() => navigateMonth('next')}
+              variant="outline"
+              size="sm"
+              className="h-8 w-8 p-0 sm:h-9 sm:w-9 flex-shrink-0"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+          
+          {/* Currency and Settings Controls - Desktop/Tablet */}
+          <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
             <Dialog open={showBankDialog} onOpenChange={setShowBankDialog}>
               <DialogTrigger asChild>
                 <Button
@@ -465,36 +493,6 @@ export default function FinanceModule() {
                 </div>
               </DialogContent>
             </Dialog>
-          </div>
-        </div>
-
-        {/* Aligned Header Controls - Month Selector, Currency, and Settings */}
-        <div className="flex items-center justify-between gap-2 sm:gap-3">
-          {/* Month Navigation */}
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <Button
-              onClick={() => navigateMonth('prev')}
-              variant="outline"
-              size="sm"
-              className="h-8 w-8 p-0 sm:h-9 sm:w-9 flex-shrink-0"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap truncate">
-              {selectedMonthName}
-            </p>
-            <Button
-              onClick={() => navigateMonth('next')}
-              variant="outline"
-              size="sm"
-              className="h-8 w-8 p-0 sm:h-9 sm:w-9 flex-shrink-0"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
-          
-          {/* Currency and Settings Controls */}
-          <div className="flex items-center gap-2 flex-shrink-0">
             <Select value={currency} onValueChange={setCurrency}>
               <SelectTrigger className="w-16 sm:w-20 h-8 sm:h-9">
                 <SelectValue />
@@ -513,6 +511,28 @@ export default function FinanceModule() {
             >
               <Settings className="w-4 h-4" />
               <span className="ml-1 hidden sm:inline">Gestion</span>
+            </Button>
+          </div>
+
+          {/* Currency and Settings Controls - Mobile Only */}
+          <div className="flex sm:hidden items-center gap-2 flex-shrink-0">
+            <Select value={currency} onValueChange={setCurrency}>
+              <SelectTrigger className="w-16 h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {currencies.map(curr => (
+                  <SelectItem key={curr} value={curr}>{curr}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              onClick={() => setShowManagement(!showManagement)}
+              variant="outline"
+              size="sm"
+              className="h-8 px-2"
+            >
+              <Settings className="w-4 h-4" />
             </Button>
           </div>
         </div>
