@@ -115,7 +115,7 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md w-[95vw] max-w-[95vw] sm:w-full p-0 gap-0 bg-white dark:bg-gray-800 border-yellow-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md w-[95vw] max-w-[95vw] sm:w-full p-0 gap-0 bg-white dark:bg-gray-800 border-yellow-200 dark:border-gray-700 max-h-[80vh] sm:max-h-[90vh] overflow-y-auto">
         <DialogHeader className="p-4 sm:p-6 pb-3 sm:pb-4 sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
           <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             Nouvel événement
