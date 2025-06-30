@@ -8,7 +8,7 @@ import ScheduleModule from "@/components/ScheduleModule";
 import DocumentsModule from "@/components/DocumentsModule";
 import ForumModule from "@/components/ForumModule";
 import FinanceModule from "@/components/FinanceModule";
-import { Menu, X, Home, User, Settings, Bell, LogOut } from "lucide-react";
+import { Menu, X, Home, User, Settings, Bell, LogOut, DollarSign, CheckSquare, Calendar, FileText, MessageCircle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 
@@ -22,12 +22,12 @@ export default function Index() {
   };
 
   const navigationItems = [
-    { id: "home", label: "Home" },
-    { id: "finances", label: "Finances" },
-    { id: "todo", label: "To-Do" },
-    { id: "planning", label: "Planning" },
-    { id: "documents", label: "Documents" },
-    { id: "forum", label: "Forum" }
+    { id: "home", label: "Home", icon: Home },
+    { id: "finances", label: "Finances", icon: DollarSign },
+    { id: "todo", label: "To-Do", icon: CheckSquare },
+    { id: "planning", label: "Planning", icon: Calendar },
+    { id: "documents", label: "Documents", icon: FileText },
+    { id: "forum", label: "Forum", icon: MessageCircle }
   ];
 
   // User data for mobile menu
@@ -59,12 +59,12 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-      {/* Sticky Header - Enhanced for native mobile feel */}
-      <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-[#F6C103] dark:border-gray-700 shadow-lg lg:shadow-sm">
+      {/* Mobile-First Header - Native app style */}
+      <header className="sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
-            {/* Left: Brand - Optimized for mobile */}
-            <h1 className="text-lg sm:text-xl lg:text-3xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AD03] dark:from-[#F6C103] dark:to-[#E5AD03] bg-clip-text text-transparent">
+          <div className="flex items-center justify-between h-16 lg:h-20">
+            {/* Left: Brand - Mobile optimized */}
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AD03] dark:from-[#F6C103] dark:to-[#E5AD03] bg-clip-text text-transparent">
               SKOOLIFE
             </h1>
             
@@ -87,40 +87,29 @@ export default function Index() {
               </div>
             </nav>
 
-            {/* Mobile Navigation Controls - Enhanced native feel */}
-            <div className="lg:hidden flex items-center gap-1">
-              <button
-                onClick={() => handleNavigation("home")}
-                className={`p-3 rounded-xl transition-all duration-200 touch-manipulation ${
-                  view === "home"
-                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-lg scale-105"
-                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95"
-                }`}
-              >
-                <Home className="h-5 w-5" />
-              </button>
-              
+            {/* Mobile: Menu Button Only */}
+            <div className="lg:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="p-3 rounded-xl text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 touch-manipulation"
               >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
             
-            {/* Right: User Controls - Enhanced for mobile */}
-            <div className="hidden sm:flex items-center gap-2 lg:gap-3">
+            {/* Right: Desktop User Controls */}
+            <div className="hidden lg:flex items-center gap-2 lg:gap-3">
               <ThemeToggle />
               <UserAccountMenu />
             </div>
           </div>
 
-          {/* Mobile Navigation Menu - Now contains user account section */}
+          {/* Mobile Menu Overlay - Native drawer style */}
           {mobileMenuOpen && (
-            <div className="lg:hidden border-t border-[#F6C103]/20 dark:border-gray-700/50 bg-white/98 dark:bg-gray-800/98 backdrop-blur-xl rounded-b-2xl shadow-2xl mx-2 mb-2">
-              <div className="p-6 space-y-6">
+            <div className="lg:hidden fixed inset-0 top-16 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-fade-in">
+              <div className="p-6 space-y-6 h-full overflow-y-auto">
                 {/* User Profile Section */}
-                <div className="flex items-center space-x-4 pb-4 border-b border-yellow-100 dark:border-gray-700">
+                <div className="flex items-center space-x-4 pb-6 border-b border-yellow-100 dark:border-gray-700">
                   <Avatar className="h-16 w-16 border-2 border-yellow-200">
                     <AvatarImage src={user.avatar} alt={user.name} />
                     <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 font-semibold text-xl">
@@ -139,57 +128,57 @@ export default function Index() {
 
                 {/* Account Section */}
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
                     Account
                   </p>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <button 
-                      className="flex w-full items-center space-x-3 py-3 px-4 hover:bg-yellow-50 dark:hover:bg-gray-700 rounded-xl cursor-pointer transition-all duration-200 active:scale-95"
+                      className="flex w-full items-center space-x-4 py-4 px-4 hover:bg-yellow-50 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition-all duration-200 active:scale-98 touch-manipulation"
                       onClick={handleSwitchAccounts}
                     >
-                      <User className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-                      <span className="text-base font-medium">Switch accounts</span>
+                      <User className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                      <span className="text-lg font-medium">Switch accounts</span>
                     </button>
                     <button 
-                      className="flex w-full items-center space-x-3 py-3 px-4 hover:bg-yellow-50 dark:hover:bg-gray-700 rounded-xl cursor-pointer transition-all duration-200 active:scale-95"
+                      className="flex w-full items-center space-x-4 py-4 px-4 hover:bg-yellow-50 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition-all duration-200 active:scale-98 touch-manipulation"
                       onClick={handleAccountSettings}
                     >
-                      <Settings className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-                      <span className="text-base font-medium">Account settings</span>
+                      <Settings className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                      <span className="text-lg font-medium">Account settings</span>
                     </button>
                   </div>
                 </div>
 
                 {/* Notifications Section */}
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
                     Notifications
                   </p>
-                  <div className="flex items-center justify-between py-3 px-4 hover:bg-yellow-50 dark:hover:bg-gray-700 rounded-xl transition-all duration-200">
-                    <div className="flex items-center space-x-3">
-                      <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-                      <span className="text-base font-medium">Email notifications</span>
+                  <div className="flex items-center justify-between py-4 px-4 hover:bg-yellow-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-200">
+                    <div className="flex items-center space-x-4">
+                      <Bell className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                      <span className="text-lg font-medium">Email notifications</span>
                     </div>
                     <Switch 
-                      className="data-[state=checked]:bg-yellow-500"
+                      className="data-[state=checked]:bg-yellow-500 scale-125"
                       onCheckedChange={handleNotificationToggle}
                     />
                   </div>
                 </div>
 
                 {/* Theme Toggle */}
-                <div className="flex items-center justify-center py-4 border-t border-gray-200/30 dark:border-gray-700/30">
+                <div className="flex items-center justify-center py-6 border-t border-gray-200/30 dark:border-gray-700/30">
                   <ThemeToggle />
                 </div>
 
                 {/* Logout Section */}
                 <div className="pt-2 border-t border-gray-200/30 dark:border-gray-700/30">
                   <button 
-                    className="flex w-full items-center space-x-3 py-4 px-4 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl cursor-pointer text-red-600 dark:text-red-400 transition-all duration-200 active:scale-95"
+                    className="flex w-full items-center space-x-4 py-4 px-4 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl cursor-pointer text-red-600 dark:text-red-400 transition-all duration-200 active:scale-98 touch-manipulation"
                     onClick={handleLogout}
                   >
-                    <LogOut className="h-5 w-5" />
-                    <span className="text-base font-semibold">Logout</span>
+                    <LogOut className="h-6 w-6" />
+                    <span className="text-lg font-semibold">Logout</span>
                   </button>
                 </div>
               </div>
@@ -198,17 +187,44 @@ export default function Index() {
         </div>
       </header>
 
-      {/* Main Content - Enhanced mobile spacing */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-8">
+      {/* Main Content - Mobile optimized with proper padding for bottom nav */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-24 lg:pb-8 lg:py-8">
         <div className="w-full">
-          {view === "home" && <HomeModule onNavigate={handleNavigation} />}
-          {view === "finances" && <FinanceModule />}
-          {view === "todo" && <TodoModule />}
-          {view === "planning" && <ScheduleModule />}
-          {view === "documents" && <DocumentsModule />}
-          {view === "forum" && <ForumModule />}
+          <div className="transition-all duration-300 ease-in-out">
+            {view === "home" && <HomeModule onNavigate={handleNavigation} />}
+            {view === "finances" && <FinanceModule />}
+            {view === "todo" && <TodoModule />}
+            {view === "planning" && <ScheduleModule />}
+            {view === "documents" && <DocumentsModule />}
+            {view === "forum" && <ForumModule />}
+          </div>
         </div>
       </main>
+
+      {/* Fixed Bottom Navigation - Native mobile app style */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
+        <div className="flex items-center justify-around px-2 py-2 safe-area-inset-bottom">
+          {navigationItems.map((item) => {
+            const IconComponent = item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNavigation(item.id)}
+                className={`flex flex-col items-center justify-center py-2 px-3 rounded-xl transition-all duration-200 touch-manipulation active:scale-95 min-w-0 flex-1 ${
+                  view === item.id
+                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-lg scale-105"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+              >
+                <IconComponent className="h-5 w-5 mb-1" />
+                <span className="text-xs font-medium truncate max-w-full">
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
     </div>
   );
 }
