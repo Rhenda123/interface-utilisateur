@@ -1,21 +1,25 @@
 
-export interface GoogleCalendarEvent {
+interface GoogleCalendarEvent {
   id: string;
   summary: string;
   description?: string;
-  location?: string;
   start: {
     dateTime?: string;
     date?: string;
+    timeZone?: string;
   };
   end: {
     dateTime?: string;
     date?: string;
+    timeZone?: string;
   };
+  location?: string;
+  status: string;
 }
 
 interface GoogleCalendarConfig {
   accessToken: string;
+  calendarId?: string;
 }
 
 class GoogleCalendarService {
@@ -26,115 +30,104 @@ class GoogleCalendarService {
   }
 
   async getEvents(timeMin: string, timeMax: string): Promise<GoogleCalendarEvent[]> {
-    if (!this.config) {
+    if (!this.config?.accessToken) {
       throw new Error('Google Calendar not configured');
     }
 
-    try {
-      const response = await fetch(
-        `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`,
-        {
-          headers: {
-            'Authorization': `Bearer ${this.config.accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+    const calendarId = this.config.calendarId || 'primary';
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`;
+    
+    const params = new URLSearchParams({
+      timeMin,
+      timeMax,
+      singleEvents: 'true',
+      orderBy: 'startTime',
+      maxResults: '100'
+    });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    const response = await fetch(`${url}?${params}`, {
+      headers: {
+        'Authorization': `Bearer ${this.config.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
-      const data = await response.json();
-      return data.items || [];
-    } catch (error) {
-      console.error('Failed to fetch Google Calendar events:', error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Google Calendar API error: ${response.statusText}`);
     }
+
+    const data = await response.json();
+    return data.items || [];
   }
 
   async createEvent(event: Partial<GoogleCalendarEvent>): Promise<GoogleCalendarEvent> {
-    if (!this.config) {
+    if (!this.config?.accessToken) {
       throw new Error('Google Calendar not configured');
     }
 
-    try {
-      const response = await fetch(
-        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${this.config.accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(event),
-        }
-      );
+    const calendarId = this.config.calendarId || 'primary';
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.config.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(event),
+    });
 
-      return await response.json();
-    } catch (error) {
-      console.error('Failed to create Google Calendar event:', error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Failed to create Google Calendar event: ${response.statusText}`);
     }
+
+    return response.json();
   }
 
   async updateEvent(eventId: string, event: Partial<GoogleCalendarEvent>): Promise<GoogleCalendarEvent> {
-    if (!this.config) {
+    if (!this.config?.accessToken) {
       throw new Error('Google Calendar not configured');
     }
 
-    try {
-      const response = await fetch(
-        `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${this.config.accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(event),
-        }
-      );
+    const calendarId = this.config.calendarId || 'primary';
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${eventId}`;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${this.config.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(event),
+    });
 
-      return await response.json();
-    } catch (error) {
-      console.error('Failed to update Google Calendar event:', error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Failed to update Google Calendar event: ${response.statusText}`);
     }
+
+    return response.json();
   }
 
   async deleteEvent(eventId: string): Promise<void> {
-    if (!this.config) {
+    if (!this.config?.accessToken) {
       throw new Error('Google Calendar not configured');
     }
 
-    try {
-      const response = await fetch(
-        `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${this.config.accessToken}`,
-          },
-        }
-      );
+    const calendarId = this.config.calendarId || 'primary';
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${eventId}`;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-    } catch (error) {
-      console.error('Failed to delete Google Calendar event:', error);
-      throw error;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${this.config.accessToken}`,
+      },
+    });
+
+    if (!response.ok && response.status !== 410) {
+      throw new Error(`Failed to delete Google Calendar event: ${response.statusText}`);
     }
   }
 }
 
 export const googleCalendarService = new GoogleCalendarService();
+export type { GoogleCalendarEvent, GoogleCalendarConfig };
