@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -397,49 +398,38 @@ function ScheduleModule() {
         </div>
       </div>
 
-      {/* Google Calendar Integration - Show after filters */}
-      {showFilters && (
-        <>
-          {/* Event Type Filters */}
-          <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-900 rounded-xl">
-            <CardContent className="p-5">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Filtrer par type d'événement</h3>
-              <div className="flex flex-wrap gap-3">
-                {eventTypes.map(type => {
-                  const IconComponent = type.icon;
-                  const isVisible = visibleEventTypes.has(type.id);
-                  return (
-                    <Button
-                      key={type.id}
-                      onClick={() => toggleEventTypeVisibility(type.id)}
-                      variant={isVisible ? "default" : "outline"}
-                      size="sm"
-                      className={`flex items-center gap-2 rounded-full touch-manipulation active:scale-95 transition-all shadow-sm hover:shadow-md font-medium ${isVisible ? '' : 'opacity-50'}`}
-                      style={isVisible ? { backgroundColor: type.color } : {}}
-                    >
-                      <IconComponent className="w-4 h-4" />
-                      <span className="text-xs sm:text-sm">{type.name}</span>
-                    </Button>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-          
-          {/* Google Calendar Sync */}
-          <GoogleCalendarSync 
-            onEventsSync={handleGoogleEventsSync}
-            isMobile={isMobileView}
-          />
-        </>
-      )}
+      {/* Always show Google Calendar Sync - positioned prominently */}
+      <GoogleCalendarSync 
+        onEventsSync={handleGoogleEventsSync}
+        isMobile={isMobileView}
+      />
 
-      {/* Mobile Google Calendar Sync - Compact version */}
-      {isMobileView && !selectedDay && (
-        <GoogleCalendarSync 
-          onEventsSync={handleGoogleEventsSync}
-          isMobile={true}
-        />
+      {/* Event Type Filters - only show when filters are toggled */}
+      {showFilters && (
+        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-gray-900 rounded-xl">
+          <CardContent className="p-5">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Filtrer par type d'événement</h3>
+            <div className="flex flex-wrap gap-3">
+              {eventTypes.map(type => {
+                const IconComponent = type.icon;
+                const isVisible = visibleEventTypes.has(type.id);
+                return (
+                  <Button
+                    key={type.id}
+                    onClick={() => toggleEventTypeVisibility(type.id)}
+                    variant={isVisible ? "default" : "outline"}
+                    size="sm"
+                    className={`flex items-center gap-2 rounded-full touch-manipulation active:scale-95 transition-all shadow-sm hover:shadow-md font-medium ${isVisible ? '' : 'opacity-50'}`}
+                    style={isVisible ? { backgroundColor: type.color } : {}}
+                  >
+                    <IconComponent className="w-4 h-4" />
+                    <span className="text-xs sm:text-sm">{type.name}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Enhanced Mobile Week Navigation - More compact */}
