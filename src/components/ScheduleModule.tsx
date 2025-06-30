@@ -345,7 +345,8 @@ function ScheduleModule() {
     <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 lg:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Mon Planning</h2>
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Hide action buttons on mobile, show on desktop */}
+        <div className="hidden sm:flex items-center gap-2 sm:gap-3">
           <Button
             onClick={() => setShowFullCreateModal(true)}
             className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 flex items-center gap-2 rounded-full sm:rounded-lg px-4 py-2 sm:px-6 sm:py-3 shadow-lg hover:shadow-xl active:scale-95 transition-all touch-manipulation font-medium"
