@@ -103,92 +103,92 @@ export default function Index() {
               <UserAccountMenu />
             </div>
           </div>
-
-          {/* Mobile Menu Overlay - User Account Section */}
-          {mobileMenuOpen && (
-            <div className="lg:hidden fixed inset-0 top-16 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-fade-in">
-              <div className="p-6 space-y-6 h-full overflow-y-auto">
-                {/* User Profile Section */}
-                <div className="flex items-center space-x-4 pb-6 border-b border-yellow-100 dark:border-gray-700">
-                  <Avatar className="h-16 w-16 border-2 border-yellow-200">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 font-semibold text-xl">
-                      {user.initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xl font-semibold text-gray-900 dark:text-white truncate">
-                      {user.name}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                      {user.email}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Account Section */}
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
-                    Account
-                  </p>
-                  <div className="space-y-1">
-                    <button 
-                      className="flex w-full items-center space-x-4 py-4 px-4 hover:bg-yellow-50 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition-all duration-200 active:scale-98 touch-manipulation"
-                      onClick={handleSwitchAccounts}
-                    >
-                      <User className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-                      <span className="text-lg font-medium">Switch accounts</span>
-                    </button>
-                    <button 
-                      className="flex w-full items-center space-x-4 py-4 px-4 hover:bg-yellow-50 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition-all duration-200 active:scale-98 touch-manipulation"
-                      onClick={handleAccountSettings}
-                    >
-                      <Settings className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-                      <span className="text-lg font-medium">Account settings</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Notifications Section */}
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
-                    Notifications
-                  </p>
-                  <div className="flex items-center justify-between py-4 px-4 hover:bg-yellow-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-200">
-                    <div className="flex items-center space-x-4">
-                      <Bell className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-                      <span className="text-lg font-medium">Email notifications</span>
-                    </div>
-                    <Switch 
-                      className="data-[state=checked]:bg-yellow-500 scale-125"
-                      onCheckedChange={handleNotificationToggle}
-                    />
-                  </div>
-                </div>
-
-                {/* Theme Toggle */}
-                <div className="flex items-center justify-center py-6 border-t border-gray-200/30 dark:border-gray-700/30">
-                  <ThemeToggle />
-                </div>
-
-                {/* Logout Section */}
-                <div className="pt-2 border-t border-gray-200/30 dark:border-gray-700/30">
-                  <button 
-                    className="flex w-full items-center space-x-4 py-4 px-4 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl cursor-pointer text-red-600 dark:text-red-400 transition-all duration-200 active:scale-98 touch-manipulation"
-                    onClick={handleLogout}
-                  >
-                    <LogOut className="h-6 w-6" />
-                    <span className="text-lg font-semibold">Logout</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </header>
 
+      {/* Mobile Menu Overlay - User Account Section */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-fade-in">
+          <div className="pt-20 p-6 space-y-6 h-full overflow-y-auto">
+            {/* User Profile Section */}
+            <div className="flex items-center space-x-4 pb-6 border-b border-yellow-100 dark:border-gray-700">
+              <Avatar className="h-16 w-16 border-2 border-yellow-200">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 font-semibold text-xl">
+                  {user.initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-xl font-semibold text-gray-900 dark:text-white truncate">
+                  {user.name}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+
+            {/* Account Section */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+                Account
+              </p>
+              <div className="space-y-1">
+                <button 
+                  className="flex w-full items-center space-x-4 py-4 px-4 hover:bg-yellow-50 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition-all duration-200 active:scale-98 touch-manipulation"
+                  onClick={handleSwitchAccounts}
+                >
+                  <User className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                  <span className="text-lg font-medium">Switch accounts</span>
+                </button>
+                <button 
+                  className="flex w-full items-center space-x-4 py-4 px-4 hover:bg-yellow-50 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition-all duration-200 active:scale-98 touch-manipulation"
+                  onClick={handleAccountSettings}
+                >
+                  <Settings className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                  <span className="text-lg font-medium">Account settings</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Notifications Section */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+                Notifications
+              </p>
+              <div className="flex items-center justify-between py-4 px-4 hover:bg-yellow-50 dark:hover:bg-gray-800 rounded-xl transition-all duration-200">
+                <div className="flex items-center space-x-4">
+                  <Bell className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                  <span className="text-lg font-medium">Email notifications</span>
+                </div>
+                <Switch 
+                  className="data-[state=checked]:bg-yellow-500 scale-125"
+                  onCheckedChange={handleNotificationToggle}
+                />
+              </div>
+            </div>
+
+            {/* Theme Toggle */}
+            <div className="flex items-center justify-center py-6 border-t border-gray-200/30 dark:border-gray-700/30">
+              <ThemeToggle />
+            </div>
+
+            {/* Logout Section */}
+            <div className="pt-2 border-t border-gray-200/30 dark:border-gray-700/30">
+              <button 
+                className="flex w-full items-center space-x-4 py-4 px-4 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl cursor-pointer text-red-600 dark:text-red-400 transition-all duration-200 active:scale-98 touch-manipulation"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-6 w-6" />
+                <span className="text-lg font-semibold">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content - Mobile optimized with proper padding for bottom nav */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-24 lg:pb-8 lg:py-8">
+      <main className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-24 lg:pb-8 lg:py-8 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
         <div className="w-full">
           <div className="transition-all duration-300 ease-in-out">
             {view === "home" && <HomeModule onNavigate={handleNavigation} />}
