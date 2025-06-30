@@ -31,6 +31,7 @@ export interface Event {
   recurringEnd?: string;
   dynamicFields: Record<string, string>;
   reminders: number[];
+  googleEventId?: string; // Added optional Google Calendar event ID
 }
 
 // Add Google Calendar event type

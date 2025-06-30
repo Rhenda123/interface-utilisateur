@@ -42,15 +42,15 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
       
       // Initialize Google API
       if (!window.gapi) {
-        await new Promise((resolve) => {
+        await new Promise<void>((resolve) => {
           const script = document.createElement('script');
           script.src = 'https://apis.google.com/js/api.js';
-          script.onload = resolve;
+          script.onload = () => resolve();
           document.head.appendChild(script);
         });
       }
 
-      await new Promise((resolve) => window.gapi.load('auth2', resolve));
+      await new Promise<void>((resolve) => window.gapi.load('auth2', () => resolve()));
       
       const authInstance = window.gapi.auth2.getAuthInstance();
       if (!authInstance) {
