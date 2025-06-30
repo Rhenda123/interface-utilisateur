@@ -59,8 +59,8 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-      {/* Mobile-First Header - Native app style */}
-      <header className="sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg">
+      {/* Mobile-First Header - Native app style with white background */}
+      <header className="sticky top-0 z-50 bg-white dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Left: Brand - Mobile optimized */}
@@ -104,7 +104,7 @@ export default function Index() {
             </div>
           </div>
 
-          {/* Mobile Menu Overlay - Native drawer style */}
+          {/* Mobile Menu Overlay - User Account Section */}
           {mobileMenuOpen && (
             <div className="lg:hidden fixed inset-0 top-16 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-fade-in">
               <div className="p-6 space-y-6 h-full overflow-y-auto">
@@ -201,25 +201,22 @@ export default function Index() {
         </div>
       </main>
 
-      {/* Fixed Bottom Navigation - Native mobile app style */}
+      {/* Fixed Bottom Navigation - Native mobile app style with icons only */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
-        <div className="flex items-center justify-around px-2 py-2 safe-area-inset-bottom">
+        <div className="flex items-center justify-around px-2 py-3 safe-area-inset-bottom">
           {navigationItems.map((item) => {
             const IconComponent = item.icon;
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavigation(item.id)}
-                className={`flex flex-col items-center justify-center py-2 px-3 rounded-xl transition-all duration-200 touch-manipulation active:scale-95 min-w-0 flex-1 ${
+                className={`flex items-center justify-center p-3 rounded-full transition-all duration-200 touch-manipulation active:scale-95 ${
                   view === item.id
-                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-lg scale-105"
+                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-lg scale-110"
                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
                 }`}
               >
-                <IconComponent className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium truncate max-w-full">
-                  {item.label}
-                </span>
+                <IconComponent className="h-6 w-6" />
               </button>
             );
           })}
