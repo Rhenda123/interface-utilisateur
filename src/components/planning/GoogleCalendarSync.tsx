@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Calendar } from 'lucide-react';
+import { Calendar, CreditCard } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface GoogleCalendarSyncProps {
@@ -13,8 +13,8 @@ const GoogleCalendarSync: React.FC<GoogleCalendarSyncProps> = ({ onEventsSync, i
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2 w-full">
-          <Calendar className="w-4 h-4" />
+        <Button className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2 w-full justify-center py-3 px-4 rounded-lg font-medium transition-colors">
+          <CreditCard className="w-4 h-4" />
           Connecter votre Google Agenda
         </Button>
       </DialogTrigger>
