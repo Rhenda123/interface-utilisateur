@@ -670,7 +670,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 border border-indigo-200 dark:border-indigo-700">
               <div className="flex items-center gap-2 mb-2">
                 <Calendar className="w-4 h-4 text-indigo-600" />
-                <span className="text-sm font-medium text-indigo-700 dark:text-indigo-300">Cette semaine</span>
+                <span className="text-sm font-medium text-indigo-700 dark:text-indigo-300">This week</span>
               </div>
               <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
                 {thisWeekEvents.length}
@@ -818,7 +818,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               Aujourd'hui
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              {thisWeekEvents.length} cette semaine
+              {thisWeekEvents.length} this week
             </div>
           </CardContent>
         </Card>
