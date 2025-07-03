@@ -200,7 +200,7 @@ export default function Index() {
 
       {/* Fixed Bottom Navigation - Enhanced for mobile/tablet without header */}
       <nav className="xl:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
-        <div className="flex items-center justify-around px-1 py-2 safe-area-inset-bottom">
+        <div className="flex items-center justify-around px-1 py-2">
           {navigationItems.map((item) => {
             const IconComponent = item.icon;
             return (
