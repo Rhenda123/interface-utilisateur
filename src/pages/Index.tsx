@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
@@ -6,9 +5,8 @@ import HomeModule from "@/components/HomeModule";
 import TodoModule from "@/components/TodoModule";
 import ScheduleModule from "@/components/ScheduleModule";
 import DocumentsModule from "@/components/DocumentsModule";
-import ForumModule from "@/components/ForumModule";
 import FinanceModule from "@/components/FinanceModule";
-import { Menu, X, Home, User, Settings, Bell, LogOut, DollarSign, CheckSquare, Calendar, FileText, MessageCircle } from "lucide-react";
+import { Menu, X, Home, User, Settings, Bell, LogOut, DollarSign, CheckSquare, Calendar, FileText } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 
@@ -26,8 +24,7 @@ export default function Index() {
     { id: "finances", label: "Finances", icon: DollarSign },
     { id: "todo", label: "To-Do", icon: CheckSquare },
     { id: "planning", label: "Planning", icon: Calendar },
-    { id: "documents", label: "Documents", icon: FileText },
-    { id: "forum", label: "Forum", icon: MessageCircle }
+    { id: "documents", label: "Documents", icon: FileText }
   ];
 
   // User data for mobile menu
@@ -196,7 +193,6 @@ export default function Index() {
             {view === "todo" && <TodoModule />}
             {view === "planning" && <ScheduleModule />}
             {view === "documents" && <DocumentsModule />}
-            {view === "forum" && <ForumModule />}
           </div>
         </div>
       </main>
