@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
@@ -56,17 +57,17 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-      {/* Mobile-First Header - Fixed dark mode styling */}
-      <header className="sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg">
+      {/* Desktop-Only Header - Hidden on mobile and tablet */}
+      <header className="hidden xl:block sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Left: Brand - Mobile optimized */}
+            {/* Left: Brand */}
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AD03] dark:from-[#F6C103] dark:to-[#E5AD03] bg-clip-text text-transparent">
               SKOOLIFE
             </h1>
             
-            {/* Desktop Navigation - Hidden on mobile */}
-            <nav className="hidden lg:flex flex-1 justify-center">
+            {/* Desktop Navigation */}
+            <nav className="flex flex-1 justify-center">
               <div className="inline-flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-lg border border-[#F6C103] dark:border-gray-700">
                 {navigationItems.map((item) => (
                   <button 
@@ -83,19 +84,9 @@ export default function Index() {
                 ))}
               </div>
             </nav>
-
-            {/* Mobile: Menu Button Only */}
-            <div className="lg:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-3 rounded-xl text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 touch-manipulation"
-              >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </div>
             
             {/* Right: Desktop User Controls */}
-            <div className="hidden lg:flex items-center gap-2 lg:gap-3">
+            <div className="flex items-center gap-2 lg:gap-3">
               <ThemeToggle />
               <UserAccountMenu />
             </div>
@@ -105,8 +96,18 @@ export default function Index() {
 
       {/* Mobile Menu Overlay - User Account Section */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-fade-in">
-          <div className="pt-20 p-6 space-y-6 h-full overflow-y-auto">
+        <div className="xl:hidden fixed inset-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-fade-in">
+          <div className="p-6 space-y-6 h-full overflow-y-auto">
+            {/* Close button */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-3 rounded-xl text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 touch-manipulation"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
             {/* User Profile Section */}
             <div className="flex items-center space-x-4 pb-6 border-b border-yellow-100 dark:border-gray-700">
               <Avatar className="h-16 w-16 border-2 border-yellow-200">
@@ -184,8 +185,8 @@ export default function Index() {
         </div>
       )}
 
-      {/* Main Content - Mobile optimized with proper padding for bottom nav */}
-      <main className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20 lg:pb-8 lg:py-8 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
+      {/* Main Content - Adjusted padding for mobile without header */}
+      <main className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20 xl:pb-8 xl:py-8 transition-all duration-300 ${mobileMenuOpen ? 'xl:block hidden' : ''}`}>
         <div className="w-full">
           <div className="transition-all duration-300 ease-in-out">
             {view === "home" && <HomeModule onNavigate={handleNavigation} />}
@@ -197,8 +198,8 @@ export default function Index() {
         </div>
       </main>
 
-      {/* Fixed Bottom Navigation - Native mobile app style with icons only - Compact design */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
+      {/* Fixed Bottom Navigation - Enhanced for mobile/tablet without header */}
+      <nav className="xl:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
         <div className="flex items-center justify-around px-1 py-2 safe-area-inset-bottom">
           {navigationItems.map((item) => {
             const IconComponent = item.icon;
@@ -216,6 +217,13 @@ export default function Index() {
               </button>
             );
           })}
+          {/* Menu button for mobile settings */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="flex items-center justify-center p-2.5 rounded-full text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95 transition-all duration-200 touch-manipulation"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
         </div>
       </nav>
     </div>
