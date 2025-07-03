@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Progress } from "@/components/ui/progress";
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from "recharts";
-import { Search, ArrowUp, ArrowDown, Edit, Trash2, Download, Plus, TrendingUp, TrendingDown, Wallet, Euro, Calendar, Filter, Settings, ChevronLeft, ChevronRight, Eye, BarChart3, CreditCard } from "lucide-react";
+import { Search, ArrowUp, ArrowDown, Edit, Trash2, Download, Plus, TrendingUp, TrendingDown, Wallet, Euro, Calendar, Filter, Settings, ChevronLeft, ChevronRight, Eye, BarChart3 } from "lucide-react";
 import BudgetManager from "@/components/finance/BudgetManager";
 import CategoryManager from "@/components/finance/CategoryManager";
 
@@ -428,7 +427,7 @@ export default function FinanceModule() {
           </div>
         </div>
 
-        {/* Aligned Header Controls - Month Selector, Connect Bank, Currency, and Settings */}
+        {/* Aligned Header Controls - Month Selector, Currency, and Settings */}
         <div className="flex items-center justify-between gap-2 sm:gap-3">
           {/* Month Navigation */}
           <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -455,44 +454,6 @@ export default function FinanceModule() {
           
           {/* Currency and Settings Controls - Desktop/Tablet */}
           <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
-            <Dialog open={showBankDialog} onOpenChange={setShowBankDialog}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-8 sm:h-9 px-2 sm:px-3 border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/20"
-                >
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  Connecter banque
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="w-[95vw] max-w-md mx-auto">
-                <DialogHeader>
-                  <DialogTitle>Connexion bancaire</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <CreditCard className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-medium text-blue-900 dark:text-blue-200">Fonctionnalité à venir</h4>
-                      <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                        La connexion bancaire sécurisée nécessite une infrastructure backend. 
-                        Connectez Supabase pour activer cette fonctionnalité.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    <p><strong>Avantages à venir :</strong></p>
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Synchronisation automatique des transactions</li>
-                      <li>Suivi des soldes en temps réel</li>
-                      <li>Catégorisation intelligente</li>
-                      <li>Analyses financières avancées</li>
-                    </ul>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
             <Select value={currency} onValueChange={setCurrency}>
               <SelectTrigger className="w-16 sm:w-20 h-8 sm:h-9">
                 <SelectValue />
@@ -554,48 +515,6 @@ export default function FinanceModule() {
                 <span className="leading-none">{item.label}</span>
               </button>
             ))}
-          </div>
-          
-          {/* Connect Bank Button - Mobile */}
-          <div className="mt-3">
-            <Dialog open={showBankDialog} onOpenChange={setShowBankDialog}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full h-9 border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/20"
-                >
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  Connecter votre banque
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="w-[95vw] max-w-md mx-auto">
-                <DialogHeader>
-                  <DialogTitle>Connexion bancaire</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <CreditCard className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-medium text-blue-900 dark:text-blue-200">Fonctionnalité à venir</h4>
-                      <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                        La connexion bancaire sécurisée nécessite une infrastructure backend. 
-                        Connectez Supabase pour activer cette fonctionnalité.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    <p><strong>Avantages à venir :</strong></p>
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Synchronisation automatique des transactions</li>
-                      <li>Suivi des soldes en temps réel</li>
-                      <li>Catégorisation intelligente</li>
-                      <li>Analyses financières avancées</li>
-                    </ul>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
           </div>
         </div>
       </div>
