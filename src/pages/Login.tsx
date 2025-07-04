@@ -32,13 +32,13 @@ const Login = () => {
         if (success) {
           navigate('/');
         } else {
-          setError('Invalid email or password');
+          setError('Email ou mot de passe invalide');
         }
       } else {
-        setError('Registration is currently disabled. Please use existing credentials.');
+        setError('L\'inscription est actuellement désactivée. Veuillez utiliser les identifiants existants.');
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError('Une erreur s\'est produite. Veuillez réessayer.');
     } finally {
       setIsLoading(false);
     }
@@ -75,10 +75,10 @@ const Login = () => {
           {/* Welcome Text */}
           <div className="space-y-2">
             <CardTitle className="text-2xl font-semibold text-gray-900 dark:text-white">
-              {isLogin ? 'Welcome back! 👋' : 'Join SKOOLIFE 🎓'}
+              {isLogin ? 'Bon retour ! 👋' : 'Rejoignez SKOOLIFE 🎓'}
             </CardTitle>
             <CardDescription className="text-gray-600 dark:text-gray-300 text-base">
-              {isLogin ? 'We\'re excited to see you again' : 'Start your educational journey with us'}
+              {isLogin ? 'Nous sommes ravis de vous revoir' : 'Commencez votre parcours éducatif avec nous'}
             </CardDescription>
           </div>
         </CardHeader>
@@ -88,12 +88,12 @@ const Login = () => {
             {!isLogin && (
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Full Name
+                  Nom complet
                 </Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Enter your full name"
+                  placeholder="Entrez votre nom complet"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required={!isLogin}
@@ -104,12 +104,12 @@ const Login = () => {
 
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email Address
+                Adresse email
               </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Entrez votre email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -119,13 +119,13 @@ const Login = () => {
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Password
+                Mot de passe
               </Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
+                  placeholder="Entrez votre mot de passe"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -153,14 +153,14 @@ const Login = () => {
               disabled={isLoading}
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLogin ? 'Sign In' : 'Create Account'}
+              {isLogin ? 'Se connecter' : 'Créer un compte'}
             </Button>
           </form>
 
           {/* Toggle Login/Signup */}
           <div className="text-center pt-4 border-t border-gray-100 dark:border-gray-700">
             <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
-              {isLogin ? "New to SKOOLIFE?" : "Already have an account?"}
+              {isLogin ? "Nouveau sur SKOOLIFE ?" : "Vous avez déjà un compte ?"}
             </p>
             <button
               type="button"
@@ -173,7 +173,7 @@ const Login = () => {
               }}
               className="text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300 font-semibold text-sm transition-colors hover:underline"
             >
-              {isLogin ? "Create your account" : "Sign in instead"}
+              {isLogin ? "Créez votre compte" : "Se connecter plutôt"}
             </button>
           </div>
         </CardContent>
