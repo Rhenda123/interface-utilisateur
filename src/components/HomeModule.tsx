@@ -866,8 +866,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             </CarouselContent>
           </Carousel>
           
-          {/* Carousel Indicators */}
-          <div className="flex justify-center mt-4 gap-2">
+          {/* Carousel Indicators - Reduced margin for mobile */}
+          <div className="flex justify-center mt-2 gap-2">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}

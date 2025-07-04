@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
@@ -6,9 +7,11 @@ import TodoModule from "@/components/TodoModule";
 import ScheduleModule from "@/components/ScheduleModule";
 import DocumentsModule from "@/components/DocumentsModule";
 import FinanceModule from "@/components/FinanceModule";
+import { AppSidebar } from "@/components/AppSidebar";
 import { Menu, X, Home, User, Settings, Bell, LogOut, DollarSign, CheckSquare, Calendar, FileText } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 export default function Index() {
   const [view, setView] = useState("home");
@@ -56,57 +59,49 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-      {/* Mobile-First Header - Fixed dark mode styling */}
-      <header className="sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Left: Brand - Mobile optimized */}
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AD03] dark:from-[#F6C103] dark:to-[#E5AD03] bg-clip-text text-transparent">
-              SKOOLIFE
-            </h1>
-            
-            {/* Desktop Navigation - Hidden on mobile */}
-            <nav className="hidden lg:flex flex-1 justify-center">
-              <div className="inline-flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-lg border border-[#F6C103] dark:border-gray-700">
-                {navigationItems.map((item) => (
-                  <button 
-                    key={item.id}
-                    onClick={() => setView(item.id)} 
-                    className={`px-4 py-2 rounded-md font-medium transition-all duration-200 whitespace-nowrap hover:shadow-md ${
-                      view === item.id 
-                        ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-md transform scale-105" 
-                        : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-[#FEF7D6] dark:hover:bg-gray-700 hover:shadow-sm"
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </nav>
-
-            {/* Mobile: Menu Button Only */}
-            <div className="lg:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-3 rounded-xl text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 touch-manipulation"
-              >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </div>
-            
-            {/* Right: Desktop User Controls */}
-            <div className="hidden lg:flex items-center gap-2 lg:gap-3">
-              <ThemeToggle />
-              <UserAccountMenu />
-            </div>
+      {/* Desktop Layout with Sidebar */}
+      <div className="hidden xl:block">
+        <SidebarProvider>
+          <div className="flex min-h-screen w-full">
+            <AppSidebar view={view} onNavigate={handleNavigation} />
+            <SidebarInset>
+              {/* Desktop Header */}
+              <header className="sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+                <div className="flex items-center justify-end h-16 px-6 gap-3">
+                  <ThemeToggle />
+                  <UserAccountMenu />
+                </div>
+              </header>
+              
+              {/* Desktop Main Content */}
+              <main className="p-8">
+                <div className="transition-all duration-300 ease-in-out">
+                  {view === "home" && <HomeModule onNavigate={handleNavigation} />}
+                  {view === "finances" && <FinanceModule />}
+                  {view === "todo" && <TodoModule />}
+                  {view === "planning" && <ScheduleModule />}
+                  {view === "documents" && <DocumentsModule />}
+                </div>
+              </main>
+            </SidebarInset>
           </div>
-        </div>
-      </header>
+        </SidebarProvider>
+      </div>
 
       {/* Mobile Menu Overlay - User Account Section */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-fade-in">
-          <div className="pt-20 p-6 space-y-6 h-full overflow-y-auto">
+        <div className="xl:hidden fixed inset-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-fade-in">
+          <div className="p-6 space-y-6 h-full overflow-y-auto">
+            {/* Close button */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-3 rounded-xl text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 touch-manipulation"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
             {/* User Profile Section */}
             <div className="flex items-center space-x-4 pb-6 border-b border-yellow-100 dark:border-gray-700">
               <Avatar className="h-16 w-16 border-2 border-yellow-200">
@@ -184,40 +179,50 @@ export default function Index() {
         </div>
       )}
 
-      {/* Main Content - Mobile optimized with proper padding for bottom nav */}
-      <main className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20 lg:pb-8 lg:py-8 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
-        <div className="w-full">
-          <div className="transition-all duration-300 ease-in-out">
-            {view === "home" && <HomeModule onNavigate={handleNavigation} />}
-            {view === "finances" && <FinanceModule />}
-            {view === "todo" && <TodoModule />}
-            {view === "planning" && <ScheduleModule />}
-            {view === "documents" && <DocumentsModule />}
+      {/* Mobile/Tablet Content - Only visible on smaller screens */}
+      <div className="xl:hidden">
+        {/* Main Content */}
+        <main className={`px-4 sm:px-6 py-4 pb-16 transition-all duration-300 ${mobileMenuOpen ? 'hidden' : ''}`}>
+          <div className="w-full">
+            <div className="transition-all duration-300 ease-in-out">
+              {view === "home" && <HomeModule onNavigate={handleNavigation} />}
+              {view === "finances" && <FinanceModule />}
+              {view === "todo" && <TodoModule />}
+              {view === "planning" && <ScheduleModule />}
+              {view === "documents" && <DocumentsModule />}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
 
-      {/* Fixed Bottom Navigation - Native mobile app style with icons only - Compact design */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
-        <div className="flex items-center justify-around px-1 py-2 safe-area-inset-bottom">
-          {navigationItems.map((item) => {
-            const IconComponent = item.icon;
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleNavigation(item.id)}
-                className={`flex items-center justify-center p-2.5 rounded-full transition-all duration-200 touch-manipulation active:scale-95 ${
-                  view === item.id
-                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-lg scale-105"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`}
-              >
-                <IconComponent className="h-5 w-5" />
-              </button>
-            );
-          })}
-        </div>
-      </nav>
+        {/* Fixed Bottom Navigation */}
+        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
+          <div className="flex items-center justify-around px-1 py-2">
+            {navigationItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavigation(item.id)}
+                  className={`flex items-center justify-center p-2.5 rounded-full transition-all duration-200 touch-manipulation active:scale-95 ${
+                    view === item.id
+                      ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-lg scale-105"
+                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                  }`}
+                >
+                  <IconComponent className="h-5 w-5" />
+                </button>
+              );
+            })}
+            {/* Menu button for mobile settings */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="flex items-center justify-center p-2.5 rounded-full text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95 transition-all duration-200 touch-manipulation"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
+        </nav>
+      </div>
     </div>
   );
 }
