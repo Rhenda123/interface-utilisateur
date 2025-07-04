@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -364,15 +363,32 @@ function TodoModule() {
                   </SelectContent>
                 </Select>
 
-                <select 
-                  value={priority} 
-                  onChange={(e) => setPriority(e.target.value)} 
-                  className="w-full border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 rounded-xl px-4 py-3 font-medium text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 focus:outline-none touch-manipulation"
-                >
-                  <option>Haute</option>
-                  <option>Moyenne</option>
-                  <option>Faible</option>
-                </select>
+                <Select value={priority} onValueChange={setPriority}>
+                  <SelectTrigger className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
+                    <SelectValue placeholder="Priorité" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                    <SelectItem value="Haute">
+                      <div className="flex items-center gap-2">
+                        <AlertTriangle className="w-3 h-3" />
+                        Haute
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="Moyenne">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3" />
+                        Moyenne
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="Faible">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-3 h-3" />
+                        Faible
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
                 <Input 
                   type="date" 
                   value={deadline} 
