@@ -12,18 +12,15 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { LogOut, User, Settings, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-interface UserAccountMenuProps {
-  onLogout?: () => void;
-}
-
-const UserAccountMenu = ({ onLogout }: UserAccountMenuProps) => {
-  const { user } = useAuth();
+const UserAccountMenu = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    if (onLogout) {
-      onLogout();
-    }
+    logout();
+    navigate('/login');
   };
 
   const handleSwitchAccounts = () => {
