@@ -1,6 +1,7 @@
 
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
 import HomeModule from "@/components/HomeModule";
@@ -13,8 +14,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 
 export default function Index() {
+  const { user, logout, isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [view, setView] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   const handleNavigation = (newView: string) => {
     setView(newView);
@@ -29,17 +38,10 @@ export default function Index() {
     { id: "documents", label: "Documents", icon: FileText }
   ];
 
-  // User data for mobile menu
-  const user = {
-    name: "Ridouane Henda",
-    email: "r.henda@icloud.com",
-    avatar: "",
-    initials: "RH"
-  };
-
   const handleLogout = () => {
-    console.log("Logout clicked");
+    logout();
     setMobileMenuOpen(false);
+    navigate('/login');
   };
 
   const handleSwitchAccounts = () => {
@@ -55,6 +57,25 @@ export default function Index() {
   const handleNotificationToggle = () => {
     console.log("Notification toggle clicked");
   };
+
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AD03] bg-clip-text text-transparent mb-4">
+            SKOOLIFE
+          </h1>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500 mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render anything if not authenticated (will redirect)
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
@@ -102,17 +123,17 @@ export default function Index() {
             {/* User Profile Section */}
             <div className="flex items-center space-x-4 pb-6 border-b border-yellow-100 dark:border-gray-700">
               <Avatar className="h-16 w-16 border-2 border-yellow-200">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={user?.avatar} alt={user?.name} />
                 <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 font-semibold text-xl">
-                  {user.initials}
+                  {user?.initials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="text-xl font-semibold text-gray-900 dark:text-white truncate">
-                  {user.name}
+                  {user?.name}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                  {user.email}
+                  {user?.email}
                 </p>
               </div>
             </div>
@@ -213,4 +234,3 @@ export default function Index() {
     </div>
   );
 }
-
