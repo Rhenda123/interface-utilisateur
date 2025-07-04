@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import ThemeToggle from '@/components/ThemeToggle';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -51,11 +50,6 @@ const Login = () => {
         <div className="absolute top-20 sm:top-40 right-10 sm:right-20 w-16 h-16 sm:w-32 sm:h-32 bg-yellow-300/20 dark:bg-yellow-400/10 rounded-full blur-xl sm:blur-2xl animate-pulse delay-1000"></div>
         <div className="absolute bottom-10 sm:bottom-20 left-10 sm:left-20 w-12 h-12 sm:w-24 sm:h-24 bg-yellow-400/20 dark:bg-yellow-300/10 rounded-full blur-lg sm:blur-xl animate-pulse delay-500"></div>
         <div className="absolute bottom-20 sm:bottom-40 right-5 sm:right-10 w-8 h-8 sm:w-16 sm:h-16 bg-yellow-200/30 dark:bg-yellow-500/10 rounded-full blur-md sm:blur-lg animate-pulse delay-700"></div>
-      </div>
-
-      {/* Theme Toggle */}
-      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
-        <ThemeToggle />
       </div>
 
       <Card className="w-full max-w-sm sm:max-w-md lg:max-w-lg border-0 shadow-lg sm:shadow-2xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm animate-fade-in mx-auto">
