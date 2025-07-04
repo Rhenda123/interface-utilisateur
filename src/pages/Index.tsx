@@ -19,6 +19,7 @@ export default function Index() {
   const [view, setView] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [fadeStage, setFadeStage] = useState(0);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -51,9 +52,19 @@ export default function Index() {
   ];
 
   const handleLogout = () => {
-    logout();
+    setIsLoggingOut(true);
     setMobileMenuOpen(false);
-    navigate('/login');
+    
+    // Progressive fade-out animation
+    setFadeStage(2); // Hide bottom nav first
+    setTimeout(() => setFadeStage(1), 200); // Then hide main content
+    setTimeout(() => setFadeStage(0), 400); // Finally hide header
+    
+    // Complete logout after animation
+    setTimeout(() => {
+      logout();
+      navigate('/login');
+    }, 800);
   };
 
   const handleSwitchAccounts = () => {
@@ -124,7 +135,7 @@ export default function Index() {
             {/* Right: Desktop User Controls */}
             <div className="hidden lg:flex items-center gap-2 lg:gap-3">
               <ThemeToggle />
-              <UserAccountMenu />
+              <UserAccountMenu onLogout={handleLogout} />
             </div>
           </div>
         </div>
