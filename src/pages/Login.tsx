@@ -54,114 +54,106 @@ const Login = () => {
   };
 
   if (!showForm) {
-    // Welcome screen with improved contained design
+    // Welcome screen with interface-matching colors
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 flex flex-col items-center justify-center p-4 relative overflow-hidden">
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute top-32 right-12 w-24 h-24 bg-orange-200/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
-          <div className="absolute bottom-32 left-12 w-18 h-18 bg-yellow-200/30 rounded-full blur-xl animate-pulse delay-500"></div>
-          <div className="absolute bottom-16 right-16 w-16 h-16 bg-amber-200/20 rounded-full blur-lg animate-pulse delay-700"></div>
-        </div>
-
-        {/* Main Content Container with proper containment */}
-        <div className="w-full max-w-sm mx-auto relative z-10 flex flex-col items-center">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        {/* Main Content Container */}
+        <div className="w-full max-w-sm mx-auto flex flex-col items-center">
           {/* Logo */}
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-800 tracking-tight">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-foreground tracking-tight">
               SKOOLIFE
             </h1>
-            <div className="w-12 h-1 bg-gray-700 mx-auto mt-2 rounded-full"></div>
+            <div className="w-12 h-1 bg-yellow-500 mx-auto mt-2 rounded-full"></div>
           </div>
 
           {/* Main Rectangle Container */}
-          <div className="w-full bg-white/20 backdrop-blur-sm rounded-3xl shadow-xl p-6 flex flex-col items-center space-y-5">
-            {/* Illustration Container */}
-            <div className="w-20 h-20 bg-white/30 rounded-2xl flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
-              
-              {/* Central academic hub */}
-              <div className="relative flex items-center justify-center">
-                <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center shadow-lg">
-                  <BookOpen className="w-4 h-4 text-yellow-300" />
+          <Card className="w-full shadow-lg border-border">
+            <CardContent className="p-6 flex flex-col items-center space-y-6">
+              {/* Illustration Container */}
+              <div className="w-20 h-20 bg-yellow-100 rounded-2xl flex items-center justify-center">
+                {/* Central academic hub */}
+                <div className="relative flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center shadow-lg">
+                    <BookOpen className="w-4 h-4 text-yellow-400" />
+                  </div>
+                  
+                  {/* Surrounding elements */}
+                  <div className="absolute -top-3 -left-3 w-5 h-5 bg-white rounded-md flex items-center justify-center shadow-md border">
+                    <Target className="w-2.5 h-2.5 text-gray-600" />
+                  </div>
+                  <div className="absolute -top-3 -right-3 w-5 h-5 bg-white rounded-md flex items-center justify-center shadow-md border">
+                    <Users className="w-2.5 h-2.5 text-gray-600" />
+                  </div>
+                  <div className="absolute -bottom-2 left-0 w-4 h-4 bg-yellow-200 rounded-sm flex items-center justify-center shadow-sm">
+                    <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
+                  </div>
+                  <div className="absolute -bottom-2 right-0 w-4 h-4 bg-orange-200 rounded-sm flex items-center justify-center shadow-sm">
+                    <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
+                  </div>
                 </div>
+              </div>
+
+              {/* Welcome Text */}
+              <div className="text-center space-y-3">
+                <h2 className="text-xl font-bold text-foreground leading-tight">
+                  Optimise ton parcours éducatif
+                </h2>
+                <p className="text-muted-foreground text-sm leading-relaxed px-2">
+                  Gère tes cours, devoirs et projets en un seul endroit
+                </p>
                 
-                {/* Surrounding elements */}
-                <div className="absolute -top-3 -left-3 w-5 h-5 bg-white/70 rounded-md flex items-center justify-center shadow-md">
-                  <Target className="w-2.5 h-2.5 text-gray-600" />
-                </div>
-                <div className="absolute -top-3 -right-3 w-5 h-5 bg-white/70 rounded-md flex items-center justify-center shadow-md">
-                  <Users className="w-2.5 h-2.5 text-gray-600" />
-                </div>
-                <div className="absolute -bottom-2 left-0 w-4 h-4 bg-yellow-200/70 rounded-sm flex items-center justify-center shadow-sm">
-                  <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
-                </div>
-                <div className="absolute -bottom-2 right-0 w-4 h-4 bg-orange-200/70 rounded-sm flex items-center justify-center shadow-sm">
-                  <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Welcome Text */}
-            <div className="text-center space-y-3">
-              <h2 className="text-xl font-bold text-gray-800 leading-tight">
-                Optimise ton parcours éducatif
-              </h2>
-              <p className="text-gray-700 text-sm leading-relaxed px-2">
-                Gère tes cours, devoirs et projets en un seul endroit
-              </p>
-              
-              {/* Features */}
-              <div className="flex justify-center space-x-4 text-gray-600 text-xs pt-1">
-                <div className="flex items-center space-x-1">
-                  <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                  <span>Planning</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                  <span>Devoirs</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                  <span>Projets</span>
+                {/* Features */}
+                <div className="flex justify-center space-x-4 text-muted-foreground text-xs pt-2">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-1 h-1 bg-yellow-500 rounded-full"></div>
+                    <span>Planning</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-1 h-1 bg-yellow-500 rounded-full"></div>
+                    <span>Devoirs</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-1 h-1 bg-yellow-500 rounded-full"></div>
+                    <span>Projets</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="w-full space-y-3">
-              <Button 
-                onClick={() => handleAuthAction(true)}
-                className="w-full h-11 text-sm font-semibold bg-gray-800 text-yellow-300 hover:bg-gray-700 rounded-xl shadow-lg transition-all duration-200"
-              >
-                Se connecter
-              </Button>
-              
-              <Button 
-                onClick={() => handleAuthAction(false)}
-                variant="outline"
-                className="w-full h-11 text-sm font-semibold bg-white/15 text-gray-800 border-2 border-gray-700 hover:bg-white/25 rounded-xl backdrop-blur-sm transition-all duration-200"
-              >
-                S'inscrire
-              </Button>
-            </div>
-
-            {/* Footer */}
-            <div className="text-center space-y-2">
-              <p className="text-gray-700 text-xs">
-                En t'inscrivant, tu acceptes nos
-              </p>
-              <div className="space-y-1">
-                <button className="block w-full text-gray-800 text-xs font-medium underline hover:text-gray-600 transition-colors">
-                  Conditions d'utilisation
-                </button>
-                <button className="block w-full text-gray-700 text-xs underline hover:text-gray-600 transition-colors">
-                  Besoin d'aide pour te connecter ?
-                </button>
+              {/* Action Buttons */}
+              <div className="w-full space-y-3">
+                <Button 
+                  onClick={() => handleAuthAction(true)}
+                  className="w-full h-11 text-sm font-semibold bg-gray-900 text-white hover:bg-gray-800 rounded-lg shadow-md transition-all duration-200"
+                >
+                  Se connecter
+                </Button>
+                
+                <Button 
+                  onClick={() => handleAuthAction(false)}
+                  variant="outline"
+                  className="w-full h-11 text-sm font-semibold border-2 border-gray-200 hover:bg-gray-50 rounded-lg transition-all duration-200"
+                >
+                  S'inscrire
+                </Button>
               </div>
-            </div>
-          </div>
+
+              {/* Footer */}
+              <div className="text-center space-y-3 pt-2">
+                <p className="text-muted-foreground text-xs">
+                  En t'inscrivant, tu acceptes nos
+                </p>
+                <div className="space-y-1">
+                  <button className="block w-full text-foreground text-xs font-medium underline hover:text-muted-foreground transition-colors">
+                    Conditions d'utilisation
+                  </button>
+                  <button className="block w-full text-muted-foreground text-xs underline hover:text-foreground transition-colors">
+                    Besoin d'aide pour te connecter ?
+                  </button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -169,38 +161,30 @@ const Login = () => {
 
   // Form screen
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-24 h-24 bg-white/20 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute top-40 right-16 w-32 h-32 bg-orange-200/30 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-40 left-16 w-28 h-28 bg-yellow-200/40 rounded-full blur-xl animate-pulse delay-500"></div>
-        <div className="absolute bottom-20 right-12 w-20 h-20 bg-amber-200/30 rounded-full blur-lg animate-pulse delay-700"></div>
-      </div>
-
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       {/* Back Button */}
       <button
         onClick={() => setShowForm(false)}
-        className="absolute top-6 left-6 z-20 text-gray-700 hover:text-gray-800 transition-colors p-2 bg-white/20 rounded-full backdrop-blur-sm"
+        className="absolute top-6 left-6 z-20 text-muted-foreground hover:text-foreground transition-colors p-2 bg-card rounded-full border shadow-sm"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
 
-      <Card className="w-full max-w-md border-0 shadow-2xl bg-white/95 backdrop-blur-sm">
+      <Card className="w-full max-w-md shadow-lg border-border">
         <CardHeader className="text-center space-y-4 pb-6">
           <div className="flex justify-center items-center">
-            <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
+            <h1 className="text-2xl font-bold text-foreground tracking-tight">
               SKOOLIFE
             </h1>
           </div>
           
           <div className="space-y-1">
-            <h2 className="text-xl font-bold text-gray-800">
+            <h2 className="text-xl font-bold text-foreground">
               {isLogin ? 'Bon retour !' : 'Rejoins-nous'}
             </h2>
-            <CardDescription className="text-gray-600 text-sm">
+            <CardDescription className="text-muted-foreground text-sm">
               {isLogin ? 'Nous sommes ravis de vous revoir !' : 'Commence ton parcours éducatif avec nous'}
             </CardDescription>
           </div>
@@ -210,7 +194,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="name" className="text-sm font-medium text-foreground">
                   Nom complet
                 </Label>
                 <Input
@@ -220,13 +204,13 @@ const Login = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required={!isLogin}
-                  className="h-11 border-gray-200 focus:border-yellow-500 focus:ring-yellow-500/20 rounded-xl"
+                  className="h-11 border-border focus:border-yellow-500 focus:ring-yellow-500/20 rounded-lg"
                 />
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="email" className="text-sm font-medium text-foreground">
                 Adresse email
               </Label>
               <Input
@@ -236,12 +220,12 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-11 border-gray-200 focus:border-yellow-500 focus:ring-yellow-500/20 rounded-xl"
+                className="h-11 border-border focus:border-yellow-500 focus:ring-yellow-500/20 rounded-lg"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="password" className="text-sm font-medium text-foreground">
                 Mot de passe
               </Label>
               <div className="relative">
@@ -252,12 +236,12 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="h-11 border-gray-200 focus:border-yellow-500 focus:ring-yellow-500/20 rounded-xl pr-12"
+                  className="h-11 border-border focus:border-yellow-500 focus:ring-yellow-500/20 rounded-lg pr-12"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -265,14 +249,14 @@ const Login = () => {
             </div>
 
             {error && (
-              <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-xl border border-red-200">
+              <div className="text-destructive text-sm text-center bg-destructive/10 p-3 rounded-lg border border-destructive/20">
                 {error}
               </div>
             )}
 
             <Button 
               type="submit" 
-              className="w-full h-11 bg-gray-800 hover:bg-gray-700 text-yellow-300 font-semibold rounded-xl shadow-lg transition-all duration-200"
+              className="w-full h-11 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-lg shadow-md transition-all duration-200"
               disabled={isLoading}
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -280,8 +264,8 @@ const Login = () => {
             </Button>
           </form>
 
-          <div className="text-center pt-3 border-t border-gray-100">
-            <p className="text-gray-600 text-sm mb-2">
+          <div className="text-center pt-3 border-t border-border">
+            <p className="text-muted-foreground text-sm mb-2">
               {isLogin ? "Nouveau sur SKOOLIFE ?" : "Tu as déjà un compte ?"}
             </p>
             <button
@@ -293,7 +277,7 @@ const Login = () => {
                 setPassword('');
                 setName('');
               }}
-              className="text-gray-800 hover:text-gray-600 font-medium text-sm transition-colors hover:underline"
+              className="text-foreground hover:text-muted-foreground font-medium text-sm transition-colors hover:underline"
             >
               {isLogin ? "Rejoins l'aventure" : "Se connecter plutôt"}
             </button>
