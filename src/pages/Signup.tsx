@@ -4,29 +4,42 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Mail, Lock, ArrowLeft, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: "Erreur",
+        description: "Les mots de passe ne correspondent pas.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
       toast({
-        title: "Connexion réussie !",
-        description: "Bienvenue dans votre espace Skoolife.",
+        title: "Inscription réussie !",
+        description: "Votre compte Skoolife a été créé avec succès.",
       });
     }, 1500);
   };
@@ -49,9 +62,9 @@ const Login = () => {
               <h1 className="text-xl sm:text-2xl font-bold gradient-text">SKOOLIFE</h1>
             </Link>
             <div className="text-sm text-secondary">
-              Pas encore de compte ?{" "}
-              <Link to="/signup" className="text-primary font-semibold hover:underline">
-                S'inscrire
+              Déjà un compte ?{" "}
+              <Link to="/login" className="text-primary font-semibold hover:underline">
+                Se connecter
               </Link>
             </div>
           </div>
@@ -64,26 +77,46 @@ const Login = () => {
           {/* Welcome Section */}
           <div className="text-center space-y-4">
             <div className="w-16 h-16 sm:w-20 sm:h-20 gradient-bg rounded-3xl flex items-center justify-center mx-auto shadow-lg">
-              <Mail className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+              <User className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-bold text-primary">Bon retour !</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-primary">Rejoignez l'aventure !</h2>
               <p className="text-secondary text-base sm:text-lg">
-                Connectez-vous à votre espace Skoolife
+                Créez votre compte Skoolife gratuitement
               </p>
             </div>
           </div>
 
-          {/* Login Form */}
+          {/* Signup Form */}
           <Card className="card-elevated border-border/50 theme-transition">
             <CardHeader className="space-y-1 text-center pb-4">
-              <CardTitle className="text-xl font-semibold text-primary">Connexion</CardTitle>
+              <CardTitle className="text-xl font-semibold text-primary">Inscription</CardTitle>
               <CardDescription className="text-secondary">
-                Entrez vos identifiants pour accéder à votre compte
+                Remplissez les informations ci-dessous pour créer votre compte
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleLogin} className="space-y-6">
+              <form onSubmit={handleSignup} className="space-y-6">
+                {/* Name Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-sm font-medium text-primary">
+                    Nom complet
+                  </Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-4 h-4" />
+                    <Input
+                      id="name"
+                      name="name"
+                      type="text"
+                      placeholder="Votre nom complet"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="pl-10 h-12 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl theme-transition"
+                    />
+                  </div>
+                </div>
+
                 {/* Email Field */}
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-sm font-medium text-primary">
@@ -131,14 +164,31 @@ const Login = () => {
                   </div>
                 </div>
 
-                {/* Forgot Password Link */}
-                <div className="text-right">
-                  <Link 
-                    to="/forgot-password" 
-                    className="text-sm text-primary hover:underline font-medium"
-                  >
-                    Mot de passe oublié ?
-                  </Link>
+                {/* Confirm Password Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword" className="text-sm font-medium text-primary">
+                    Confirmer le mot de passe
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-4 h-4" />
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder="Confirmez votre mot de passe"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      required
+                      className="pl-10 pr-12 h-12 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl theme-transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary hover:text-primary transition-colors"
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Submit Button */}
@@ -150,49 +200,24 @@ const Login = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Connexion en cours...
+                      Création du compte...
                     </>
                   ) : (
-                    "Se connecter"
+                    "Créer mon compte"
                   )}
                 </Button>
               </form>
             </CardContent>
           </Card>
 
-          {/* Sign Up Link */}
+          {/* Login Link */}
           <div className="text-center">
             <p className="text-secondary text-sm">
-              Nouveau sur Skoolife ?{" "}
-              <Link to="/signup" className="text-primary font-semibold hover:underline">
-                Créer un compte gratuitement
+              Déjà un compte ?{" "}
+              <Link to="/login" className="text-primary font-semibold hover:underline">
+                Se connecter
               </Link>
             </p>
-          </div>
-
-          {/* Features Preview */}
-          <div className="surface-secondary border border-border/50 rounded-2xl p-6 theme-transition">
-            <h3 className="text-center font-semibold text-primary mb-4">
-              Pourquoi choisir Skoolife ?
-            </h3>
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="space-y-2">
-                <div className="text-2xl font-bold text-primary">4-en-1</div>
-                <div className="text-xs text-secondary">Outils essentiels</div>
-              </div>
-              <div className="space-y-2">
-                <div className="text-2xl font-bold text-primary">100%</div>
-                <div className="text-xs text-secondary">Pour étudiants</div>
-              </div>
-              <div className="space-y-2">
-                <div className="text-2xl font-bold text-primary">24/7</div>
-                <div className="text-xs text-secondary">Disponible</div>
-              </div>
-              <div className="space-y-2">
-                <div className="text-2xl font-bold text-primary">0€</div>
-                <div className="text-xs text-secondary">Gratuit</div>
-              </div>
-            </div>
           </div>
         </div>
       </main>
@@ -211,4 +236,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
