@@ -19,21 +19,15 @@ export default function Index() {
   const [view, setView] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showWelcomeTransition, setShowWelcomeTransition] = useState(false);
-  const [hasShownTransition, setHasShownTransition] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate('/login');
-    } else if (!isLoading && isAuthenticated && !hasShownTransition) {
-      // Show welcome transition for first-time login
-      const hasSeenTransition = sessionStorage.getItem('skoolife_welcome_shown');
-      if (!hasSeenTransition) {
-        setShowWelcomeTransition(true);
-        sessionStorage.setItem('skoolife_welcome_shown', 'true');
-      }
-      setHasShownTransition(true);
+    } else if (!isLoading && isAuthenticated) {
+      // Show welcome transition every time user is authenticated (login or refresh)
+      setShowWelcomeTransition(true);
     }
-  }, [isAuthenticated, isLoading, navigate, hasShownTransition]);
+  }, [isAuthenticated, isLoading, navigate]);
 
   const handleWelcomeComplete = () => {
     setShowWelcomeTransition(false);
