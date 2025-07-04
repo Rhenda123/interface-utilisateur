@@ -11,31 +11,34 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { LogOut, User, Settings, Bell } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 const UserAccountMenu = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const user = {
+    name: "Ridouane Henda",
+    email: "r.henda@icloud.com",
+    avatar: "",
+    initials: "RH"
+  };
 
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    console.log("Logout clicked");
+    // Add your logout logic here
   };
 
   const handleSwitchAccounts = () => {
     console.log("Switch accounts clicked");
+    // Add switch accounts logic here
   };
 
   const handleAccountSettings = () => {
     console.log("Account settings clicked");
+    // Add account settings logic here
   };
 
   const handleNotificationToggle = () => {
     console.log("Notification toggle clicked");
+    // Add notification toggle logic here
   };
-
-  if (!user) return null;
 
   return (
     <DropdownMenu>

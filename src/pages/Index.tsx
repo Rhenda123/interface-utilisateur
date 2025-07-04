@@ -1,7 +1,6 @@
 
-import React, { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+
+import React, { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
 import HomeModule from "@/components/HomeModule";
@@ -14,28 +13,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 
 export default function Index() {
-  const { user, logout, isAuthenticated, isLoading } = useAuth();
-  const navigate = useNavigate();
   const [view, setView] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [fadeStage, setFadeStage] = useState(0);
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      navigate('/login');
-    } else if (!isLoading && isAuthenticated) {
-      // Progressive fade-in animation
-      const timer1 = setTimeout(() => setFadeStage(1), 100);
-      const timer2 = setTimeout(() => setFadeStage(2), 300);
-      const timer3 = setTimeout(() => setFadeStage(3), 500);
-
-      return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
-        clearTimeout(timer3);
-      };
-    }
-  }, [isAuthenticated, isLoading, navigate]);
 
   const handleNavigation = (newView: string) => {
     setView(newView);
@@ -50,10 +29,17 @@ export default function Index() {
     { id: "documents", label: "Documents", icon: FileText }
   ];
 
+  // User data for mobile menu
+  const user = {
+    name: "Ridouane Henda",
+    email: "r.henda@icloud.com",
+    avatar: "",
+    initials: "RH"
+  };
+
   const handleLogout = () => {
-    logout();
+    console.log("Logout clicked");
     setMobileMenuOpen(false);
-    navigate('/login');
   };
 
   const handleSwitchAccounts = () => {
@@ -70,31 +56,10 @@ export default function Index() {
     console.log("Notification toggle clicked");
   };
 
-  // Show loading state while checking authentication
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AD03] bg-clip-text text-transparent mb-4">
-            SKOOLIFE
-          </h1>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500 mx-auto"></div>
-        </div>
-      </div>
-    );
-  }
-
-  // Don't render anything if not authenticated (will redirect)
-  if (!isAuthenticated) {
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
       {/* Desktop-Only Header - Hidden on tablet and mobile */}
-      <header className={`hidden lg:block sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg transition-all duration-800 ease-out ${
-        fadeStage >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-      }`}>
+      <header className="hidden lg:block sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Left: Brand - Mobile optimized */}
@@ -137,17 +102,17 @@ export default function Index() {
             {/* User Profile Section */}
             <div className="flex items-center space-x-4 pb-6 border-b border-yellow-100 dark:border-gray-700">
               <Avatar className="h-16 w-16 border-2 border-yellow-200">
-                <AvatarImage src={user?.avatar} alt={user?.name} />
+                <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 font-semibold text-xl">
-                  {user?.initials}
+                  {user.initials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="text-xl font-semibold text-gray-900 dark:text-white truncate">
-                  {user?.name}
+                  {user.name}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                  {user?.email}
+                  {user.email}
                 </p>
               </div>
             </div>
@@ -212,9 +177,7 @@ export default function Index() {
       )}
 
       {/* Main Content - Mobile optimized with proper padding for bottom nav */}
-      <main className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20 lg:pb-8 lg:py-8 transition-all duration-1000 ease-out delay-200 ${
-        mobileMenuOpen ? 'lg:block hidden' : ''
-      } ${fadeStage >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <main className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20 lg:pb-8 lg:py-8 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
         <div className="w-full">
           <div className="transition-all duration-300 ease-in-out">
             {view === "home" && <HomeModule onNavigate={handleNavigation} />}
@@ -227,9 +190,7 @@ export default function Index() {
       </main>
 
       {/* Fixed Bottom Navigation - Native mobile app style with icons only - Compact design */}
-      <nav className={`lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl transition-all duration-1200 ease-out delay-400 ${
-        fadeStage >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-      }`}>
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
         <div className="flex items-center justify-around px-1 py-2">
           {navigationItems.map((item) => {
             const IconComponent = item.icon;
@@ -252,3 +213,4 @@ export default function Index() {
     </div>
   );
 }
+
