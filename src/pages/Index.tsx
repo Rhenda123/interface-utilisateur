@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
@@ -84,16 +85,6 @@ export default function Index() {
               </div>
             </nav>
 
-            {/* Mobile: Menu Button Only */}
-            <div className="lg:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-3 rounded-xl text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 touch-manipulation"
-              >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </div>
-            
             {/* Right: Desktop User Controls */}
             <div className="hidden lg:flex items-center gap-2 lg:gap-3">
               <ThemeToggle />
@@ -199,7 +190,7 @@ export default function Index() {
 
       {/* Fixed Bottom Navigation - Native mobile app style with icons only - Compact design */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
-        <div className="flex items-center justify-around px-1 py-2 safe-area-inset-bottom">
+        <div className="flex items-center justify-around px-1 py-2">
           {navigationItems.map((item) => {
             const IconComponent = item.icon;
             return (
