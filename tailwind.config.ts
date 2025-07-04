@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -68,23 +67,6 @@ export default {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
-			},
-			spacing: {
-				'responsive-xs': 'clamp(0.25rem, 1vw, 0.5rem)',
-				'responsive-sm': 'clamp(0.5rem, 2vw, 1rem)',
-				'responsive-md': 'clamp(1rem, 3vw, 1.5rem)',
-				'responsive-lg': 'clamp(1.5rem, 4vw, 2rem)',
-				'responsive-xl': 'clamp(2rem, 5vw, 3rem)',
-				'responsive-2xl': 'clamp(3rem, 6vw, 4rem)',
-			},
-			fontSize: {
-				'responsive-xs': 'clamp(0.75rem, 2.5vw, 0.875rem)',
-				'responsive-sm': 'clamp(0.875rem, 2.5vw, 1rem)',
-				'responsive-base': 'clamp(1rem, 2.5vw, 1.125rem)',
-				'responsive-lg': 'clamp(1.125rem, 3vw, 1.25rem)',
-				'responsive-xl': 'clamp(1.25rem, 3.5vw, 1.5rem)',
-				'responsive-2xl': 'clamp(1.5rem, 4vw, 2rem)',
-				'responsive-3xl': 'clamp(2rem, 5vw, 2.5rem)',
 			},
 			keyframes: {
 				'accordion-down': {
