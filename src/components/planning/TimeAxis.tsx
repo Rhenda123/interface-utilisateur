@@ -19,8 +19,8 @@ const TimeAxis: React.FC<TimeAxisProps> = ({ className = "" }) => {
 
   return (
     <div className={`bg-gradient-to-b from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 border-r border-yellow-300 dark:border-yellow-600 ${className}`}>
-      {/* Header spacer - Sticky on tablet and desktop only */}
-      <div className="h-16 border-b border-yellow-300 dark:border-yellow-600 flex items-center justify-center md:sticky md:top-16 z-40 bg-gradient-to-b from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800">
+      {/* Header spacer - Sticky on desktop/tablet only */}
+      <div className="h-16 border-b border-yellow-300 dark:border-yellow-600 flex items-center justify-center md:sticky md:top-0 z-30 bg-gradient-to-b from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800">
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Heure</span>
       </div>
       
