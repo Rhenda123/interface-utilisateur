@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff, Loader2, BookOpen, Users, Target, Calendar, PiggyBank, FileText, MessageSquare } from 'lucide-react';
+import { Eye, EyeOff, Loader2, BookOpen, Users, Target, Calendar, PiggyBank, FileText, MessageSquare, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -147,31 +147,31 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Desktop View - New Design */}
-        <div className="min-h-screen bg-gray-50 hidden lg:flex">
+        {/* Desktop View - Exact Match to Screenshots */}
+        <div className="min-h-screen bg-white hidden lg:block">
           {/* Header */}
-          <div className="absolute top-0 left-0 right-0 z-10 px-8 py-6">
+          <div className="absolute top-0 left-0 right-0 z-10 px-12 py-8">
             <div className="flex items-center justify-between max-w-7xl mx-auto">
               <div className="flex items-center">
-                <h1 className="text-2xl font-bold text-yellow-500">SKOOLIFE</h1>
+                <h1 className="text-3xl font-bold text-black">SKOOLIFE</h1>
               </div>
-              <div className="flex items-center space-x-8">
-                <nav className="flex items-center space-x-8">
-                  <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">Fonctionnalités</a>
-                  <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">À propos</a>
-                  <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">Contact</a>
+              <div className="flex items-center space-x-10">
+                <nav className="flex items-center space-x-10">
+                  <a href="#" className="text-gray-600 hover:text-black font-medium text-lg">Fonctionnalités</a>
+                  <a href="#" className="text-gray-600 hover:text-black font-medium text-lg">À propos</a>
+                  <a href="#" className="text-gray-600 hover:text-black font-medium text-lg">Contact</a>
                 </nav>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <Button 
                     onClick={() => handleAuthAction(false)}
                     variant="outline"
-                    className="px-6 py-2 border-gray-300 hover:bg-gray-50"
+                    className="px-8 py-3 border-2 border-gray-300 hover:bg-gray-50 text-lg font-medium"
                   >
                     Rejoindre l'aventure
                   </Button>
                   <Button 
                     onClick={() => handleAuthAction(true)}
-                    className="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+                    className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold text-lg"
                   >
                     Connexion
                   </Button>
@@ -180,246 +180,216 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col items-center justify-center px-8 pt-24">
+          <div className="pt-32 pb-20">
             {/* Hero Section */}
-            <div className="text-center max-w-4xl mx-auto mb-16">
-              <div className="inline-flex items-center bg-yellow-100 px-4 py-2 rounded-full mb-8">
-                <Target className="w-4 h-4 text-yellow-600 mr-2" />
-                <span className="text-yellow-800 text-sm font-medium">L'outil ultime pour maîtriser la vie étudiante</span>
+            <div className="text-center max-w-5xl mx-auto mb-20 px-12">
+              <div className="inline-flex items-center bg-yellow-100 px-6 py-3 rounded-full mb-10">
+                <Target className="w-5 h-5 text-yellow-600 mr-3" />
+                <span className="text-yellow-800 text-lg font-medium">L'outil ultime pour maîtriser la vie étudiante</span>
               </div>
               
-              <h1 className="text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Gérez toute votre <span className="text-yellow-500">vie étudiante</span> en un seul endroit
+              <h1 className="text-7xl font-bold text-black mb-8 leading-tight">
+                Gérez toute votre <span className="text-yellow-400">vie étudiante</span> en un seul endroit
               </h1>
               
-              <p className="text-xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto">
+              <p className="text-2xl text-gray-600 mb-16 leading-relaxed max-w-4xl mx-auto">
                 Skoolife est la plateforme tout-en-un qui simplifie chaque aspect de votre parcours étudiant. Planning, budget, documents, collaboration - tout ce dont vous avez besoin pour réussir.
               </p>
+
+              <div className="flex justify-center space-x-6">
+                <Button 
+                  onClick={() => handleAuthAction(false)}
+                  className="px-10 py-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold text-xl rounded-lg"
+                >
+                  Commencer gratuitement
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </div>
             </div>
 
             {/* Features Grid */}
-            <div className="grid grid-cols-2 gap-8 mb-16 max-w-4xl">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Calendar className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Planning intelligent</h3>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <PiggyBank className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Gestion budget</h3>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <FileText className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Documents organisés</h3>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <MessageSquare className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Forum collaboratif</h3>
-              </div>
-            </div>
-
-            {/* Features Section */}
-            <div className="max-w-6xl mx-auto mb-16">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                  Tout ce dont vous avez besoin pour réussir
-                </h2>
-                <p className="text-xl text-gray-600">
-                  Découvrez comment Skoolife transforme la gestion de votre vie étudiante avec des outils intuitifs et puissants
-                </p>
-              </div>
-
-              <div className="grid grid-cols-4 gap-8">
+            <div className="max-w-6xl mx-auto mb-24 px-12">
+              <div className="grid grid-cols-4 gap-12">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Calendar className="w-8 h-8 text-white" />
+                  <div className="w-20 h-20 bg-yellow-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <Calendar className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Planning Intelligent</h3>
-                  <p className="text-gray-600 text-sm">
+                  <h3 className="text-2xl font-semibold text-black mb-4">Planning Intelligent</h3>
+                  <p className="text-gray-600 text-lg leading-relaxed">
                     Organisez vos cours, devoirs et examens avec un planificateur adaptatif
                   </p>
                 </div>
 
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <PiggyBank className="w-8 h-8 text-white" />
+                  <div className="w-20 h-20 bg-yellow-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <PiggyBank className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Gestion Budget</h3>
-                  <p className="text-gray-600 text-sm">
+                  <h3 className="text-2xl font-semibold text-black mb-4">Gestion Budget</h3>
+                  <p className="text-gray-600 text-lg leading-relaxed">
                     Suivez vos dépenses et gérez votre budget étudiant intelligemment
                   </p>
                 </div>
 
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <FileText className="w-8 h-8 text-white" />
+                  <div className="w-20 h-20 bg-yellow-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <FileText className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Documents Organisés</h3>
-                  <p className="text-gray-600 text-sm">
+                  <h3 className="text-2xl font-semibold text-black mb-4">Documents Organisés</h3>
+                  <p className="text-gray-600 text-lg leading-relaxed">
                     Centralisez et organisez tous vos fichiers académiques
                   </p>
                 </div>
 
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <MessageSquare className="w-8 h-8 text-white" />
+                  <div className="w-20 h-20 bg-yellow-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <MessageSquare className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Forum Collaboratif</h3>
-                  <p className="text-gray-600 text-sm">
+                  <h3 className="text-2xl font-semibold text-black mb-4">Forum Collaboratif</h3>
+                  <p className="text-gray-600 text-lg leading-relaxed">
                     Échangez avec d'autres étudiants et collaborez efficacement
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Success Partner Section */}
-            <div className="max-w-5xl mx-auto mb-16">
+            {/* Partnership Section */}
+            <div className="max-w-7xl mx-auto mb-24 px-12">
               <div className="flex items-center justify-between">
-                <div className="max-w-md">
-                  <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                <div className="max-w-2xl">
+                  <h2 className="text-5xl font-bold text-black mb-8 leading-tight">
                     Plus qu'une app, votre partenaire de réussite
                   </h2>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <div className="flex items-center">
-                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
-                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
-                      <span className="text-gray-700">Réduisez le stress avec une organisation claire</span>
+                      <span className="text-gray-700 text-xl">Réduisez le stress avec une organisation claire</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
-                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
-                      <span className="text-gray-700">Maximisez votre productivité quotidienne</span>
+                      <span className="text-gray-700 text-xl">Maximisez votre productivité quotidienne</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
-                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
-                      <span className="text-gray-700">Gardez le contrôle de votre vie étudiante</span>
+                      <span className="text-gray-700 text-xl">Gardez le contrôle de votre vie étudiante</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
-                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
-                      <span className="text-gray-700">Planifiez votre avenir avec confiance</span>
+                      <span className="text-gray-700 text-xl">Planifiez votre avenir avec confiance</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8 text-center">
+                <div className="grid grid-cols-2 gap-12 text-center">
                   <div>
-                    <div className="text-5xl font-bold text-gray-900 mb-2">4-en-1</div>
-                    <div className="text-gray-600">Outils essentiels unifiés</div>
+                    <div className="text-6xl font-bold text-black mb-3">4-en-1</div>
+                    <div className="text-gray-600 text-lg">Outils essentiels unifiés</div>
                   </div>
                   <div>
-                    <div className="text-5xl font-bold text-gray-900 mb-2">100%</div>
-                    <div className="text-gray-600">Pensé pour les étudiants</div>
+                    <div className="text-6xl font-bold text-black mb-3">100%</div>
+                    <div className="text-gray-600 text-lg">Pensé pour les étudiants</div>
                   </div>
                   <div>
-                    <div className="text-5xl font-bold text-gray-900 mb-2">24/7</div>
-                    <div className="text-gray-600">Accessible partout</div>
+                    <div className="text-6xl font-bold text-black mb-3">24/7</div>
+                    <div className="text-gray-600 text-lg">Accessible partout</div>
                   </div>
                   <div>
-                    <div className="text-5xl font-bold text-gray-900 mb-2">0€</div>
-                    <div className="text-gray-600">Commencez gratuitement</div>
+                    <div className="text-6xl font-bold text-black mb-3">0€</div>
+                    <div className="text-gray-600 text-lg">Commencez gratuitement</div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Testimonials */}
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <div className="max-w-7xl mx-auto px-12">
+              <div className="text-center mb-16">
+                <h2 className="text-5xl font-bold text-black mb-6">
                   Ce que disent les étudiants
                 </h2>
-                <p className="text-xl text-gray-600">
+                <p className="text-2xl text-gray-600">
                   Découvrez comment Skoolife transforme le quotidien de milliers d'étudiants
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-8">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border">
-                  <div className="flex mb-4">
+              <div className="grid grid-cols-3 gap-10">
+                <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                  <div className="flex mb-6">
                     {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                      <svg key={i} className="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                     ))}
                   </div>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-gray-700 mb-6 text-lg leading-relaxed">
                     "Skoolife a révolutionné ma façon d'organiser mes études. Plus de stress avec les deadlines !"
                   </p>
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-white font-semibold text-sm">MA</span>
+                    <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mr-4">
+                      <span className="text-white font-semibold">MA</span>
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">Marie A.</div>
-                      <div className="text-gray-600 text-sm">Étudiante en droit</div>
+                      <div className="font-semibold text-black text-lg">Marie A.</div>
+                      <div className="text-gray-600">Étudiante en droit</div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-sm border">
-                  <div className="flex mb-4">
+                <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                  <div className="flex mb-6">
                     {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                      <svg key={i} className="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                     ))}
                   </div>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-gray-700 mb-6 text-lg leading-relaxed">
                     "Le suivi budgétaire m'aide énormément à gérer mes finances étudiantes. Indispensable !"
                   </p>
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-white font-semibold text-sm">TL</span>
+                    <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mr-4">
+                      <span className="text-white font-semibold">TL</span>
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">Thomas L.</div>
-                      <div className="text-gray-600 text-sm">Étudiant en commerce</div>
+                      <div className="font-semibold text-black text-lg">Thomas L.</div>
+                      <div className="text-gray-600">Étudiant en commerce</div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-sm border">
-                  <div className="flex mb-4">
+                <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                  <div className="flex mb-6">
                     {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                      <svg key={i} className="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                     ))}
                   </div>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-gray-700 mb-6 text-lg leading-relaxed">
                     "L'interface est magnifique et intuitive. J'adore pouvoir tout centraliser au même endroit."
                   </p>
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-white font-semibold text-sm">EB</span>
+                    <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mr-4">
+                      <span className="text-white font-semibold">EB</span>
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">Emma B.</div>
-                      <div className="text-gray-600 text-sm">Étudiante en médecine</div>
+                      <div className="font-semibold text-black text-lg">Emma B.</div>
+                      <div className="text-gray-600">Étudiante en médecine</div>
                     </div>
                   </div>
                 </div>
