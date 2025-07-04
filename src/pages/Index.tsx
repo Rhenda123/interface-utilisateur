@@ -1,7 +1,7 @@
+
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import WelcomeTransition from "@/components/WelcomeTransition";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
 import HomeModule from "@/components/HomeModule";
@@ -18,20 +18,24 @@ export default function Index() {
   const navigate = useNavigate();
   const [view, setView] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showWelcomeTransition, setShowWelcomeTransition] = useState(false);
+  const [fadeStage, setFadeStage] = useState(0);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate('/login');
     } else if (!isLoading && isAuthenticated) {
-      // Show welcome transition every time user is authenticated (login or refresh)
-      setShowWelcomeTransition(true);
+      // Progressive fade-in animation
+      const timer1 = setTimeout(() => setFadeStage(1), 100);
+      const timer2 = setTimeout(() => setFadeStage(2), 300);
+      const timer3 = setTimeout(() => setFadeStage(3), 500);
+
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+      };
     }
   }, [isAuthenticated, isLoading, navigate]);
-
-  const handleWelcomeComplete = () => {
-    setShowWelcomeTransition(false);
-  };
 
   const handleNavigation = (newView: string) => {
     setView(newView);
@@ -85,15 +89,12 @@ export default function Index() {
     return null;
   }
 
-  // Show welcome transition if needed
-  if (showWelcomeTransition) {
-    return <WelcomeTransition onComplete={handleWelcomeComplete} />;
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
       {/* Desktop-Only Header - Hidden on tablet and mobile */}
-      <header className="hidden lg:block sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg">
+      <header className={`hidden lg:block sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm lg:shadow-lg transition-all duration-800 ease-out ${
+        fadeStage >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Left: Brand - Mobile optimized */}
@@ -211,7 +212,9 @@ export default function Index() {
       )}
 
       {/* Main Content - Mobile optimized with proper padding for bottom nav */}
-      <main className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20 lg:pb-8 lg:py-8 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
+      <main className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20 lg:pb-8 lg:py-8 transition-all duration-1000 ease-out delay-200 ${
+        mobileMenuOpen ? 'lg:block hidden' : ''
+      } ${fadeStage >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <div className="w-full">
           <div className="transition-all duration-300 ease-in-out">
             {view === "home" && <HomeModule onNavigate={handleNavigation} />}
@@ -224,7 +227,9 @@ export default function Index() {
       </main>
 
       {/* Fixed Bottom Navigation - Native mobile app style with icons only - Compact design */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl">
+      <nav className={`lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl transition-all duration-1200 ease-out delay-400 ${
+        fadeStage >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}>
         <div className="flex items-center justify-around px-1 py-2">
           {navigationItems.map((item) => {
             const IconComponent = item.icon;
