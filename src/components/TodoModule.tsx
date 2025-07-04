@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,7 +44,7 @@ function TodoModule() {
   const [input, setInput] = useState("");
   const [priority, setPriority] = useState("Moyenne");
   const [deadline, setDeadline] = useState("");
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("none");
   const [filter, setFilter] = useState("Toutes");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -74,7 +75,7 @@ function TodoModule() {
         priority,
         deadline,
         createdAt: new Date().toISOString(),
-        categoryId: selectedCategoryId || undefined,
+        categoryId: selectedCategoryId === "none" ? undefined : selectedCategoryId,
       };
 
       if (editingIndex !== null) {
@@ -92,7 +93,7 @@ function TodoModule() {
       setInput("");
       setPriority("Moyenne");
       setDeadline("");
-      setSelectedCategoryId("");
+      setSelectedCategoryId("none");
       setShowAddForm(false);
     }
   };
@@ -113,7 +114,7 @@ function TodoModule() {
     setInput(task.text);
     setPriority(task.priority);
     setDeadline(task.deadline);
-    setSelectedCategoryId(task.categoryId || "");
+    setSelectedCategoryId(task.categoryId || "none");
     setEditingIndex(index);
     setShowAddForm(true);
   };
@@ -122,7 +123,7 @@ function TodoModule() {
     setInput("");
     setPriority("Moyenne");
     setDeadline("");
-    setSelectedCategoryId("");
+    setSelectedCategoryId("none");
     setEditingIndex(null);
     setShowAddForm(false);
   };
@@ -350,8 +351,8 @@ function TodoModule() {
                   <SelectTrigger className="border-2 border-yellow-200 dark:border-gray-600 bg-yellow-50 dark:bg-gray-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
                     <SelectValue placeholder="Choisir une catégorie" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Aucune catégorie</SelectItem>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                    <SelectItem value="none">Aucune catégorie</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
                         <div className="flex items-center gap-2">
