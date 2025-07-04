@@ -54,9 +54,9 @@ const Login = () => {
   };
 
   if (!showForm) {
-    // Welcome screen with improved design
+    // Welcome screen with improved contained design
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 flex flex-col items-center justify-center p-4 relative overflow-hidden">
         {/* Decorative Background Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
@@ -65,100 +65,101 @@ const Login = () => {
           <div className="absolute bottom-16 right-16 w-16 h-16 bg-amber-200/20 rounded-full blur-lg animate-pulse delay-700"></div>
         </div>
 
-        {/* Main Content Container */}
-        <div className="w-full max-w-sm mx-auto relative z-10">
+        {/* Main Content Container with proper containment */}
+        <div className="w-full max-w-sm mx-auto relative z-10 flex flex-col items-center">
           {/* Logo */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold text-gray-800 tracking-tight">
               SKOOLIFE
             </h1>
-            <div className="w-16 h-1 bg-gray-700 mx-auto mt-2 rounded-full"></div>
+            <div className="w-12 h-1 bg-gray-700 mx-auto mt-2 rounded-full"></div>
           </div>
 
-          {/* Illustration Container */}
-          <div className="w-full max-w-xs mx-auto mb-8">
-            <div className="aspect-square bg-white/20 backdrop-blur-sm rounded-3xl shadow-xl flex items-center justify-center relative overflow-hidden">
+          {/* Main Rectangle Container */}
+          <div className="w-full bg-white/20 backdrop-blur-sm rounded-3xl shadow-xl p-6 flex flex-col items-center space-y-5">
+            {/* Illustration Container */}
+            <div className="w-20 h-20 bg-white/30 rounded-2xl flex items-center justify-center relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
               
               {/* Central academic hub */}
               <div className="relative flex items-center justify-center">
-                <div className="w-12 h-12 bg-gray-700 rounded-xl flex items-center justify-center shadow-lg">
-                  <BookOpen className="w-6 h-6 text-yellow-300" />
+                <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center shadow-lg">
+                  <BookOpen className="w-4 h-4 text-yellow-300" />
                 </div>
                 
                 {/* Surrounding elements */}
-                <div className="absolute -top-5 -left-5 w-7 h-7 bg-white/70 rounded-lg flex items-center justify-center shadow-md">
-                  <Target className="w-3.5 h-3.5 text-gray-600" />
+                <div className="absolute -top-3 -left-3 w-5 h-5 bg-white/70 rounded-md flex items-center justify-center shadow-md">
+                  <Target className="w-2.5 h-2.5 text-gray-600" />
                 </div>
-                <div className="absolute -top-5 -right-5 w-7 h-7 bg-white/70 rounded-lg flex items-center justify-center shadow-md">
-                  <Users className="w-3.5 h-3.5 text-gray-600" />
+                <div className="absolute -top-3 -right-3 w-5 h-5 bg-white/70 rounded-md flex items-center justify-center shadow-md">
+                  <Users className="w-2.5 h-2.5 text-gray-600" />
                 </div>
-                <div className="absolute -bottom-4 left-0 w-6 h-6 bg-yellow-200/70 rounded-md flex items-center justify-center shadow-sm">
-                  <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                <div className="absolute -bottom-2 left-0 w-4 h-4 bg-yellow-200/70 rounded-sm flex items-center justify-center shadow-sm">
+                  <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
                 </div>
-                <div className="absolute -bottom-4 right-0 w-6 h-6 bg-orange-200/70 rounded-md flex items-center justify-center shadow-sm">
-                  <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                <div className="absolute -bottom-2 right-0 w-4 h-4 bg-orange-200/70 rounded-sm flex items-center justify-center shadow-sm">
+                  <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Welcome Text */}
-          <div className="text-center space-y-4 mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 leading-tight">
-              Optimise ton parcours éducatif
-            </h2>
-            <p className="text-gray-700 text-base leading-relaxed">
-              Gère tes cours, devoirs et projets en un seul endroit
-            </p>
-            
-            {/* Features */}
-            <div className="flex justify-center space-x-6 text-gray-600 text-sm pt-2">
-              <div className="flex items-center space-x-1">
-                <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
-                <span>Planning</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
-                <span>Devoirs</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
-                <span>Projets</span>
+            {/* Welcome Text */}
+            <div className="text-center space-y-3">
+              <h2 className="text-xl font-bold text-gray-800 leading-tight">
+                Optimise ton parcours éducatif
+              </h2>
+              <p className="text-gray-700 text-sm leading-relaxed px-2">
+                Gère tes cours, devoirs et projets en un seul endroit
+              </p>
+              
+              {/* Features */}
+              <div className="flex justify-center space-x-4 text-gray-600 text-xs pt-1">
+                <div className="flex items-center space-x-1">
+                  <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
+                  <span>Planning</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
+                  <span>Devoirs</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
+                  <span>Projets</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="space-y-3">
-            <Button 
-              onClick={() => handleAuthAction(true)}
-              className="w-full h-12 text-base font-semibold bg-gray-800 text-yellow-300 hover:bg-gray-700 rounded-xl shadow-lg transition-all duration-200"
-            >
-              Se connecter
-            </Button>
-            
-            <Button 
-              onClick={() => handleAuthAction(false)}
-              variant="outline"
-              className="w-full h-12 text-base font-semibold bg-white/15 text-gray-800 border-2 border-gray-700 hover:bg-white/25 rounded-xl backdrop-blur-sm transition-all duration-200"
-            >
-              S'inscrire
-            </Button>
-          </div>
+            {/* Action Buttons */}
+            <div className="w-full space-y-3">
+              <Button 
+                onClick={() => handleAuthAction(true)}
+                className="w-full h-11 text-sm font-semibold bg-gray-800 text-yellow-300 hover:bg-gray-700 rounded-xl shadow-lg transition-all duration-200"
+              >
+                Se connecter
+              </Button>
+              
+              <Button 
+                onClick={() => handleAuthAction(false)}
+                variant="outline"
+                className="w-full h-11 text-sm font-semibold bg-white/15 text-gray-800 border-2 border-gray-700 hover:bg-white/25 rounded-xl backdrop-blur-sm transition-all duration-200"
+              >
+                S'inscrire
+              </Button>
+            </div>
 
-          {/* Footer */}
-          <div className="text-center pt-8 space-y-3">
-            <p className="text-gray-700 text-sm">
-              En t'inscrivant, tu acceptes nos
-            </p>
-            <div className="space-y-2">
-              <button className="block w-full text-gray-800 text-sm font-medium underline hover:text-gray-600 transition-colors">
-                Conditions d'utilisation
-              </button>
-              <button className="block w-full text-gray-700 text-sm underline hover:text-gray-600 transition-colors">
-                Besoin d'aide pour te connecter ?
-              </button>
+            {/* Footer */}
+            <div className="text-center space-y-2">
+              <p className="text-gray-700 text-xs">
+                En t'inscrivant, tu acceptes nos
+              </p>
+              <div className="space-y-1">
+                <button className="block w-full text-gray-800 text-xs font-medium underline hover:text-gray-600 transition-colors">
+                  Conditions d'utilisation
+                </button>
+                <button className="block w-full text-gray-700 text-xs underline hover:text-gray-600 transition-colors">
+                  Besoin d'aide pour te connecter ?
+                </button>
+              </div>
             </div>
           </div>
         </div>
