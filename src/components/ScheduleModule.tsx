@@ -212,12 +212,8 @@ const ScheduleModule: React.FC<ScheduleModuleProps> = ({ onViewChange }) => {
             setSelectedTimeSlot(null);
           }}
           onSave={handleCreateEvent}
-          initialData={{
-            day: selectedTimeSlot.day,
-            startTime: `${selectedTimeSlot.time.toString().padStart(2, '0')}:00`,
-            endTime: `${(selectedTimeSlot.time + 1).toString().padStart(2, '0')}:00`,
-            date: formatDateForAPI(new Date())
-          }}
+          defaultDay={selectedTimeSlot.day}
+          defaultTime={selectedTimeSlot.time}
         />
       )}
 
@@ -230,12 +226,6 @@ const ScheduleModule: React.FC<ScheduleModuleProps> = ({ onViewChange }) => {
           }}
           onSave={handleUpdateEvent}
           event={selectedEvent}
-          timeSlots={Array.from({ length: 48 }, (_, i) => {
-            const hour = Math.floor(i / 2);
-            const minute = (i % 2) * 30;
-            return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-          })}
-          days={["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]}
         />
       )}
     </div>

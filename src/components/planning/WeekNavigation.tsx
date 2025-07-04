@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Calendar, Today } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 
 interface WeekNavigationProps {
   currentWeek: Date;
@@ -42,7 +42,7 @@ const WeekNavigation: React.FC<WeekNavigationProps> = ({
             variant="outline"
             className="bg-yellow-400 hover:bg-yellow-500 border-yellow-500 text-gray-900 font-semibold shadow-md hover:shadow-lg transition-all"
           >
-            <Today className="w-4 h-4 mr-2" />
+            <Calendar className="w-4 h-4 mr-2" />
             Aujourd'hui
           </Button>
           
