@@ -150,12 +150,6 @@ const Login = () => {
               {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
             </button>
           </div>
-
-          {isLogin && (
-            <div className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
-              Demo credentials: r.henda@icloud.com
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>
