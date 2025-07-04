@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff, Loader2, Sparkles } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '@/components/ThemeToggle';
 
@@ -63,9 +62,6 @@ const Login = () => {
         <CardHeader className="text-center space-y-6 pb-8">
           {/* Logo Section */}
           <div className="flex justify-center items-center space-x-3">
-            <div className="relative">
-              <Sparkles className="h-4 w-4 text-yellow-500 animate-pulse" />
-            </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 bg-clip-text text-transparent tracking-tight">
               SKOOLIFE
             </h1>
