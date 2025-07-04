@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import WelcomeTransition from "@/components/WelcomeTransition";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
 import HomeModule from "@/components/HomeModule";
@@ -18,12 +18,26 @@ export default function Index() {
   const navigate = useNavigate();
   const [view, setView] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showWelcomeTransition, setShowWelcomeTransition] = useState(false);
+  const [hasShownTransition, setHasShownTransition] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate('/login');
+    } else if (!isLoading && isAuthenticated && !hasShownTransition) {
+      // Show welcome transition for first-time login
+      const hasSeenTransition = sessionStorage.getItem('skoolife_welcome_shown');
+      if (!hasSeenTransition) {
+        setShowWelcomeTransition(true);
+        sessionStorage.setItem('skoolife_welcome_shown', 'true');
+      }
+      setHasShownTransition(true);
     }
-  }, [isAuthenticated, isLoading, navigate]);
+  }, [isAuthenticated, isLoading, navigate, hasShownTransition]);
+
+  const handleWelcomeComplete = () => {
+    setShowWelcomeTransition(false);
+  };
 
   const handleNavigation = (newView: string) => {
     setView(newView);
@@ -75,6 +89,11 @@ export default function Index() {
   // Don't render anything if not authenticated (will redirect)
   if (!isAuthenticated) {
     return null;
+  }
+
+  // Show welcome transition if needed
+  if (showWelcomeTransition) {
+    return <WelcomeTransition onComplete={handleWelcomeComplete} />;
   }
 
   return (
