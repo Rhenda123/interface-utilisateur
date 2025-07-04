@@ -73,8 +73,8 @@ const DayColumn: React.FC<DayColumnProps> = ({
 
   return (
     <div className="flex-1 border-r border-yellow-200 dark:border-gray-600 last:border-r-0">
-      {/* Day Header - Sticky on desktop/tablet only */}
-      <div className="h-16 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 border-b border-yellow-300 dark:border-yellow-600 flex items-center justify-center md:sticky md:top-0 z-30">
+      {/* Day Header - Sticky on tablet and desktop only */}
+      <div className="h-16 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 border-b border-yellow-300 dark:border-yellow-600 flex items-center justify-center md:sticky md:top-16 z-40">
         <span className="font-semibold text-gray-800 dark:text-gray-200">{day}</span>
       </div>
       

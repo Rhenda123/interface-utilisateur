@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Event } from "@/utils/eventTypes";
 import { getEventsForWeek, createEvent, updateEvent, deleteEvent } from "@/utils/api";
@@ -155,35 +156,36 @@ const ScheduleModule: React.FC<ScheduleModuleProps> = ({ onViewChange }) => {
 
   return (
     <div className="h-full flex flex-col bg-white dark:bg-gray-900">
-      <WeekNavigation
-        currentWeek={currentWeek}
-        onPreviousWeek={handlePreviousWeek}
-        onNextWeek={handleNextWeek}
-        onToday={handleToday}
-      />
+      {/* Navigation - Sticky on tablet and desktop */}
+      <div className="md:sticky md:top-0 z-50 bg-white dark:bg-gray-900">
+        <WeekNavigation
+          currentWeek={currentWeek}
+          onPreviousWeek={handlePreviousWeek}
+          onNextWeek={handleNextWeek}
+          onToday={handleToday}
+        />
+      </div>
       
-      {/* Planning Grid - Fixed positioning for sticky headers */}
-      <div className="flex-1 overflow-hidden">
-        <div className="h-full overflow-auto">
-          <div className="flex min-w-full">
-            {/* Time Axis */}
-            <div className="w-20 flex-shrink-0">
-              <TimeAxis />
-            </div>
-            
-            {/* Days Container */}
-            <div className="flex-1 flex min-w-0">
-              {weekDays.map(({ dayName, dayEvents }) => (
-                <DayColumn
-                  key={dayName}
-                  day={dayName}
-                  events={dayEvents}
-                  onEdit={handleEditEvent}
-                  onDelete={handleDeleteEvent}
-                  onTimeSlotClick={handleTimeSlotClick}
-                />
-              ))}
-            </div>
+      {/* Planning Grid */}
+      <div className="flex-1 overflow-auto">
+        <div className="flex min-w-full">
+          {/* Time Axis */}
+          <div className="w-20 flex-shrink-0">
+            <TimeAxis />
+          </div>
+          
+          {/* Days Container */}
+          <div className="flex-1 flex min-w-0">
+            {weekDays.map(({ dayName, dayEvents }) => (
+              <DayColumn
+                key={dayName}
+                day={dayName}
+                events={dayEvents}
+                onEdit={handleEditEvent}
+                onDelete={handleDeleteEvent}
+                onTimeSlotClick={handleTimeSlotClick}
+              />
+            ))}
           </div>
         </div>
       </div>
