@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -70,9 +69,6 @@ const Login = () => {
           
           {/* Welcome Text */}
           <div className="space-y-1 sm:space-y-2">
-            <CardTitle className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 dark:text-white">
-              {isLogin ? 'Bon retour ! 👋' : 'Rejoins l\'aventure 🎓'}
-            </CardTitle>
             <CardDescription className="text-gray-600 dark:text-gray-300 text-sm sm:text-base px-2 sm:px-0">
               {isLogin ? 'Nous sommes ravis de vous revoir' : 'Commencez votre parcours éducatif avec nous'}
             </CardDescription>
