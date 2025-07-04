@@ -34,45 +34,40 @@ const WeekNavigation: React.FC<WeekNavigationProps> = ({
   const weekRange = getWeekRange(currentWeek);
 
   return (
-    <div className="md:sticky md:top-0 z-50 bg-white dark:bg-gray-900 border-b-2 border-yellow-200 dark:border-gray-700 shadow-sm">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 md:p-6">
-        <div className="flex items-center gap-4">
+    <div className="flex items-center justify-between gap-4 p-4 bg-white dark:bg-gray-800 border-b border-yellow-200 dark:border-gray-700">
+      <div className="flex items-center gap-3">
+        <Button
+          onClick={onToday}
+          variant="outline"
+          className="border-yellow-200 dark:border-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
+        >
+          <Calendar className="w-4 h-4 mr-2" />
+          Aujourd'hui
+        </Button>
+        
+        <div className="flex items-center gap-1">
           <Button
-            onClick={onToday}
-            variant="outline"
-            className="bg-yellow-400 hover:bg-yellow-500 border-yellow-500 text-gray-900 font-semibold shadow-md hover:shadow-lg transition-all"
+            onClick={onPreviousWeek}
+            variant="ghost"
+            size="sm"
+            className="hover:bg-yellow-100 dark:hover:bg-yellow-900/20"
           >
-            <Calendar className="w-4 h-4 mr-2" />
-            Aujourd'hui
+            <ChevronLeft className="w-4 h-4" />
           </Button>
           
-          <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg p-1">
-            <Button
-              onClick={onPreviousWeek}
-              variant="ghost"
-              size="sm"
-              className="hover:bg-white dark:hover:bg-gray-700 transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-            
-            <Button
-              onClick={onNextWeek}
-              variant="ghost"
-              size="sm"
-              className="hover:bg-white dark:hover:bg-gray-700 transition-colors"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
+          <Button
+            onClick={onNextWeek}
+            variant="ghost"
+            size="sm"
+            className="hover:bg-yellow-100 dark:hover:bg-yellow-900/20"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </Button>
         </div>
-        
-        <div className="flex items-center gap-3">
-          <Calendar className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-          <div className="text-xl font-bold text-gray-900 dark:text-white">
-            {weekRange.start} - {weekRange.end}
-          </div>
-        </div>
+      </div>
+      
+      <div className="text-lg font-semibold text-gray-900 dark:text-white">
+        {weekRange.start} - {weekRange.end}
       </div>
     </div>
   );

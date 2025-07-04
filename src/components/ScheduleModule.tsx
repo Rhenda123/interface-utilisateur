@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Event } from "@/utils/eventTypes";
 import { getEventsForWeek, createEvent, updateEvent, deleteEvent } from "@/utils/api";
@@ -46,7 +45,7 @@ const ScheduleModule: React.FC<ScheduleModuleProps> = ({ onViewChange }) => {
   const handleCreateEvent = async (newEvent: Event) => {
     try {
       await createEvent(newEvent);
-      fetchEvents();
+      fetchEvents(); // Refresh events after creating
       setShowCreateModal(false);
       setSelectedTimeSlot(null);
       toast({
@@ -66,7 +65,7 @@ const ScheduleModule: React.FC<ScheduleModuleProps> = ({ onViewChange }) => {
   const handleUpdateEvent = async (updatedEvent: Event) => {
     try {
       await updateEvent(updatedEvent);
-      fetchEvents();
+      fetchEvents(); // Refresh events after updating
       setShowEditModal(false);
       setSelectedEvent(null);
       toast({
@@ -86,7 +85,7 @@ const ScheduleModule: React.FC<ScheduleModuleProps> = ({ onViewChange }) => {
   const handleDeleteEvent = async (eventId: string) => {
     try {
       await deleteEvent(eventId);
-      fetchEvents();
+      fetchEvents(); // Refresh events after deleting
       toast({
         title: "Succès!",
         description: "Événement supprimé avec succès.",
@@ -129,7 +128,7 @@ const ScheduleModule: React.FC<ScheduleModuleProps> = ({ onViewChange }) => {
 
   const getStartOfWeek = (date: Date): Date => {
     const day = date.getDay();
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+    const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
     return new Date(date.setDate(diff));
   };
 
@@ -155,28 +154,20 @@ const ScheduleModule: React.FC<ScheduleModuleProps> = ({ onViewChange }) => {
   ];
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-br from-yellow-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="h-full flex flex-col bg-white dark:bg-gray-900">
       <WeekNavigation
         currentWeek={currentWeek}
-        onPreviousWeek={() => {
-          const prevWeek = new Date(currentWeek);
-          prevWeek.setDate(currentWeek.getDate() - 7);
-          setCurrentWeek(prevWeek);
-        }}
-        onNextWeek={() => {
-          const nextWeek = new Date(currentWeek);
-          nextWeek.setDate(currentWeek.getDate() + 7);
-          setCurrentWeek(nextWeek);
-        }}
-        onToday={() => setCurrentWeek(new Date())}
+        onPreviousWeek={handlePreviousWeek}
+        onNextWeek={handleNextWeek}
+        onToday={handleToday}
       />
       
-      {/* Planning Grid Container */}
+      {/* Planning Grid - Fixed positioning for sticky headers */}
       <div className="flex-1 overflow-hidden">
-        <div className="h-full overflow-auto scrollbar-thin scrollbar-thumb-yellow-300 scrollbar-track-yellow-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
+        <div className="h-full overflow-auto">
           <div className="flex min-w-full">
             {/* Time Axis */}
-            <div className="w-24 flex-shrink-0">
+            <div className="w-20 flex-shrink-0">
               <TimeAxis />
             </div>
             
@@ -187,15 +178,9 @@ const ScheduleModule: React.FC<ScheduleModuleProps> = ({ onViewChange }) => {
                   key={dayName}
                   day={dayName}
                   events={dayEvents}
-                  onEdit={(event) => {
-                    setSelectedEvent(event);
-                    setShowEditModal(true);
-                  }}
+                  onEdit={handleEditEvent}
                   onDelete={handleDeleteEvent}
-                  onTimeSlotClick={(day, hour) => {
-                    setSelectedTimeSlot({ day, time: hour });
-                    setShowCreateModal(true);
-                  }}
+                  onTimeSlotClick={handleTimeSlotClick}
                 />
               ))}
             </div>
