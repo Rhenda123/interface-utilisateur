@@ -1,4 +1,5 @@
 
+
 import React from "react";
 import { Event } from "@/utils/eventTypes";
 import { getEventTypeById } from "@/utils/eventTypes";
@@ -73,8 +74,8 @@ const DayColumn: React.FC<DayColumnProps> = ({
 
   return (
     <div className="flex-1 border-r border-yellow-200 dark:border-gray-600 last:border-r-0">
-      {/* Day Header */}
-      <div className="h-16 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 border-b border-yellow-300 dark:border-yellow-600 flex items-center justify-center sticky top-0 z-10">
+      {/* Day Header - Sticky on desktop/tablet, regular on mobile */}
+      <div className="h-16 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 border-b border-yellow-300 dark:border-yellow-600 flex items-center justify-center sticky top-0 z-20 md:sticky md:top-0">
         <span className="font-semibold text-gray-800 dark:text-gray-200">{day}</span>
       </div>
       
@@ -161,3 +162,4 @@ const DayColumn: React.FC<DayColumnProps> = ({
 };
 
 export default DayColumn;
+
