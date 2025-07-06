@@ -10,74 +10,86 @@ interface StatsCardsProps {
 
 const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
   return (
-    <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-4 lg:gap-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
       {/* Revenue Card */}
-      <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-2 pt-2 sm:px-4 sm:pt-4 lg:px-6 lg:pt-6">
-          <CardTitle className="text-[10px] xs:text-xs sm:text-sm font-medium text-green-700 dark:text-green-300">
+      <Card className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 dark:from-emerald-900/20 dark:via-green-900/20 dark:to-emerald-800/20 border-emerald-200 dark:border-emerald-700 shadow-lg hover:shadow-xl transition-all duration-300">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 lg:pb-3">
+          <CardTitle className="text-sm lg:text-base font-semibold text-emerald-700 dark:text-emerald-300">
             Revenus
           </CardTitle>
-          <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
-        </CardHeader>
-        <CardContent className="px-2 pb-2 sm:px-4 sm:pb-4 lg:px-6 lg:pb-6">
-          <div className="text-sm xs:text-base sm:text-xl lg:text-2xl font-bold text-green-800 dark:text-green-200">
-            €{stats.totalIncome.toFixed(0)}
+          <div className="h-8 w-8 lg:h-10 lg:w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
+            <TrendingUp className="h-4 w-4 lg:h-5 lg:w-5 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <p className="text-[8px] xs:text-[10px] sm:text-xs text-green-600 dark:text-green-400 mt-0.5">
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="text-2xl lg:text-3xl font-bold text-emerald-900 dark:text-emerald-100 mb-1">
+            €{stats.totalIncome.toLocaleString()}
+          </div>
+          <p className="text-xs lg:text-sm text-emerald-600 dark:text-emerald-400">
             Total des entrées
           </p>
         </CardContent>
       </Card>
 
       {/* Expenses Card */}
-      <Card className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-200 dark:border-red-800">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-2 pt-2 sm:px-4 sm:pt-4 lg:px-6 lg:pt-6">
-          <CardTitle className="text-[10px] xs:text-xs sm:text-sm font-medium text-red-700 dark:text-red-300">
+      <Card className="relative overflow-hidden bg-gradient-to-br from-red-50 via-rose-50 to-red-100 dark:from-red-900/20 dark:via-rose-900/20 dark:to-red-800/20 border-red-200 dark:border-red-700 shadow-lg hover:shadow-xl transition-all duration-300">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 lg:pb-3">
+          <CardTitle className="text-sm lg:text-base font-semibold text-red-700 dark:text-red-300">
             Dépenses
           </CardTitle>
-          <TrendingDown className="h-3 w-3 sm:h-4 sm:w-4 text-red-600" />
-        </CardHeader>
-        <CardContent className="px-2 pb-2 sm:px-4 sm:pb-4 lg:px-6 lg:pb-6">
-          <div className="text-sm xs:text-base sm:text-xl lg:text-2xl font-bold text-red-800 dark:text-red-200">
-            €{stats.totalExpenses.toFixed(0)}
+          <div className="h-8 w-8 lg:h-10 lg:w-10 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
+            <TrendingDown className="h-4 w-4 lg:h-5 lg:w-5 text-red-600 dark:text-red-400" />
           </div>
-          <p className="text-[8px] xs:text-[10px] sm:text-xs text-red-600 dark:text-red-400 mt-0.5">
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="text-2xl lg:text-3xl font-bold text-red-900 dark:text-red-100 mb-1">
+            €{stats.totalExpenses.toLocaleString()}
+          </div>
+          <p className="text-xs lg:text-sm text-red-600 dark:text-red-400">
             Total des sorties
           </p>
         </CardContent>
       </Card>
 
       {/* Balance Card */}
-      <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-2 pt-2 sm:px-4 sm:pt-4 lg:px-6 lg:pt-6">
-          <CardTitle className="text-[10px] xs:text-xs sm:text-sm font-medium text-blue-700 dark:text-blue-300">
+      <Card className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-sky-50 to-blue-100 dark:from-blue-900/20 dark:via-sky-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-700 shadow-lg hover:shadow-xl transition-all duration-300">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 lg:pb-3">
+          <CardTitle className="text-sm lg:text-base font-semibold text-blue-700 dark:text-blue-300">
             Solde
           </CardTitle>
-          <Wallet className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
-        </CardHeader>
-        <CardContent className="px-2 pb-2 sm:px-4 sm:pb-4 lg:px-6 lg:pb-6">
-          <div className={`text-sm xs:text-base sm:text-xl lg:text-2xl font-bold ${stats.balance >= 0 ? 'text-blue-800 dark:text-blue-200' : 'text-red-600'}`}>
-            €{stats.balance.toFixed(0)}
+          <div className="h-8 w-8 lg:h-10 lg:w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+            <Wallet className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600 dark:text-blue-400" />
           </div>
-          <p className="text-[8px] xs:text-[10px] sm:text-xs text-blue-600 dark:text-blue-400 mt-0.5">
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className={`text-2xl lg:text-3xl font-bold mb-1 ${
+            stats.balance >= 0 
+              ? 'text-blue-900 dark:text-blue-100' 
+              : 'text-red-600 dark:text-red-400'
+          }`}>
+            €{stats.balance.toLocaleString()}
+          </div>
+          <p className="text-xs lg:text-sm text-blue-600 dark:text-blue-400">
             Différence
           </p>
         </CardContent>
       </Card>
 
       {/* Savings Rate Card */}
-      <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-800">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-2 pt-2 sm:px-4 sm:pt-4 lg:px-6 lg:pt-6">
-          <CardTitle className="text-[10px] xs:text-xs sm:text-sm font-medium text-purple-700 dark:text-purple-300">
+      <Card className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-violet-50 to-purple-100 dark:from-purple-900/20 dark:via-violet-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 lg:pb-3">
+          <CardTitle className="text-sm lg:text-base font-semibold text-purple-700 dark:text-purple-300">
             Épargne
           </CardTitle>
-          <PiggyBank className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
-        </CardHeader>
-        <CardContent className="px-2 pb-2 sm:px-4 sm:pb-4 lg:px-6 lg:pb-6">
-          <div className="text-sm xs:text-base sm:text-xl lg:text-2xl font-bold text-purple-800 dark:text-purple-200">
-            {stats.savingsRate.toFixed(0)}%
+          <div className="h-8 w-8 lg:h-10 lg:w-10 rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center">
+            <PiggyBank className="h-4 w-4 lg:h-5 lg:w-5 text-purple-600 dark:text-purple-400" />
           </div>
-          <p className="text-[8px] xs:text-[10px] sm:text-xs text-purple-600 dark:text-purple-400 mt-0.5">
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="text-2xl lg:text-3xl font-bold text-purple-900 dark:text-purple-100 mb-1">
+            {stats.savingsRate.toFixed(1)}%
+          </div>
+          <p className="text-xs lg:text-sm text-purple-600 dark:text-purple-400">
             Taux d'épargne
           </p>
         </CardContent>

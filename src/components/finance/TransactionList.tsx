@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Edit, Trash2, Filter, X, MoreHorizontal } from 'lucide-react';
+import { Edit, Trash2, Filter, X, Calendar } from 'lucide-react';
 import { Transaction, Category } from '@/types/finance';
 import { toast } from 'sonner';
 
@@ -44,45 +44,49 @@ const TransactionList: React.FC<TransactionListProps> = ({
   };
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="pb-2 sm:pb-3 lg:pb-4">
-        <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-          <CardTitle className="flex items-center gap-1.5 sm:gap-2 text-base sm:text-lg lg:text-xl">
-            <Filter className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
-            <span className="hidden sm:inline">Transactions ({filteredTransactions.length})</span>
-            <span className="sm:hidden">({filteredTransactions.length})</span>
+    <Card className="shadow-lg border-gray-200 dark:border-gray-700">
+      <CardHeader className="pb-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <CardTitle className="flex items-center gap-3 text-gray-800 dark:text-gray-200 text-lg lg:text-xl">
+            <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+              <Filter className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+            Transactions ({filteredTransactions.length})
           </CardTitle>
           
           {showFilters && (
-            <div className="flex flex-col xs:flex-row gap-1.5 sm:gap-2">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger className="w-full xs:w-24 sm:w-28 lg:w-32 h-7 sm:h-8 lg:h-9 text-xs sm:text-sm">
+                <SelectTrigger className="w-full sm:w-40 h-10">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tous</SelectItem>
-                  <SelectItem value="income">Revenus</SelectItem>
-                  <SelectItem value="expense">Dépenses</SelectItem>
+                  <SelectItem value="all">📊 Tous les types</SelectItem>
+                  <SelectItem value="income">💰 Revenus</SelectItem>
+                  <SelectItem value="expense">💸 Dépenses</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={filterCategory} onValueChange={setFilterCategory}>
-                <SelectTrigger className="w-full xs:w-28 sm:w-32 lg:w-36 h-7 sm:h-8 lg:h-9 text-xs sm:text-sm">
+                <SelectTrigger className="w-full sm:w-48 h-10">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Toutes</SelectItem>
+                  <SelectItem value="all">🏷️ Toutes catégories</SelectItem>
                   {categories.map(category => (
                     <SelectItem key={category.id} value={category.id}>
-                      {category.icon} {category.name}
+                      <div className="flex items-center gap-2">
+                        <span>{category.icon}</span>
+                        <span>{category.name}</span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
               {(filterType !== 'all' || filterCategory !== 'all') && (
-                <Button variant="outline" size="sm" onClick={clearFilters} className="h-7 sm:h-8 lg:h-9 px-2">
-                  <X className="h-3 w-3 sm:h-4 sm:w-4" />
+                <Button variant="outline" size="sm" onClick={clearFilters} className="h-10 px-3">
+                  <X className="h-4 w-4" />
                 </Button>
               )}
             </div>
@@ -90,13 +94,17 @@ const TransactionList: React.FC<TransactionListProps> = ({
         </div>
       </CardHeader>
       
-      <CardContent className="px-2 sm:px-4 lg:px-6">
+      <CardContent>
         {filteredTransactions.length === 0 ? (
-          <div className="text-center py-6 sm:py-8 lg:py-12 text-gray-500">
-            <p className="text-xs sm:text-sm lg:text-base">Aucune transaction trouvée</p>
+          <div className="text-center py-12 text-gray-500">
+            <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+              <Calendar className="h-8 w-8 text-gray-400" />
+            </div>
+            <p className="text-lg font-medium mb-2">Aucune transaction trouvée</p>
+            <p className="text-sm">Commencez par ajouter vos premières transactions</p>
           </div>
         ) : (
-          <div className="space-y-1.5 sm:space-y-2 lg:space-y-3">
+          <div className="space-y-3">
             {filteredTransactions
               .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
               .map((transaction) => {
@@ -104,61 +112,63 @@ const TransactionList: React.FC<TransactionListProps> = ({
                 return (
                   <div
                     key={transaction.id}
-                    className="flex items-center justify-between p-2 sm:p-3 lg:p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                    className="flex items-center justify-between p-4 lg:p-5 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200 group"
                   >
-                    <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-1 min-w-0">
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
                       {/* Category Icon */}
                       <div 
-                        className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm lg:text-lg flex-shrink-0"
-                        style={{ backgroundColor: `${categoryInfo.color}20`, color: categoryInfo.color }}
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-medium flex-shrink-0 shadow-sm"
+                        style={{ backgroundColor: `${categoryInfo.color}15`, border: `2px solid ${categoryInfo.color}30` }}
                       >
-                        {categoryInfo.icon}
+                        <span style={{ color: categoryInfo.color }}>{categoryInfo.icon}</span>
                       </div>
                       
                       {/* Transaction Info */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
-                          <h4 className="font-medium truncate text-xs sm:text-sm lg:text-base">{transaction.description}</h4>
-                          <span className={`px-1.5 py-0.5 text-[10px] sm:text-xs rounded-full flex-shrink-0 ${
+                        <div className="flex items-center gap-3 mb-1">
+                          <h4 className="font-semibold text-gray-900 dark:text-gray-100 truncate text-base lg:text-lg">
+                            {transaction.description}
+                          </h4>
+                          <span className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${
                             transaction.type === 'income' 
-                              ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400'
-                              : 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400'
+                              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                              : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                           }`}>
-                            {transaction.type === 'income' ? 'R' : 'D'}
+                            {transaction.type === 'income' ? 'Revenu' : 'Dépense'}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs lg:text-sm text-gray-500 dark:text-gray-400">
-                          <span className="truncate max-w-16 sm:max-w-none">{categoryInfo.name}</span>
+                        <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="font-medium">{categoryInfo.name}</span>
                           <span>•</span>
                           <span>{new Date(transaction.date).toLocaleDateString('fr-FR', { 
                             day: 'numeric', 
-                            month: 'short',
-                            year: '2-digit'
+                            month: 'long',
+                            year: 'numeric'
                           })}</span>
                         </div>
                       </div>
                     </div>
                     
                     {/* Amount and Actions */}
-                    <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 flex-shrink-0">
-                      <span className={`text-xs sm:text-sm lg:text-lg font-semibold ${
-                        transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                    <div className="flex items-center gap-4 flex-shrink-0">
+                      <span className={`text-xl lg:text-2xl font-bold ${
+                        transaction.type === 'income' ? 'text-emerald-600' : 'text-red-600'
                       }`}>
-                        {transaction.type === 'income' ? '+' : '-'}€{transaction.amount.toFixed(0)}
+                        {transaction.type === 'income' ? '+' : '-'}€{transaction.amount.toLocaleString()}
                       </span>
                       
                       {/* Actions */}
-                      <div className="flex gap-0.5 sm:gap-1">
-                        <Button variant="ghost" size="sm" className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 p-0 hidden sm:flex">
-                          <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <Button variant="ghost" size="sm" className="h-9 w-9 p-0 hover:bg-blue-100 dark:hover:bg-blue-900/30">
+                          <Edit className="h-4 w-4 text-blue-600" />
                         </Button>
                         <Button 
                           variant="ghost" 
                           size="sm" 
                           onClick={() => handleDelete(transaction.id)}
-                          className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 p-0 text-red-500 hover:text-red-700"
+                          className="h-9 w-9 p-0 hover:bg-red-100 dark:hover:bg-red-900/30"
                         >
-                          <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <Trash2 className="h-4 w-4 text-red-600" />
                         </Button>
                       </div>
                     </div>

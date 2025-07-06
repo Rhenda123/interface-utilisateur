@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart3, Settings, Target, TrendingUp, Plus, Filter } from 'lucide-react';
+import { BarChart3, Settings, Target, TrendingUp, Plus, Filter, DollarSign, PieChart } from 'lucide-react';
 import { useFinanceData } from '@/hooks/useFinanceData';
 import { Transaction } from '@/types/finance';
 import StatsCards from './finance/StatsCards';
@@ -41,58 +41,64 @@ const FinanceModule = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-gray-900 dark:to-gray-800">
-      {/* Mobile-Optimized Header */}
-      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-yellow-200 dark:border-gray-700 px-3 py-2 sm:px-6 sm:py-3 lg:px-8">
-        <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-          <div className="text-center sm:text-left">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
-              Finance Manager
-            </h1>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-0.5 hidden sm:block">
-              Gérez vos finances personnelles avec simplicité
-            </p>
-          </div>
-          
-          {/* Compact Mobile Action Buttons */}
-          <div className="flex gap-1.5 sm:gap-2 justify-center sm:justify-end">
-            <Button
-              onClick={() => setShowTransactionForm(!showTransactionForm)}
-              className="flex-1 sm:flex-none bg-yellow-500 hover:bg-yellow-600 text-white text-xs sm:text-sm px-2 py-1.5 sm:px-3 sm:py-2 h-8 sm:h-9"
-            >
-              <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-2" />
-              <span className="hidden xs:inline">Nouveau</span>
-              <span className="xs:hidden">+</span>
-            </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-gray-800">
+      {/* Professional Header */}
+      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-lg">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            {/* Title Section */}
+            <div className="text-center lg:text-left">
+              <div className="flex items-center justify-center lg:justify-start gap-3 mb-2">
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                  <DollarSign className="h-6 w-6 text-white" />
+                </div>
+                <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                  Finance Manager
+                </h1>
+              </div>
+              <p className="text-gray-600 dark:text-gray-300 text-lg">
+                Tableau de bord financier professionnel
+              </p>
+            </div>
             
-            <Button
-              onClick={() => setShowCharts(!showCharts)}
-              variant="outline"
-              className="flex-1 sm:flex-none border-yellow-500 text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 text-xs sm:text-sm px-2 py-1.5 sm:px-3 sm:py-2 h-8 sm:h-9"
-            >
-              <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-2" />
-              <span className="hidden sm:inline">{showCharts ? 'Masquer' : 'Graphiques'}</span>
-              <span className="sm:hidden">📊</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="hidden lg:flex border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 text-sm h-9"
-            >
-              <Target className="w-4 h-4 mr-2" />
-              Budgets
-            </Button>
+            {/* Action Buttons */}
+            <div className="flex gap-3 justify-center lg:justify-end">
+              <Button
+                onClick={() => setShowTransactionForm(!showTransactionForm)}
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 py-3 h-12 shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Nouvelle Transaction
+              </Button>
+              
+              <Button
+                onClick={() => setShowCharts(!showCharts)}
+                variant="outline"
+                className="border-2 border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-900/20 px-6 py-3 h-12 shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                <PieChart className="w-5 h-5 mr-2" />
+                {showCharts ? 'Masquer Graphiques' : 'Afficher Graphiques'}
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="hidden xl:flex border-2 border-emerald-200 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-700 dark:text-emerald-400 dark:hover:bg-emerald-900/20 px-6 py-3 h-12 shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                <Target className="w-5 h-5 mr-2" />
+                Gérer Budgets
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="px-3 py-3 sm:px-6 sm:py-4 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 lg:space-y-6">
-        {/* Stats Cards - Ultra Compact for Mobile */}
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/* Stats Cards */}
         <StatsCards stats={stats} />
 
-        {/* Mobile Transaction Form Modal */}
+        {/* Mobile Transaction Form */}
         {showTransactionForm && (
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <TransactionForm
               categories={categories}
               onAddTransaction={handleAddTransaction}
@@ -100,57 +106,57 @@ const FinanceModule = () => {
           </div>
         )}
 
-        {/* Charts Section - Responsive */}
+        {/* Charts Section */}
         {showCharts && (
-          <div className="animate-fade-in">
+          <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
             <ChartsSection transactions={transactions} categories={categories} />
           </div>
         )}
 
-        {/* Main Content with Responsive Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-3 sm:space-y-4 lg:space-y-6">
-          {/* Ultra-Compact Mobile Tab Navigation */}
-          <TabsList className="grid w-full grid-cols-3 h-auto p-0.5 sm:p-1 bg-white dark:bg-gray-800 shadow-sm">
+        {/* Main Content Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+          {/* Professional Tab Navigation */}
+          <TabsList className="grid w-full grid-cols-3 h-14 p-1 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-xl">
             <TabsTrigger 
               value="overview" 
-              className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-2 py-1.5 sm:py-2 lg:py-3 text-[10px] xs:text-xs sm:text-sm"
+              className="flex items-center gap-3 py-3 text-base font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200"
             >
-              <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden xs:inline sm:hidden lg:inline">Vue d'ensemble</span>
-              <span className="xs:hidden sm:inline lg:hidden">Vue</span>
+              <TrendingUp className="w-5 h-5" />
+              <span className="hidden sm:inline">Vue d'ensemble</span>
+              <span className="sm:hidden">Vue</span>
             </TabsTrigger>
             <TabsTrigger 
               value="transactions" 
-              className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-2 py-1.5 sm:py-2 lg:py-3 text-[10px] xs:text-xs sm:text-sm"
+              className="flex items-center gap-3 py-3 text-base font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200"
             >
-              <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden xs:inline">Transactions</span>
-              <span className="xs:hidden">Trans.</span>
+              <Filter className="w-5 h-5" />
+              <span className="hidden sm:inline">Transactions</span>
+              <span className="sm:hidden">Trans.</span>
             </TabsTrigger>
             <TabsTrigger 
               value="reports" 
-              className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-2 py-1.5 sm:py-2 lg:py-3 text-[10px] xs:text-xs sm:text-sm"
+              className="flex items-center gap-3 py-3 text-base font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200"
             >
-              <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
+              <BarChart3 className="w-5 h-5" />
               <span>Rapports</span>
             </TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab - Mobile-First Layout */}
-          <TabsContent value="overview" className="space-y-3 sm:space-y-4 lg:space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-8">
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
               {/* Desktop Transaction Form */}
-              <div className="hidden lg:block lg:col-span-1">
+              <div className="hidden xl:block xl:col-span-1">
                 <TransactionForm
                   categories={categories}
                   onAddTransaction={handleAddTransaction}
                 />
               </div>
               
-              {/* Transaction List - Responsive */}
-              <div className="lg:col-span-3">
+              {/* Recent Transactions */}
+              <div className="xl:col-span-3">
                 <TransactionList
-                  transactions={transactions.slice(0, 8)}
+                  transactions={transactions.slice(0, 6)}
                   categories={categories}
                   onDeleteTransaction={handleDeleteTransaction}
                   showFilters={false}
@@ -159,11 +165,11 @@ const FinanceModule = () => {
             </div>
           </TabsContent>
 
-          {/* Transactions Tab - Full List */}
-          <TabsContent value="transactions" className="space-y-3 sm:space-y-4 lg:space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
+          {/* Transactions Tab */}
+          <TabsContent value="transactions" className="space-y-8">
+            <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
               {/* Desktop Form */}
-              <div className="hidden lg:block lg:col-span-1">
+              <div className="hidden xl:block xl:col-span-1">
                 <TransactionForm
                   categories={categories}
                   onAddTransaction={handleAddTransaction}
@@ -171,7 +177,7 @@ const FinanceModule = () => {
               </div>
               
               {/* Full Transaction List */}
-              <div className="lg:col-span-4">
+              <div className="xl:col-span-4">
                 <TransactionList
                   transactions={transactions}
                   categories={categories}
@@ -184,16 +190,26 @@ const FinanceModule = () => {
 
           {/* Reports Tab */}
           <TabsContent value="reports">
-            <Card className="min-h-[300px] sm:min-h-[400px]">
-              <CardHeader>
-                <CardTitle className="text-center sm:text-left text-lg sm:text-xl">Rapports et Analyses</CardTitle>
+            <Card className="min-h-[400px] shadow-lg border-gray-200 dark:border-gray-700">
+              <CardHeader className="text-center pb-8">
+                <CardTitle className="text-2xl lg:text-3xl font-bold text-gray-800 dark:text-gray-200">
+                  Rapports et Analyses Avancées
+                </CardTitle>
+                <p className="text-gray-600 dark:text-gray-400 text-lg mt-2">
+                  Fonctionnalités en développement
+                </p>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 sm:py-12 lg:py-16 text-gray-500">
-                  <BarChart3 className="w-8 h-8 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 opacity-50" />
-                  <h3 className="text-base sm:text-lg font-medium mb-2">Rapports à venir</h3>
-                  <p className="text-xs sm:text-sm lg:text-base max-w-md mx-auto">
-                    Les fonctionnalités de rapports détaillés seront disponibles prochainement.
+                <div className="text-center py-16 text-gray-500">
+                  <div className="h-24 w-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 flex items-center justify-center">
+                    <BarChart3 className="w-12 h-12 text-blue-500" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
+                    Rapports Détaillés Bientôt Disponibles
+                  </h3>
+                  <p className="text-base max-w-2xl mx-auto leading-relaxed">
+                    Cette section contiendra des analyses approfondies, des prévisions financières, 
+                    et des rapports personnalisés pour optimiser votre gestion financière.
                   </p>
                 </div>
               </CardContent>
