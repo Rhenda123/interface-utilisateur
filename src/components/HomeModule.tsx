@@ -741,7 +741,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col justify-center space-y-4 sm:space-y-6 pt-16 lg:pt-4 px-3 sm:px-4 lg:px-6 pb-2 lg:pb-4 max-w-full overflow-hidden">
+    <div className="min-h-screen space-y-4 sm:space-y-6 pt-16 lg:pt-4 px-3 sm:px-4 lg:px-6 pb-2 lg:pb-4 max-w-full overflow-hidden">
       <div className="text-center mb-4 sm:mb-6">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-2 sm:mb-3">
           Tableau de bord
