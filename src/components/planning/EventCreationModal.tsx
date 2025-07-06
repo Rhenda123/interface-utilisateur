@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, MoreHorizontal } from "lucide-react";
 import { eventTypes, getEventTypeById, Event } from "@/utils/eventTypes";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EventCreationModalProps {
   isOpen: boolean;
@@ -27,6 +27,8 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
   initialData,
   onMoreOptions
 }) => {
+  const isMobile = useIsMobile();
+  
   const [eventName, setEventName] = useState("");
   const [selectedTypeId, setSelectedTypeId] = useState("class");
   const [selectedDay, setSelectedDay] = useState(initialData.day);
@@ -227,15 +229,17 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
         
         {/* Actions - Fixed at bottom */}
         <div className="flex flex-col gap-3 p-4 border-t border-skoolife-primary/20 dark:border-gray-700 bg-gradient-to-r from-skoolife-light to-white dark:from-gray-800 dark:to-gray-800">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onMoreOptions}
-            className="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-skoolife-light/50 h-8"
-          >
-            <MoreHorizontal className="w-4 h-4 mr-2" />
-            Plus d'options
-          </Button>
+          {!isMobile && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onMoreOptions}
+              className="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-skoolife-light/50 h-8"
+            >
+              <MoreHorizontal className="w-4 h-4 mr-2" />
+              Plus d'options
+            </Button>
+          )}
           
           <div className="flex gap-2">
             <Button
