@@ -770,11 +770,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             }`}>
               €{currentBalance.toFixed(0)}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               Solde Actuel
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {budgetProgress.toFixed(0)}% utilisé
             </div>
           </CardContent>
         </Card>
@@ -790,11 +787,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-primary dark:text-yellow-400 mb-1 sm:mb-2">
               {pendingTasks}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               Tâches
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {urgentTasks.length} urgentes
             </div>
           </CardContent>
         </Card>
@@ -810,11 +804,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-primary dark:text-yellow-400 mb-1 sm:mb-2">
               {todaysEvents.length}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               Aujourd'hui
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {thisWeekEvents.length} this week
             </div>
           </CardContent>
         </Card>
@@ -830,11 +821,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-secondary dark:text-orange-400 mb-1 sm:mb-2">
               {documents.length}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               Documents
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {recentDocuments.length} récents
             </div>
           </CardContent>
         </Card>
