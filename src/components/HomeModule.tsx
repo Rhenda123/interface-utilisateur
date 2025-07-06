@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -858,7 +856,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </Carousel>
           
           {/* Carousel Indicators - Minimal spacing from bottom navigation */}
-          <div className="flex justify-center mt-1 mb-0 gap-2">
+          <div className="flex justify-center mt-3 mb-0 gap-2">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}
@@ -885,4 +883,3 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 };
 
 export default HomeModule;
-
