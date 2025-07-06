@@ -38,7 +38,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Enhanced data loading with better error handling and performance
   const loadAllData = () => {
     try {
       console.log('Loading all data for Home dashboard synchronization...');
@@ -569,24 +568,24 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         
         {/* Modern Task Overview */}
         <div className="space-y-4">
-          {/* Task Statistics Cards */}
+          {/* Task Statistics Cards - Colors inversed */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
+            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700">
               <div className="flex items-center gap-2 mb-2">
-                <Target className="w-4 h-4 text-skoolife-secondary" />
-                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">À faire</span>
+                <Target className="w-4 h-4 text-skoolife-primary" />
+                <span className="text-sm font-medium text-skoolife-primary dark:text-yellow-300">À faire</span>
               </div>
-              <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
+              <div className="text-lg font-bold text-skoolife-primary dark:text-yellow-400">
                 {pendingTasks}
               </div>
             </div>
             
-            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700">
+            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
               <div className="flex items-center gap-2 mb-2">
-                <CheckCircle className="w-4 h-4 text-skoolife-primary" />
-                <span className="text-sm font-medium text-skoolife-primary dark:text-yellow-300">Terminées</span>
+                <CheckCircle className="w-4 h-4 text-skoolife-secondary" />
+                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">Terminées</span>
               </div>
-              <div className="text-lg font-bold text-skoolife-primary dark:text-yellow-400">
+              <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
                 {completedTasks}
               </div>
             </div>
