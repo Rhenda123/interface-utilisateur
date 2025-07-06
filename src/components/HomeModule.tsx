@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, TrendingUp, TrendingDown, AlertCircle, CheckCircle, ArrowRight, Target, Wallet, FileText } from "lucide-react";
 
 interface HomeModuleProps {
@@ -761,7 +762,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       </div>
 
       {/* Enhanced Responsive Quick Stats Grid with SKOOLIFE colors */}
-      <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-2 sm:mb-3`}>
+      <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-4 sm:mb-6`}>
         <Card 
           className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('finances')}
@@ -833,9 +834,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </Card>
       </div>
 
+      {/* Séparateur visuel */}
+      <div className="my-4 sm:my-6">
+        <Separator className="bg-skoolife-primary/20 dark:bg-gray-700" />
+      </div>
+
       {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
       {screenSize === 'mobile' ? (
-        <div className="relative">
+        <div className="relative mt-4">
           <Carousel 
             className="w-full"
             setApi={setCarouselApi}
@@ -874,7 +880,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-4">
           {contentBlocks}
         </div>
       )}
