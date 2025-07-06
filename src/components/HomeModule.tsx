@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Calendar, Clock, TrendingUp, TrendingDown, AlertCircle, CheckCircle, ArrowRight, Target, Wallet, FileText } from "lucide-react";
 
 interface HomeModuleProps {
@@ -741,12 +741,12 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="min-h-screen space-y-4 sm:space-y-6 pt-8 lg:pt-4 px-3 sm:px-4 lg:px-6 pb-0 max-w-full overflow-hidden">
-      <div className="text-center mb-4 sm:mb-6">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-2 sm:mb-3">
+    <div className="space-y-2 sm:space-y-3 pt-4 px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden">
+      <div className="text-center mb-2 sm:mb-3">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-1 sm:mb-2">
           Tableau de bord
         </h2>
-        <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="flex items-center justify-center gap-2 mb-1">
           <span className="text-xs text-gray-500 dark:text-gray-400 font-bold">
             Votre vue d'ensemble personnalisée
           </span>
@@ -761,7 +761,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       </div>
 
       {/* Enhanced Responsive Quick Stats Grid with SKOOLIFE colors */}
-      <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-4 sm:mb-6`}>
+      <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-2 sm:mb-3`}>
         <Card 
           className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('finances')}
@@ -835,7 +835,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
       {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
       {screenSize === 'mobile' ? (
-        <div className="relative mb-0">
+        <div className="relative">
           <Carousel 
             className="w-full"
             setApi={setCarouselApi}
@@ -856,7 +856,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </Carousel>
           
           {/* Carousel Indicators - Minimal spacing from bottom navigation */}
-          <div className="flex justify-center mt-3 mb-0 gap-2">
+          <div className="flex justify-center mt-2 gap-2">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}
