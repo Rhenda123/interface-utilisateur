@@ -704,30 +704,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             </div>
           )}
 
-          {/* This Week Preview */}
-          {thisWeekEvents.length > 0 && (
-            <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochains événements</span>
-              </div>
-              <div className="space-y-2 max-h-24 overflow-y-auto">
-                {thisWeekEvents.slice(0, 2).map((event: any, index: number) => (
-                  <div key={index} className="flex items-center gap-3 text-sm">
-                    <div className="w-2 h-2 bg-skoolife-primary rounded-full"></div>
-                    <div className="flex-1">
-                      <div className="font-medium text-gray-700 dark:text-gray-300 truncate">
-                        {event.day}: {event.name}
-                      </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">
-                        {event.startTime}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Show message when no events */}
           {thisWeekEvents.length === 0 && todaysEvents.length === 0 && (
             <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
