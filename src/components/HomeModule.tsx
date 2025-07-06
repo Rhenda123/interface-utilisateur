@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -719,7 +718,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="space-y-2 sm:space-y-3 pt-4 px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden">
+    <div className="space-y-2 sm:space-y-3 pt-4 px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden pb-6">
       <div className="text-center mb-2 sm:mb-3">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-1 sm:mb-2">
           Tableau de bord
@@ -839,7 +838,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </Carousel>
           
           {/* Carousel Indicators - Minimal spacing from bottom navigation */}
-          <div className="flex justify-center mt-2 gap-2">
+          <div className="flex justify-center mt-2 gap-2 mb-8">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}
