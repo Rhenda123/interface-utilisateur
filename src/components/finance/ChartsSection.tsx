@@ -54,36 +54,36 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ transactions, categories 
   };
 
   const CustomPieLabel = ({ name, percent }: any) => {
-    // Only show label on larger screens
-    if (window.innerWidth < 640) {
+    // Show only percentage on mobile, name + percentage on larger screens
+    if (window.innerWidth < 768) {
       return `${(percent * 100).toFixed(0)}%`;
     }
     return `${name} (${(percent * 100).toFixed(0)}%)`;
   };
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
       {/* Expense Distribution Chart */}
       <Card className="shadow-sm">
-        <CardHeader className="pb-2 sm:pb-4">
-          <CardTitle className="text-lg sm:text-xl">
+        <CardHeader className="pb-1 sm:pb-2 lg:pb-4">
+          <CardTitle className="text-sm sm:text-base lg:text-xl">
             <span className="hidden sm:inline">Répartition des dépenses</span>
             <span className="sm:hidden">Dépenses</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="px-3 sm:px-6">
+        <CardContent className="px-2 sm:px-4 lg:px-6">
           {expenseData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
+            <ResponsiveContainer width="100%" height={180} className="sm:h-[220px] lg:h-[300px]">
               <PieChart>
                 <Pie
                   data={expenseData}
                   cx="50%"
                   cy="50%"
-                  outerRadius={window.innerWidth < 640 ? 80 : 100}
+                  outerRadius={window.innerWidth < 640 ? 60 : window.innerWidth < 1024 ? 80 : 100}
                   dataKey="value"
                   label={CustomPieLabel}
                   labelLine={false}
-                  fontSize={window.innerWidth < 640 ? 10 : 12}
+                  fontSize={window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 10 : 12}
                 >
                   {expenseData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
@@ -93,9 +93,9 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ transactions, categories 
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[250px] sm:h-[300px] flex items-center justify-center text-gray-500">
+            <div className="h-[180px] sm:h-[220px] lg:h-[300px] flex items-center justify-center text-gray-500">
               <div className="text-center">
-                <p className="text-sm sm:text-base">Aucune dépense à afficher</p>
+                <p className="text-xs sm:text-sm lg:text-base">Aucune dépense à afficher</p>
               </div>
             </div>
           )}
@@ -104,30 +104,30 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ transactions, categories 
 
       {/* Income vs Expenses Chart */}
       <Card className="shadow-sm">
-        <CardHeader className="pb-2 sm:pb-4">
-          <CardTitle className="text-lg sm:text-xl">
+        <CardHeader className="pb-1 sm:pb-2 lg:pb-4">
+          <CardTitle className="text-sm sm:text-base lg:text-xl">
             <span className="hidden sm:inline">Revenus vs Dépenses</span>
             <span className="sm:hidden">Revenus / Dépenses</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="px-3 sm:px-6">
-          <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
-            <BarChart data={incomeExpenseData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
+        <CardContent className="px-2 sm:px-4 lg:px-6">
+          <ResponsiveContainer width="100%" height={180} className="sm:h-[220px] lg:h-[300px]">
+            <BarChart data={incomeExpenseData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
               <XAxis 
                 dataKey="name" 
-                fontSize={window.innerWidth < 640 ? 10 : 12}
-                tick={{ fontSize: window.innerWidth < 640 ? 10 : 12 }}
+                fontSize={window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 10 : 12}
+                tick={{ fontSize: window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 10 : 12 }}
               />
               <YAxis 
-                fontSize={window.innerWidth < 640 ? 10 : 12}
-                tick={{ fontSize: window.innerWidth < 640 ? 10 : 12 }}
+                fontSize={window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 10 : 12}
+                tick={{ fontSize: window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 10 : 12 }}
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar 
                 dataKey="value" 
-                radius={[4, 4, 0, 0]}
-                maxBarSize={window.innerWidth < 640 ? 60 : 80}
+                radius={[2, 2, 0, 0]}
+                maxBarSize={window.innerWidth < 640 ? 40 : window.innerWidth < 1024 ? 60 : 80}
               />
             </BarChart>
           </ResponsiveContainer>
