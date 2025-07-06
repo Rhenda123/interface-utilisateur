@@ -592,27 +592,12 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             </div>
           </div>
 
-          {/* Urgent Tasks Alert */}
-          {urgentTasks.length > 0 && (
-            <div className="bg-gradient-to-r from-orange-100 to-skoolife-light dark:from-orange-900/30 dark:to-yellow-900/20 rounded-xl p-4 border border-skoolife-secondary dark:border-orange-700">
-              <div className="flex items-center gap-2 mb-2">
-                <AlertCircle className="w-4 h-4 text-skoolife-secondary" />
-                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">
-                  Tâches urgentes
-                </span>
-              </div>
-              <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
-                {urgentTasks.length}
-              </div>
-            </div>
-          )}
-
           {/* Recent Tasks Preview */}
           <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochaines tâches</span>
             </div>
-            <div className="space-y-2 max-h-24 overflow-y-auto">
+            <div className="space-y-2 max-h-24">
               {tasks.filter((task: any) => !task.completed).slice(0, 2).map((task: any, index: number) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
                   <div className={`w-2 h-2 rounded-full ${
@@ -718,7 +703,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="space-y-2 sm:space-y-3 pt-4 px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden pb-6">
+    <div className="space-y-2 sm:space-y-3 pt-4 px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden pb-6 h-screen overflow-y-hidden">
       <div className="text-center mb-2 sm:mb-3">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-1 sm:mb-2">
           Tableau de bord
