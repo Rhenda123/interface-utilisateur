@@ -516,7 +516,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
               <div className="flex items-center gap-2 mb-2">
                 <TrendingDown className="w-4 h-4 text-skoolife-secondary" />
-                <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Dépenses</span>
+                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">Dépenses</span>
               </div>
               <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
                 €{currentMonthData.expenses.toFixed(0)}
@@ -574,7 +574,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
               <div className="flex items-center gap-2 mb-2">
                 <Target className="w-4 h-4 text-skoolife-secondary" />
-                <span className="text-sm font-medium text-orange-700 dark:text-orange-300">À faire</span>
+                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">À faire</span>
               </div>
               <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
                 {pendingTasks}
@@ -653,7 +653,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </Button>
         </div>
         
-        {/* Modern Planning Overview */}
+        {/* Modified Planning Overview - Replace remaining red colors */}
         <div className="space-y-4">
           {/* Event Statistics Cards */}
           <div className="grid grid-cols-2 gap-3">
@@ -670,7 +670,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
               <div className="flex items-center gap-2 mb-2">
                 <Calendar className="w-4 h-4 text-skoolife-secondary" />
-                <span className="text-sm font-medium text-orange-700 dark:text-orange-300">This week</span>
+                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">This week</span>
               </div>
               <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
                 {thisWeekEvents.length}
