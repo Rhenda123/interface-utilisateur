@@ -741,7 +741,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="space-y-4 sm:space-y-6 pt-safe-top px-3 sm:px-4 lg:px-6 pb-8 lg:pb-4 max-w-full overflow-hidden">
+    <div className="space-y-4 sm:space-y-6 pt-safe-top px-3 sm:px-4 lg:px-6 pb-2 lg:pb-4 max-w-full overflow-hidden">
       <div className="text-center mt-6 sm:mt-8 mb-4 sm:mb-6">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-2 sm:mb-3">
           Tableau de bord
@@ -830,7 +830,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
       {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
       {screenSize === 'mobile' ? (
-        <div className="relative mb-2">
+        <div className="relative mb-0">
           <Carousel 
             className="w-full"
             setApi={setCarouselApi}
@@ -850,8 +850,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             </CarouselContent>
           </Carousel>
           
-          {/* Carousel Indicators - Adjusted spacing from bottom navigation */}
-          <div className="flex justify-center mt-2 mb-1 gap-2">
+          {/* Carousel Indicators - Minimal spacing from bottom navigation */}
+          <div className="flex justify-center mt-2 mb-0 gap-2 pb-1">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}
