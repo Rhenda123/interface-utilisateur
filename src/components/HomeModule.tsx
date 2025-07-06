@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ interface HomeModuleProps {
 
 export default function HomeModule({ onNavigate }: HomeModuleProps) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {/* Header Section */}
       <div className="text-center space-y-3">
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -26,7 +25,7 @@ export default function HomeModule({ onNavigate }: HomeModuleProps) {
       </div>
 
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
         <Card 
           className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 border-orange-200 dark:border-orange-800 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900"
           onClick={() => onNavigate('finances')}
@@ -89,7 +88,7 @@ export default function HomeModule({ onNavigate }: HomeModuleProps) {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-10">
         {/* Finance Section */}
         <Card className="lg:col-span-2 border-2 border-orange-200 dark:border-orange-800">
           <CardHeader className="pb-4">
