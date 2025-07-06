@@ -33,6 +33,7 @@ interface Budget {
   limit: number;
   period: 'monthly' | 'quarterly' | 'yearly';
   spent?: number;
+  alertThreshold: number;
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#9cafff', '#1ca691', '#d9ff9c', '#ff9c9c', '#9cffff'];
@@ -197,6 +198,15 @@ const FinanceModule = () => {
     a.click();
   };
 
+  const categoryNames = categories.map(cat => cat.name);
+  const customCategories = categories.map(cat => ({
+    id: cat.id,
+    name: cat.name,
+    type: 'expense' as const,
+    icon: '📦',
+    color: cat.color
+  }));
+
   return (
     <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
       {/* Header with Stats Cards */}
@@ -234,9 +244,11 @@ const FinanceModule = () => {
               </DialogHeader>
               <BudgetManager 
                 budgets={budgets}
-                setBudgets={setBudgets}
-                transactions={transactions}
-                categories={categories}
+                onAddBudget={(budget) => setBudgets([...budgets, { ...budget, id: Date.now().toString(), spent: 0 }])}
+                onUpdateBudget={(id, updatedBudget) => setBudgets(budgets.map(b => b.id === id ? { ...b, ...updatedBudget } : b))}
+                onDeleteBudget={(id) => setBudgets(budgets.filter(b => b.id !== id))}
+                categories={categoryNames}
+                getCurrencySymbol={() => '€'}
               />
             </DialogContent>
           </Dialog>
@@ -253,9 +265,19 @@ const FinanceModule = () => {
                 <DialogTitle>Gestion des Catégories</DialogTitle>
               </DialogHeader>
               <CategoryManager 
-                categories={categories}
-                setCategories={setCategories}
-                transactions={transactions}
+                categories={customCategories}
+                onAddCategory={(category) => {
+                  const newCategory = {
+                    id: Date.now().toString(),
+                    name: category.name,
+                    color: category.color
+                  };
+                  setCategories([...categories, newCategory]);
+                }}
+                onUpdateCategory={(id, updatedCategory) => {
+                  setCategories(categories.map(c => c.id === id ? { ...c, name: updatedCategory.name || c.name, color: updatedCategory.color || c.color } : c));
+                }}
+                onDeleteCategory={(id) => setCategories(categories.filter(c => c.id !== id))}
               />
             </DialogContent>
           </Dialog>
