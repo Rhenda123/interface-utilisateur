@@ -34,34 +34,35 @@ const WeekNavigation: React.FC<WeekNavigationProps> = ({
   const weekRange = getWeekRange(currentWeek);
 
   return (
-    <div className="flex items-center justify-between gap-4 p-4 bg-white dark:bg-gray-800 border-b border-yellow-200 dark:border-gray-700">
-      <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between gap-4 p-6 bg-white dark:bg-gray-800 border-b border-yellow-200 dark:border-gray-700">
+      <div className="flex items-center gap-4">
         <Button
           onClick={onToday}
           variant="outline"
-          className="border-yellow-200 dark:border-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
+          size="default"
+          className="border-yellow-200 dark:border-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 h-11 px-5"
         >
-          <Calendar className="w-4 h-4 mr-2" />
+          <Calendar className="w-5 h-5 mr-2" />
           Aujourd'hui
         </Button>
         
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Button
             onClick={onPreviousWeek}
             variant="ghost"
-            size="sm"
-            className="hover:bg-yellow-100 dark:hover:bg-yellow-900/20"
+            size="default"
+            className="hover:bg-yellow-100 dark:hover:bg-yellow-900/20 h-11 w-11"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-5 h-5" />
           </Button>
           
           <Button
             onClick={onNextWeek}
             variant="ghost"
-            size="sm"
-            className="hover:bg-yellow-100 dark:hover:bg-yellow-900/20"
+            size="default"
+            className="hover:bg-yellow-100 dark:hover:bg-yellow-900/20 h-11 w-11"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-5 h-5" />
           </Button>
         </div>
       </div>
