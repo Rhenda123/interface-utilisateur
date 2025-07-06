@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -748,7 +749,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           Tableau de bord
         </h2>
         <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="text-xs text-gray-500 dark:text-gray-400">
+          <span className="text-xs text-gray-500 dark:text-gray-400 font-bold">
             Votre vue d'ensemble personnalisée
           </span>
         </div>
@@ -884,3 +885,4 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 };
 
 export default HomeModule;
+
