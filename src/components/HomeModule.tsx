@@ -744,11 +744,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     <div className="space-y-4 sm:space-y-6 pt-safe-top px-3 sm:px-4 lg:px-6 pb-20 lg:pb-8 max-w-full overflow-hidden">
       <div className="text-center mt-6 sm:mt-8 mb-6 sm:mb-8">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-2 sm:mb-3">
-          Tableau de Bord
+          Tableau de bord
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
-          Votre vue d'ensemble personnalisée
-        </p>
         {/* Real-time sync indicator */}
         <div className="flex items-center justify-center gap-2 mt-2">
           <div className="w-2 h-2 bg-skoolife-primary rounded-full animate-pulse"></div>
