@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -742,8 +741,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 lg:p-6 max-w-full overflow-hidden">
-      <div className="text-center mb-6 sm:mb-8">
+    <div className="space-y-4 sm:space-y-6 pt-safe-top px-3 sm:px-4 lg:px-6 pb-20 lg:pb-8 max-w-full overflow-hidden">
+      <div className="text-center mt-6 sm:mt-8 mb-6 sm:mb-8">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-2 sm:mb-3">
           Tableau de Bord
         </h2>
@@ -846,7 +845,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
       {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
       {screenSize === 'mobile' ? (
-        <div className="relative mb-2">
+        <div className="relative mb-3">
           <Carousel 
             className="w-full"
             setApi={setCarouselApi}
@@ -866,8 +865,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             </CarouselContent>
           </Carousel>
           
-          {/* Carousel Indicators - Reduced spacing from bottom navigation */}
-          <div className="flex justify-center mt-2 mb-1 gap-2">
+          {/* Carousel Indicators - Adjusted spacing from bottom navigation */}
+          <div className="flex justify-center mt-3 mb-2 gap-2">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}
