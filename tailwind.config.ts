@@ -62,6 +62,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Couleurs officielles SKOOLIFE
+				skoolife: {
+					primary: '#FFD51C',    // Jaune principal
+					light: '#FFF9E5',      // Jaune très clair
+					secondary: '#F5B43C',  // Jaune-orange
+					white: '#FFFFFF'       // Blanc
 				}
 			},
 			borderRadius: {

@@ -16,42 +16,42 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Couleurs SKOOLIFE intégrées dans le système de couleurs */
+    --primary: 52 100% 56%; /* #FFD51C converti en HSL */
+    --primary-foreground: 222.2 84% 4.9%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 51 100% 95%; /* #FFF9E5 converti en HSL */
+    --secondary-foreground: 222.2 84% 4.9%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 51 100% 95%; /* #FFF9E5 */
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 39 91% 60%; /* #F5B43C converti en HSL */
+    --accent-foreground: 222.2 84% 4.9%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 52 100% 56%; /* Utilise le jaune SKOOLIFE pour les focus */
 
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-primary: 52 100% 56%; /* Jaune SKOOLIFE */
+    --sidebar-primary-foreground: 222.2 84% 4.9%;
+    --sidebar-accent: 51 100% 95%; /* Jaune clair SKOOLIFE */
+    --sidebar-accent-foreground: 222.2 84% 4.9%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 52 100% 56%;
 
-    /* Skoolife yellow theme colors */
-    --yellow-bg-light: 45 100% 96%;
-    --yellow-bg: 45 100% 88%;
-    --yellow-primary: 45 96% 51%;
-    --yellow-primary-dark: 45 96% 45%;
-    --yellow-accent: 45 100% 80%;
+    /* Variables SKOOLIFE spécifiques */
+    --skoolife-primary: 52 100% 56%; /* #FFD51C */
+    --skoolife-light: 51 100% 95%; /* #FFF9E5 */
+    --skoolife-secondary: 39 91% 60%; /* #F5B43C */
+    --skoolife-white: 0 0% 100%; /* #FFFFFF */
   }
 
   .dark {
@@ -64,8 +64,8 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 52 100% 65%; /* Jaune SKOOLIFE légèrement plus clair pour le dark mode */
+    --primary-foreground: 222.2 84% 4.9%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -73,7 +73,7 @@
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 39 91% 65%; /* F5B43C légèrement plus clair pour le dark mode */
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -81,23 +81,22 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 52 100% 65%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-primary: 52 100% 65%;
+    --sidebar-primary-foreground: 222.2 84% 4.9%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 52 100% 65%;
 
-    /* Skoolife yellow theme colors for dark mode */
-    --yellow-bg-light: 240 5.9% 10%;
-    --yellow-bg: 240 3.7% 15.9%;
-    --yellow-primary: 45 96% 60%;
-    --yellow-primary-dark: 45 96% 55%;
-    --yellow-accent: 240 5.3% 26.1%;
+    /* Variables SKOOLIFE pour le dark mode */
+    --skoolife-primary: 52 100% 65%;
+    --skoolife-light: 240 5.9% 10%;
+    --skoolife-secondary: 39 91% 65%;
+    --skoolife-white: 0 0% 100%;
   }
 }
 
@@ -153,5 +152,30 @@
   
   .margin-responsive {
     @apply m-2 sm:m-3 lg:m-4;
+  }
+
+  /* Classes utilitaires SKOOLIFE */
+  .bg-skoolife-primary {
+    background-color: hsl(var(--skoolife-primary));
+  }
+  
+  .bg-skoolife-light {
+    background-color: hsl(var(--skoolife-light));
+  }
+  
+  .bg-skoolife-secondary {
+    background-color: hsl(var(--skoolife-secondary));
+  }
+  
+  .text-skoolife-primary {
+    color: hsl(var(--skoolife-primary));
+  }
+  
+  .border-skoolife-primary {
+    border-color: hsl(var(--skoolife-primary));
+  }
+  
+  .gradient-skoolife {
+    background: linear-gradient(135deg, hsl(var(--skoolife-primary)), hsl(var(--skoolife-secondary)));
   }
 }
