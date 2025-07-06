@@ -57,7 +57,7 @@ const categoryIcons: { [key: string]: string } = {
 };
 
 const currencies = ['EUR', 'USD', 'GBP', 'CAD'];
-const pieColors = ['#fbbf24', '#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f', '#10b981', '#059669', '#3b82f6', '#8b5cf6'];
+const pieColors = ['#FFD51C', '#F5B43C', '#FFF9E5', '#FFFFFF', '#E5AD03', '#D4A800', '#C49A00', '#B48B00', '#A47C00', '#946D00'];
 
 export default function FinanceModule() {
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
@@ -499,15 +499,15 @@ export default function FinanceModule() {
 
         {/* Mobile Navigation Tabs */}
         <div className="sm:hidden">
-          <div className="flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-sm border border-yellow-200 dark:border-gray-700">
+          <div className="flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-sm border border-skoolife-primary/30 dark:border-gray-700">
             {mobileNavItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setMobileView(item.id as any)}
                 className={`flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-md text-xs font-medium transition-all duration-200 ${
                   mobileView === item.id
-                    ? "bg-gradient-to-r from-[#F6C103] to-[#E5AD03] text-gray-900 shadow-sm"
-                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
+                    ? "bg-gradient-to-r from-skoolife-primary to-skoolife-secondary text-gray-900 shadow-sm"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-skoolife-light/50 dark:hover:bg-gray-700"
                 }`}
               >
                 <item.icon className="w-4 h-4" />
@@ -541,65 +541,65 @@ export default function FinanceModule() {
       {/* Mobile Overview */}
       {(mobileView === 'overview' || window.innerWidth >= 640) && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <Card className="border-yellow-200 dark:border-gray-700 shadow-lg bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20">
+          <Card className="border-skoolife-primary/30 dark:border-gray-700 shadow-lg bg-gradient-to-br from-skoolife-light to-white dark:from-gray-800 dark:to-gray-700">
             <CardContent className="p-3 sm:p-4">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1">
                   <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">Solde actuel</p>
-                  <p className={`text-lg sm:text-2xl font-bold truncate ${selectedMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                  <p className={`text-lg sm:text-2xl font-bold truncate ${selectedMonthData.net >= 0 ? 'text-skoolife-secondary dark:text-skoolife-primary' : 'text-gray-600 dark:text-gray-400'}`}>
                     {getCurrencySymbol()}{selectedMonthData.net}
                   </p>
                 </div>
-                <div className={`p-2 sm:p-3 rounded-full flex-shrink-0 ${selectedMonthData.net >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-red-100 dark:bg-red-900/30'}`}>
-                  <Wallet className={`w-4 h-4 sm:w-6 sm:h-6 ${selectedMonthData.net >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`} />
+                <div className={`p-2 sm:p-3 rounded-full flex-shrink-0 ${selectedMonthData.net >= 0 ? 'bg-skoolife-light dark:bg-gray-700' : 'bg-gray-100 dark:bg-gray-700'}`}>
+                  <Wallet className={`w-4 h-4 sm:w-6 sm:h-6 ${selectedMonthData.net >= 0 ? 'text-skoolife-secondary dark:text-skoolife-primary' : 'text-gray-600 dark:text-gray-400'}`} />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-emerald-200 dark:border-gray-700 shadow-lg">
+          <Card className="border-skoolife-primary/30 dark:border-gray-700 shadow-lg">
             <CardContent className="p-3 sm:p-4">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1">
                   <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">Revenus</p>
-                  <p className="text-lg sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 truncate">
+                  <p className="text-lg sm:text-2xl font-bold text-skoolife-primary dark:text-skoolife-primary truncate">
                     {getCurrencySymbol()}{selectedMonthData.income}
                   </p>
                 </div>
-                <div className="p-2 sm:p-3 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
-                  <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
+                <div className="p-2 sm:p-3 rounded-full bg-skoolife-light dark:bg-gray-700 flex-shrink-0">
+                  <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 text-skoolife-primary dark:text-skoolife-primary" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-red-200 dark:border-gray-700 shadow-lg">
+          <Card className="border-skoolife-primary/30 dark:border-gray-700 shadow-lg">
             <CardContent className="p-3 sm:p-4">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1">
                   <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">Dépenses</p>
-                  <p className="text-lg sm:text-2xl font-bold text-red-600 dark:text-red-400 truncate">
+                  <p className="text-lg sm:text-2xl font-bold text-skoolife-secondary dark:text-skoolife-secondary truncate">
                     {getCurrencySymbol()}{selectedMonthData.expenses}
                   </p>
                 </div>
-                <div className="p-2 sm:p-3 rounded-full bg-red-100 dark:bg-red-900/30 flex-shrink-0">
-                  <TrendingDown className="w-4 h-4 sm:w-6 sm:h-6 text-red-600 dark:text-red-400" />
+                <div className="p-2 sm:p-3 rounded-full bg-skoolife-light dark:bg-gray-700 flex-shrink-0">
+                  <TrendingDown className="w-4 h-4 sm:w-6 sm:h-6 text-skoolife-secondary dark:text-skoolife-secondary" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-blue-200 dark:border-gray-700 shadow-lg">
+          <Card className="border-skoolife-primary/30 dark:border-gray-700 shadow-lg">
             <CardContent className="p-3 sm:p-4">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1">
                   <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">Transactions</p>
-                  <p className="text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400 truncate">
+                  <p className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
                     {filteredTransactions.length}
                   </p>
                 </div>
-                <div className="p-2 sm:p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 flex-shrink-0">
-                  <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
+                <div className="p-2 sm:p-3 rounded-full bg-skoolife-light dark:bg-gray-700 flex-shrink-0">
+                  <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-gray-900 dark:text-white" />
                 </div>
               </div>
             </CardContent>
@@ -611,7 +611,7 @@ export default function FinanceModule() {
       <div className="hidden sm:block">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {/* Monthly Evolution Chart */}
-          <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
+          <Card className="border-skoolife-primary/30 dark:border-gray-700 shadow-lg">
             <CardHeader className="pb-2 sm:pb-4">
               <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Évolution mensuelle</CardTitle>
             </CardHeader>
@@ -621,12 +621,12 @@ export default function FinanceModule() {
                   <AreaChart data={monthlyData}>
                     <defs>
                       <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#10b981" stopOpacity={0.1}/>
+                        <stop offset="5%" stopColor="#FFD51C" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#FFD51C" stopOpacity={0.1}/>
                       </linearGradient>
                       <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1}/>
+                        <stop offset="5%" stopColor="#F5B43C" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#F5B43C" stopOpacity={0.1}/>
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
@@ -644,7 +644,7 @@ export default function FinanceModule() {
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'var(--card)',
-                        border: '2px solid #fcd34d',
+                        border: '2px solid #FFD51C',
                         borderRadius: '12px',
                         boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
                         fontSize: '12px'
@@ -657,7 +657,7 @@ export default function FinanceModule() {
                     <Area 
                       type="monotone" 
                       dataKey="income" 
-                      stroke="#10b981" 
+                      stroke="#FFD51C" 
                       strokeWidth={2}
                       fillOpacity={1} 
                       fill="url(#incomeGradient)" 
@@ -666,7 +666,7 @@ export default function FinanceModule() {
                     <Area 
                       type="monotone" 
                       dataKey="expenses" 
-                      stroke="#ef4444" 
+                      stroke="#F5B43C" 
                       strokeWidth={2}
                       fillOpacity={1} 
                       fill="url(#expenseGradient)" 
@@ -679,7 +679,7 @@ export default function FinanceModule() {
           </Card>
 
           {/* Expense Breakdown Donut Chart */}
-          <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
+          <Card className="border-skoolife-primary/30 dark:border-gray-700 shadow-lg">
             <CardHeader className="pb-2 sm:pb-4">
               <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Répartition des dépenses</CardTitle>
             </CardHeader>
@@ -707,7 +707,7 @@ export default function FinanceModule() {
                       formatter={(value: number) => [`${getCurrencySymbol()}${value}`, 'Montant']}
                       contentStyle={{ 
                         backgroundColor: 'var(--card)',
-                        border: '2px solid #fcd34d',
+                        border: '2px solid #FFD51C',
                         borderRadius: '12px',
                         boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
                         fontSize: '12px'
@@ -737,7 +737,7 @@ export default function FinanceModule() {
 
       {/* Mobile Budget Section */}
       {(mobileView === 'budget' || window.innerWidth >= 640) && budgets.length > 0 && (
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
+        <Card className="border-skoolife-primary/30 dark:border-gray-700 shadow-lg">
           <CardHeader className="pb-3 sm:pb-4">
             <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Budget - {selectedMonthName}</CardTitle>
           </CardHeader>
@@ -747,22 +747,22 @@ export default function FinanceModule() {
                 const percentage = (budget.spent / budget.limit) * 100;
                 const isOverBudget = percentage > 100;
                 return (
-                  <div key={budget.category} className="space-y-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                  <div key={budget.category} className="space-y-2 p-3 bg-skoolife-light/50 dark:bg-gray-800/50 rounded-lg">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
                         <span className="text-base">{categoryIcons[budget.category]}</span>
                         <span className="truncate">{budget.category}</span>
                       </span>
-                      <span className={`text-xs sm:text-sm font-bold ${isOverBudget ? 'text-red-600' : 'text-gray-600'}`}>
+                      <span className={`text-xs sm:text-sm font-bold ${isOverBudget ? 'text-skoolife-secondary' : 'text-gray-600'}`}>
                         {getCurrencySymbol()}{budget.spent} / {getCurrencySymbol()}{budget.limit}
                       </span>
                     </div>
                     <Progress 
                       value={Math.min(percentage, 100)} 
-                      className={`h-2 ${isOverBudget ? 'bg-red-100' : 'bg-gray-200'}`}
+                      className={`h-2 ${isOverBudget ? 'bg-skoolife-light' : 'bg-gray-200'}`}
                     />
                     {isOverBudget && (
-                      <p className="text-xs text-red-600 font-medium">Budget dépassé de {getCurrencySymbol()}{budget.spent - budget.limit}</p>
+                      <p className="text-xs text-skoolife-secondary font-medium">Budget dépassé de {getCurrencySymbol()}{budget.spent - budget.limit}</p>
                     )}
                   </div>
                 );
@@ -774,7 +774,7 @@ export default function FinanceModule() {
 
       {/* Mobile Transactions Section */}
       {(mobileView === 'transactions' || window.innerWidth >= 640) && (
-        <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
+        <Card className="border-skoolife-primary/30 dark:border-gray-700 shadow-lg">
           <CardHeader className="pb-3 sm:pb-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
               <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Transactions - {selectedMonthName}</CardTitle>
@@ -785,7 +785,7 @@ export default function FinanceModule() {
                 </Button>
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 flex-1 sm:flex-none text-xs sm:text-sm">
+                    <Button size="sm" className="bg-skoolife-primary hover:bg-skoolife-secondary text-gray-900 flex-1 sm:flex-none text-xs sm:text-sm">
                       <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                       Ajouter
                     </Button>
@@ -904,10 +904,10 @@ export default function FinanceModule() {
               {filteredTransactions.map((transaction, index) => (
                 <div 
                   key={transaction.id} 
-                  className="group relative flex items-center gap-3 p-3 sm:p-4 bg-gradient-to-r from-yellow-50 to-white dark:from-gray-800 dark:to-gray-700 rounded-lg border border-yellow-200 dark:border-gray-600 hover:shadow-lg transition-all duration-200 touch-manipulation"
+                  className="group relative flex items-center gap-3 p-3 sm:p-4 bg-gradient-to-r from-skoolife-light to-white dark:from-gray-800 dark:to-gray-700 rounded-lg border border-skoolife-primary/30 dark:border-gray-600 hover:shadow-lg transition-all duration-200 touch-manipulation"
                 >
                   {/* Timeline dot */}
-                  <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${transaction.type === 'income' ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                  <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${transaction.type === 'income' ? 'bg-skoolife-primary' : 'bg-skoolife-secondary'}`} />
                   
                   {/* Transaction content */}
                   <div className="flex-1 min-w-0">
@@ -927,8 +927,8 @@ export default function FinanceModule() {
                       <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                         <span className={`font-bold text-sm sm:text-lg ${
                           transaction.type === 'income' 
-                            ? 'text-emerald-600 dark:text-emerald-400' 
-                            : 'text-red-600 dark:text-red-400'
+                            ? 'text-skoolife-primary dark:text-skoolife-primary' 
+                            : 'text-skoolife-secondary dark:text-skoolife-secondary'
                         }`}>
                           {transaction.type === 'income' ? '+' : '-'}{getCurrencySymbol()}{transaction.amount}
                         </span>
@@ -998,7 +998,7 @@ export default function FinanceModule() {
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
+                                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-skoolife-secondary" />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent className="w-[95vw] max-w-md mx-auto">
