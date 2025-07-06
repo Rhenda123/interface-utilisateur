@@ -470,30 +470,30 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const gridConfig = getGridConfig();
 
   const financeData = [
-    { name: "Revenus", amount: currentMonthData.income, color: "#10b981" },
-    { name: "Dépenses", amount: currentMonthData.expenses, color: "#ef4444" },
+    { name: "Revenus", amount: currentMonthData.income, color: "#FFD51C" },
+    { name: "Dépenses", amount: currentMonthData.expenses, color: "#F5B43C" },
   ];
 
   const taskData = [
-    { name: "Faites", value: completedTasks, color: "#10b981" },
-    { name: "À faire", value: pendingTasks, color: "#f59e0b" },
+    { name: "Faites", value: completedTasks, color: "#FFD51C" },
+    { name: "À faire", value: pendingTasks, color: "#F5B43C" },
   ];
 
   // Content blocks for the carousel
   const contentBlocks = [
     // Finance Block
-    <Card key="finance" className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
+    <Card key="finance" className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <Wallet className="w-5 h-5 text-[#F6C103]" />
+            <Wallet className="w-5 h-5 text-skoolife-primary" />
             Finances
           </h3>
           <Button
             onClick={() => onNavigate?.('finances')}
             variant="ghost"
             size="sm"
-            className="text-[#F6C103] hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-full p-2"
+            className="text-skoolife-primary hover:bg-skoolife-light dark:hover:bg-yellow-900/20 rounded-full p-2"
           >
             <ArrowRight className="w-4 h-4" />
           </Button>
@@ -503,38 +503,38 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         <div className="space-y-4">
           {/* Income/Expense Cards */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-700">
+            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-green-700 dark:text-green-300">Revenus</span>
+                <TrendingUp className="w-4 h-4 text-skoolife-primary" />
+                <span className="text-sm font-medium text-gray-700 dark:text-yellow-300">Revenus</span>
               </div>
-              <div className="text-lg font-bold text-green-600 dark:text-green-400">
+              <div className="text-lg font-bold text-skoolife-primary dark:text-yellow-400">
                 €{currentMonthData.income.toFixed(0)}
               </div>
             </div>
             
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 border border-red-200 dark:border-red-700">
+            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingDown className="w-4 h-4 text-red-600" />
-                <span className="text-sm font-medium text-red-700 dark:text-red-300">Dépenses</span>
+                <TrendingDown className="w-4 h-4 text-skoolife-secondary" />
+                <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Dépenses</span>
               </div>
-              <div className="text-lg font-bold text-red-600 dark:text-red-400">
+              <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
                 €{currentMonthData.expenses.toFixed(0)}
               </div>
             </div>
           </div>
 
           {/* Budget Progress */}
-          <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
+          <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Budget ce mois</span>
-              <span className="text-sm font-semibold text-[#F6C103]">
+              <span className="text-sm font-semibold text-skoolife-primary">
                 {budgetProgress.toFixed(0)}%
               </span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
               <div 
-                className="bg-gradient-to-r from-[#F6C103] to-[#E5AC00] h-3 rounded-full transition-all duration-500 relative overflow-hidden" 
+                className="bg-gradient-to-r from-skoolife-primary to-skoolife-secondary h-3 rounded-full transition-all duration-500 relative overflow-hidden" 
                 style={{ width: `${Math.min(budgetProgress, 100)}%` }}
               >
                 <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
@@ -550,18 +550,18 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     </Card>,
 
     // Tasks Block
-    <Card key="tasks" className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
+    <Card key="tasks" className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-blue-500" />
+            <CheckCircle className="w-5 h-5 text-skoolife-secondary" />
             Tâches
           </h3>
           <Button
             onClick={() => onNavigate?.('todo')}
             variant="ghost"
             size="sm"
-            className="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-full p-2"
+            className="text-skoolife-secondary hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-full p-2"
           >
             <ArrowRight className="w-4 h-4" />
           </Button>
@@ -571,22 +571,22 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         <div className="space-y-4">
           {/* Task Statistics Cards */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
+            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
               <div className="flex items-center gap-2 mb-2">
-                <Target className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-700 dark:text-blue-300">À faire</span>
+                <Target className="w-4 h-4 text-skoolife-secondary" />
+                <span className="text-sm font-medium text-orange-700 dark:text-orange-300">À faire</span>
               </div>
-              <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+              <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
                 {pendingTasks}
               </div>
             </div>
             
-            <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-700">
+            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700">
               <div className="flex items-center gap-2 mb-2">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-green-700 dark:text-green-300">Terminées</span>
+                <CheckCircle className="w-4 h-4 text-skoolife-primary" />
+                <span className="text-sm font-medium text-gray-700 dark:text-yellow-300">Terminées</span>
               </div>
-              <div className="text-lg font-bold text-green-600 dark:text-green-400">
+              <div className="text-lg font-bold text-skoolife-primary dark:text-yellow-400">
                 {completedTasks}
               </div>
             </div>
@@ -608,7 +608,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           )}
 
           {/* Recent Tasks Preview */}
-          <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
+          <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochaines tâches</span>
             </div>
@@ -617,7 +617,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 <div key={index} className="flex items-center gap-2 text-sm">
                   <div className={`w-2 h-2 rounded-full ${
                     task.priority === "Haute" ? "bg-red-500" : 
-                    task.priority === "Moyenne" ? "bg-yellow-500" : "bg-green-500"
+                    task.priority === "Moyenne" ? "bg-skoolife-primary" : "bg-skoolife-secondary"
                   }`}></div>
                   <span className="text-gray-700 dark:text-gray-300 truncate flex-1">
                     {task.text}
@@ -636,7 +636,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     </Card>,
 
     // Planning Block
-    <Card key="planning" className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
+    <Card key="planning" className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -706,14 +706,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
           {/* This Week Preview - Only show if there are upcoming events */}
           {thisWeekEvents.length > 0 && (
-            <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
+            <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochains événements</span>
               </div>
               <div className="space-y-2 max-h-24 overflow-y-auto">
                 {thisWeekEvents.slice(0, 2).map((event: any, index: number) => (
                   <div key={index} className="flex items-center gap-3 text-sm">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-skoolife-primary rounded-full"></div>
                     <div className="flex-1">
                       <div className="font-medium text-gray-700 dark:text-gray-300 truncate">
                         {event.day}: {event.name}
@@ -730,7 +730,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
           {/* Show message when no events */}
           {thisWeekEvents.length === 0 && todaysEvents.length === 0 && (
-            <div className="bg-gradient-to-r from-[#FEF7D6] to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-[#F6C103]/30 dark:border-yellow-700/30">
+            <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
               <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-2">
                 Aucun événement prévu
               </p>
@@ -744,7 +744,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   return (
     <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 lg:p-6 max-w-full overflow-hidden">
       <div className="text-center mb-6 sm:mb-8">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#F6C103] to-[#E5AC00] bg-clip-text text-transparent mb-2 sm:mb-3">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-2 sm:mb-3">
           Tableau de Bord
         </h2>
         <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
@@ -752,25 +752,25 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </p>
         {/* Real-time sync indicator */}
         <div className="flex items-center justify-center gap-2 mt-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-skoolife-primary rounded-full animate-pulse"></div>
           <span className="text-xs text-gray-500 dark:text-gray-400">
             Synchronisé en temps réel
           </span>
         </div>
       </div>
 
-      {/* Enhanced Responsive Quick Stats Grid with real-time updates */}
+      {/* Enhanced Responsive Quick Stats Grid with SKOOLIFE colors */}
       <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-6 sm:mb-8`}>
         <Card 
-          className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-[#FEF7D6] dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
+          className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('finances')}
         >
           <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
             <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <TrendingUp className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 ${currentBalance >= 0 ? "text-green-500" : "text-red-500"}`} />
+              <TrendingUp className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 ${currentBalance >= 0 ? "text-skoolife-primary" : "text-red-500"}`} />
             </div>
             <div className={`text-base sm:text-lg lg:text-2xl font-bold mb-1 sm:mb-2 ${
-              currentBalance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+              currentBalance >= 0 ? "text-skoolife-primary dark:text-yellow-400" : "text-red-600 dark:text-red-400"
             }`}>
               €{currentBalance.toFixed(0)}
             </div>
@@ -784,14 +784,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </Card>
 
         <Card 
-          className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
+          className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('todo')}
         >
           <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
             <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-blue-500" />
+              <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-secondary" />
             </div>
-            <div className="text-base sm:text-lg lg:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1 sm:mb-2">
+            <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-secondary dark:text-orange-400 mb-1 sm:mb-2">
               {pendingTasks}
             </div>
             <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
@@ -804,7 +804,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </Card>
 
         <Card 
-          className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
+          className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('planning')}
         >
           <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
@@ -824,14 +824,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
         </Card>
 
         <Card 
-          className="border-[#F6C103] dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
+          className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('documents')}
         >
           <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
             <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <FileText className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-orange-500" />
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-secondary" />
             </div>
-            <div className="text-base sm:text-lg lg:text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1 sm:mb-2">
+            <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-secondary dark:text-orange-400 mb-1 sm:mb-2">
               {documents.length}
             </div>
             <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 sm:mb-2">
@@ -873,7 +873,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 key={index}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   currentSlide === index 
-                    ? 'bg-[#F6C103] w-6' 
+                    ? 'bg-skoolife-primary w-6' 
                     : 'bg-gray-300 dark:bg-gray-600'
                 }`}
                 onClick={() => {
