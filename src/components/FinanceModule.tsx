@@ -409,10 +409,9 @@ export default function FinanceModule() {
     setSelectedMonth(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
   };
 
-  // Mobile navigation items
+  // Mobile navigation items - hide charts on mobile
   const mobileNavItems = [
     { id: 'overview', label: 'Aperçu', icon: Eye },
-    { id: 'charts', label: 'Graphiques', icon: BarChart3 },
     { id: 'transactions', label: 'Transactions', icon: Calendar },
     { id: 'budget', label: 'Budget', icon: Wallet },
   ];
@@ -608,8 +607,8 @@ export default function FinanceModule() {
         </div>
       )}
 
-      {/* Mobile Charts Section */}
-      {(mobileView === 'charts' || window.innerWidth >= 640) && (
+      {/* Charts Section - Hidden on Mobile */}
+      <div className="hidden sm:block">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {/* Monthly Evolution Chart */}
           <Card className="border-yellow-200 dark:border-gray-700 shadow-lg">
@@ -734,7 +733,7 @@ export default function FinanceModule() {
             </CardContent>
           </Card>
         </div>
-      )}
+      </div>
 
       {/* Mobile Budget Section */}
       {(mobileView === 'budget' || window.innerWidth >= 640) && budgets.length > 0 && (
