@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -845,7 +846,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
       {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
       {screenSize === 'mobile' ? (
-        <div className="relative">
+        <div className="relative mb-2">
           <Carousel 
             className="w-full"
             setApi={setCarouselApi}
@@ -865,8 +866,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             </CarouselContent>
           </Carousel>
           
-          {/* Carousel Indicators - Reduced margin top */}
-          <div className="flex justify-center mt-2 gap-2">
+          {/* Carousel Indicators - Reduced spacing from bottom navigation */}
+          <div className="flex justify-center mt-2 mb-1 gap-2">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}
