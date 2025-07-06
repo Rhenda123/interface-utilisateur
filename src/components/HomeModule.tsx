@@ -482,58 +482,58 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const contentBlocks = [
     // Finance Block
     <Card key="finance" className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
-      <CardContent className="p-4 sm:p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <Wallet className="w-5 h-5 text-skoolife-primary" />
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <Wallet className="w-4 h-4 text-skoolife-primary" />
             Finances
           </h3>
           <Button
             onClick={() => onNavigate?.('finances')}
             variant="ghost"
             size="sm"
-            className="text-skoolife-primary hover:bg-skoolife-light dark:hover:bg-yellow-900/20 rounded-full p-2"
+            className="text-skoolife-primary hover:bg-skoolife-light dark:hover:bg-yellow-900/20 rounded-full p-1.5"
           >
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-3 h-3" />
           </Button>
         </div>
         
         {/* Modern Financial Overview */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Income/Expense Cards */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-4 h-4 text-skoolife-primary" />
-                <span className="text-sm font-medium text-skoolife-primary dark:text-yellow-300">Revenus</span>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-lg p-3 border border-skoolife-primary/30 dark:border-yellow-700">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <TrendingUp className="w-3 h-3 text-skoolife-primary" />
+                <span className="text-xs font-medium text-skoolife-primary dark:text-yellow-300">Revenus</span>
               </div>
-              <div className="text-lg font-bold text-skoolife-primary dark:text-yellow-400">
+              <div className="text-sm font-bold text-skoolife-primary dark:text-yellow-400">
                 €{currentMonthData.income.toFixed(0)}
               </div>
             </div>
             
-            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingDown className="w-4 h-4 text-skoolife-secondary" />
-                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">Dépenses</span>
+            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-orange-200 dark:border-orange-700">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <TrendingDown className="w-3 h-3 text-skoolife-secondary" />
+                <span className="text-xs font-medium text-skoolife-secondary dark:text-orange-300">Dépenses</span>
               </div>
-              <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
+              <div className="text-sm font-bold text-skoolife-secondary dark:text-orange-400">
                 €{currentMonthData.expenses.toFixed(0)}
               </div>
             </div>
           </div>
 
           {/* Budget Progress */}
-          <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Budget ce mois</span>
-              <span className="text-sm font-semibold text-skoolife-primary">
+          <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-lg p-3 border border-skoolife-primary/30 dark:border-yellow-700/30">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Budget ce mois</span>
+              <span className="text-xs font-semibold text-skoolife-primary">
                 {budgetProgress.toFixed(0)}%
               </span>
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-1.5">
               <div 
-                className="bg-gradient-to-r from-skoolife-primary to-skoolife-secondary h-3 rounded-full transition-all duration-500 relative overflow-hidden" 
+                className="bg-gradient-to-r from-skoolife-primary to-skoolife-secondary h-2 rounded-full transition-all duration-500 relative overflow-hidden" 
                 style={{ width: `${Math.min(budgetProgress, 100)}%` }}
               >
                 <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
@@ -550,42 +550,42 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
     // Tasks Block
     <Card key="tasks" className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
-      <CardContent className="p-4 sm:p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-skoolife-primary" />
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <CheckCircle className="w-4 h-4 text-skoolife-primary" />
             Tâches
           </h3>
           <Button
             onClick={() => onNavigate?.('todo')}
             variant="ghost"
             size="sm"
-            className="text-skoolife-primary hover:bg-skoolife-light dark:hover:bg-yellow-900/20 rounded-full p-2"
+            className="text-skoolife-primary hover:bg-skoolife-light dark:hover:bg-yellow-900/20 rounded-full p-1.5"
           >
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-3 h-3" />
           </Button>
         </div>
         
         {/* Modern Task Overview */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Task Statistics Cards - Colors inversed */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700">
-              <div className="flex items-center gap-2 mb-2">
-                <Target className="w-4 h-4 text-skoolife-primary" />
-                <span className="text-sm font-medium text-skoolife-primary dark:text-yellow-300">À faire</span>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-lg p-3 border border-skoolife-primary/30 dark:border-yellow-700">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Target className="w-3 h-3 text-skoolife-primary" />
+                <span className="text-xs font-medium text-skoolife-primary dark:text-yellow-300">À faire</span>
               </div>
-              <div className="text-lg font-bold text-skoolife-primary dark:text-yellow-400">
+              <div className="text-sm font-bold text-skoolife-primary dark:text-yellow-400">
                 {pendingTasks}
               </div>
             </div>
             
-            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
-              <div className="flex items-center gap-2 mb-2">
-                <CheckCircle className="w-4 h-4 text-skoolife-secondary" />
-                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">Terminées</span>
+            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-orange-200 dark:border-orange-700">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <CheckCircle className="w-3 h-3 text-skoolife-secondary" />
+                <span className="text-xs font-medium text-skoolife-secondary dark:text-orange-300">Terminées</span>
               </div>
-              <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
+              <div className="text-sm font-bold text-skoolife-secondary dark:text-orange-400">
                 {completedTasks}
               </div>
             </div>
@@ -593,28 +593,28 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
           {/* Urgent Tasks Alert */}
           {urgentTasks.length > 0 && (
-            <div className="bg-gradient-to-r from-orange-100 to-skoolife-light dark:from-orange-900/30 dark:to-yellow-900/20 rounded-xl p-4 border border-skoolife-secondary dark:border-orange-700">
-              <div className="flex items-center gap-2 mb-2">
-                <AlertCircle className="w-4 h-4 text-skoolife-secondary" />
-                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">
+            <div className="bg-gradient-to-r from-orange-100 to-skoolife-light dark:from-orange-900/30 dark:to-yellow-900/20 rounded-lg p-3 border border-skoolife-secondary dark:border-orange-700">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <AlertCircle className="w-3 h-3 text-skoolife-secondary" />
+                <span className="text-xs font-medium text-skoolife-secondary dark:text-orange-300">
                   Tâches urgentes
                 </span>
               </div>
-              <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
+              <div className="text-sm font-bold text-skoolife-secondary dark:text-orange-400">
                 {urgentTasks.length}
               </div>
             </div>
           )}
 
           {/* Recent Tasks Preview */}
-          <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochaines tâches</span>
+          <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-lg p-3 border border-skoolife-primary/30 dark:border-yellow-700/30">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Prochaines tâches</span>
             </div>
-            <div className="space-y-2 max-h-24 overflow-y-auto">
+            <div className="space-y-1.5 max-h-16 overflow-y-auto">
               {tasks.filter((task: any) => !task.completed).slice(0, 2).map((task: any, index: number) => (
-                <div key={index} className="flex items-center gap-2 text-sm">
-                  <div className={`w-2 h-2 rounded-full ${
+                <div key={index} className="flex items-center gap-1.5 text-xs">
+                  <div className={`w-1.5 h-1.5 rounded-full ${
                     task.priority === "Haute" ? "bg-skoolife-secondary" : 
                     task.priority === "Moyenne" ? "bg-skoolife-primary" : "bg-orange-300"
                   }`}></div>
@@ -624,7 +624,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 </div>
               ))}
               {tasks.filter((task: any) => !task.completed).length === 0 && (
-                <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-2">
+                <p className="text-gray-500 dark:text-gray-400 text-xs text-center py-1">
                   Aucune tâche en attente
                 </p>
               )}
@@ -636,42 +636,42 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
     // Planning Block
     <Card key="planning" className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
-      <CardContent className="p-4 sm:p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-skoolife-primary" />
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-skoolife-primary" />
             Planning
           </h3>
           <Button
             onClick={() => onNavigate?.('planning')}
             variant="ghost"
             size="sm"
-            className="text-skoolife-primary hover:bg-skoolife-light dark:hover:bg-yellow-900/20 rounded-full p-2"
+            className="text-skoolife-primary hover:bg-skoolife-light dark:hover:bg-yellow-900/20 rounded-full p-1.5"
           >
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-3 h-3" />
           </Button>
         </div>
         
         {/* Modern Planning Overview with consistent colors */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Event Statistics Cards */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700">
-              <div className="flex items-center gap-2 mb-2">
-                <Clock className="w-4 h-4 text-skoolife-primary" />
-                <span className="text-sm font-medium text-skoolife-primary dark:text-yellow-300">Aujourd'hui</span>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="bg-skoolife-light dark:bg-yellow-900/20 rounded-lg p-3 border border-skoolife-primary/30 dark:border-yellow-700">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Clock className="w-3 h-3 text-skoolife-primary" />
+                <span className="text-xs font-medium text-skoolife-primary dark:text-yellow-300">Aujourd'hui</span>
               </div>
-              <div className="text-lg font-bold text-skoolife-primary dark:text-yellow-400">
+              <div className="text-sm font-bold text-skoolife-primary dark:text-yellow-400">
                 {todaysEvents.length}
               </div>
             </div>
             
-            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border border-orange-200 dark:border-orange-700">
-              <div className="flex items-center gap-2 mb-2">
-                <Calendar className="w-4 h-4 text-skoolife-secondary" />
-                <span className="text-sm font-medium text-skoolife-secondary dark:text-orange-300">This week</span>
+            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-orange-200 dark:border-orange-700">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Calendar className="w-3 h-3 text-skoolife-secondary" />
+                <span className="text-xs font-medium text-skoolife-secondary dark:text-orange-300">This week</span>
               </div>
-              <div className="text-lg font-bold text-skoolife-secondary dark:text-orange-400">
+              <div className="text-sm font-bold text-skoolife-secondary dark:text-orange-400">
                 {thisWeekEvents.length}
               </div>
             </div>
@@ -679,16 +679,16 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
           {/* Today's Events */}
           {todaysEvents.length > 0 && (
-            <div className="bg-gradient-to-r from-skoolife-light to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl p-4 border border-skoolife-primary dark:border-yellow-700">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-sm font-medium text-skoolife-primary dark:text-yellow-300">
+            <div className="bg-gradient-to-r from-skoolife-light to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg p-3 border border-skoolife-primary dark:border-yellow-700">
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="text-xs font-medium text-skoolife-primary dark:text-yellow-300">
                   Événements d'aujourd'hui
                 </span>
               </div>
-              <div className="space-y-2 max-h-24 overflow-y-auto">
+              <div className="space-y-1.5 max-h-16 overflow-y-auto">
                 {todaysEvents.slice(0, 2).map((event: any, index: number) => (
-                  <div key={index} className="flex items-center gap-3 text-sm">
-                    <div className="w-2 h-2 bg-skoolife-primary rounded-full"></div>
+                  <div key={index} className="flex items-center gap-2 text-xs">
+                    <div className="w-1.5 h-1.5 bg-skoolife-primary rounded-full"></div>
                     <div className="flex-1">
                       <div className="font-medium text-gray-900 dark:text-white truncate">
                         {event.name}
@@ -705,14 +705,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
           {/* This Week Preview */}
           {thisWeekEvents.length > 0 && (
-            <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochains événements</span>
+            <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-lg p-3 border border-skoolife-primary/30 dark:border-yellow-700/30">
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Prochains événements</span>
               </div>
-              <div className="space-y-2 max-h-24 overflow-y-auto">
+              <div className="space-y-1.5 max-h-16 overflow-y-auto">
                 {thisWeekEvents.slice(0, 2).map((event: any, index: number) => (
-                  <div key={index} className="flex items-center gap-3 text-sm">
-                    <div className="w-2 h-2 bg-skoolife-primary rounded-full"></div>
+                  <div key={index} className="flex items-center gap-2 text-xs">
+                    <div className="w-1.5 h-1.5 bg-skoolife-primary rounded-full"></div>
                     <div className="flex-1">
                       <div className="font-medium text-gray-700 dark:text-gray-300 truncate">
                         {event.day}: {event.name}
@@ -729,8 +729,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
           {/* Show message when no events */}
           {thisWeekEvents.length === 0 && todaysEvents.length === 0 && (
-            <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-xl p-4 border border-skoolife-primary/30 dark:border-yellow-700/30">
-              <p className="text-gray-500 dark:text-gray-400 text-sm text-center py-2">
+            <div className="bg-gradient-to-r from-skoolife-light to-white dark:from-yellow-900/20 dark:to-gray-800 rounded-lg p-3 border border-skoolife-primary/30 dark:border-yellow-700/30">
+              <p className="text-gray-500 dark:text-gray-400 text-xs text-center py-1">
                 Aucun événement prévu
               </p>
             </div>
@@ -741,19 +741,19 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col justify-center space-y-4 sm:space-y-6 pt-safe-top px-3 sm:px-4 lg:px-6 pb-2 lg:pb-4 max-w-full overflow-hidden">
-      <div className="text-center mb-4 sm:mb-6">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-2 sm:mb-3">
+    <div className="min-h-screen flex flex-col justify-start space-y-2 sm:space-y-4 pt-1 sm:pt-2 px-2 sm:px-4 lg:px-6 pb-1 lg:pb-4 max-w-full overflow-hidden">
+      <div className="text-center mb-2 sm:mb-4">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-1 sm:mb-2">
           Tableau de bord
         </h2>
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="text-xs text-gray-500 dark:text-gray-400 font-bold">
+        <div className="flex items-center justify-center gap-1.5 mb-1">
+          <span className="text-xs font-bold text-gray-500 dark:text-gray-400">
             Votre vue d'ensemble personnalisée
           </span>
         </div>
         {/* Real-time sync indicator */}
-        <div className="flex items-center justify-center gap-2">
-          <div className="w-2 h-2 bg-skoolife-primary rounded-full animate-pulse"></div>
+        <div className="flex items-center justify-center gap-1.5">
+          <div className="w-1.5 h-1.5 bg-skoolife-primary rounded-full animate-pulse"></div>
           <span className="text-xs text-gray-500 dark:text-gray-400">
             Synchronisé en temps réel
           </span>
@@ -761,21 +761,21 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       </div>
 
       {/* Enhanced Responsive Quick Stats Grid with SKOOLIFE colors */}
-      <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-4 sm:mb-6`}>
+      <div className={`grid ${gridConfig.statsGrid} gap-2 sm:gap-3 mb-2 sm:mb-4`}>
         <Card 
           className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('finances')}
         >
-          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-            <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <TrendingUp className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 ${currentBalance >= 0 ? "text-skoolife-primary" : "text-skoolife-secondary"}`} />
+          <CardContent className="p-2 sm:p-3 lg:p-4 text-center">
+            <div className="flex items-center justify-center mb-1 sm:mb-2">
+              <TrendingUp className={`w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ${currentBalance >= 0 ? "text-skoolife-primary" : "text-skoolife-secondary"}`} />
             </div>
-            <div className={`text-base sm:text-lg lg:text-2xl font-bold mb-1 sm:mb-2 ${
+            <div className={`text-sm sm:text-base lg:text-lg font-bold mb-0.5 sm:mb-1 ${
               currentBalance >= 0 ? "text-skoolife-primary dark:text-yellow-400" : "text-skoolife-secondary dark:text-orange-400"
             }`}>
               €{currentBalance.toFixed(0)}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-xs text-gray-600 dark:text-gray-300">
               Solde Actuel
             </div>
           </CardContent>
@@ -785,14 +785,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('todo')}
         >
-          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-            <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-primary" />
+          <CardContent className="p-2 sm:p-3 lg:p-4 text-center">
+            <div className="flex items-center justify-center mb-1 sm:mb-2">
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-skoolife-primary" />
             </div>
-            <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-primary dark:text-yellow-400 mb-1 sm:mb-2">
+            <div className="text-sm sm:text-base lg:text-lg font-bold text-skoolife-primary dark:text-yellow-400 mb-0.5 sm:mb-1">
               {pendingTasks}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-xs text-gray-600 dark:text-gray-300">
               Tâches
             </div>
           </CardContent>
@@ -802,14 +802,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('planning')}
         >
-          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-            <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-primary" />
+          <CardContent className="p-2 sm:p-3 lg:p-4 text-center">
+            <div className="flex items-center justify-center mb-1 sm:mb-2">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-skoolife-primary" />
             </div>
-            <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-primary dark:text-yellow-400 mb-1 sm:mb-2">
+            <div className="text-sm sm:text-base lg:text-lg font-bold text-skoolife-primary dark:text-yellow-400 mb-0.5 sm:mb-1">
               {todaysEvents.length}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-xs text-gray-600 dark:text-gray-300">
               Aujourd'hui
             </div>
           </CardContent>
@@ -819,14 +819,14 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('documents')}
         >
-          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-            <div className="flex items-center justify-center mb-2 sm:mb-3">
-              <FileText className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-secondary" />
+          <CardContent className="p-2 sm:p-3 lg:p-4 text-center">
+            <div className="flex items-center justify-center mb-1 sm:mb-2">
+              <FileText className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-skoolife-secondary" />
             </div>
-            <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-secondary dark:text-orange-400 mb-1 sm:mb-2">
+            <div className="text-sm sm:text-base lg:text-lg font-bold text-skoolife-secondary dark:text-orange-400 mb-0.5 sm:mb-1">
               {documents.length}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-xs text-gray-600 dark:text-gray-300">
               Documents
             </div>
           </CardContent>
@@ -835,18 +835,18 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
       {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
       {screenSize === 'mobile' ? (
-        <div className="relative mb-0">
+        <div className="relative mb-0 flex-1">
           <Carousel 
-            className="w-full"
+            className="w-full h-full"
             setApi={setCarouselApi}
             opts={{
               align: "start",
               loop: true,
             }}
           >
-            <CarouselContent className="-ml-2 md:-ml-4">
+            <CarouselContent className="-ml-1 md:-ml-2 h-full">
               {contentBlocks.map((block, index) => (
-                <CarouselItem key={index} className="pl-2 md:pl-4 basis-full">
+                <CarouselItem key={index} className="pl-1 md:pl-2 basis-full h-full">
                   <div className="h-full">
                     {block}
                   </div>
@@ -856,13 +856,13 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </Carousel>
           
           {/* Carousel Indicators - Minimal spacing from bottom navigation */}
-          <div className="flex justify-center mt-3 mb-0 gap-2">
+          <div className="flex justify-center mt-2 mb-0 gap-1.5">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
                   currentSlide === index 
-                    ? 'bg-skoolife-primary w-6' 
+                    ? 'bg-skoolife-primary w-4' 
                     : 'bg-gray-300 dark:bg-gray-600'
                 }`}
                 onClick={() => {
@@ -874,7 +874,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {contentBlocks}
         </div>
       )}
