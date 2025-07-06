@@ -207,6 +207,21 @@ const FinanceModule = () => {
     color: cat.color
   }));
 
+  // Calculate spent amounts for budgets based on transactions
+  const budgetsWithSpent = budgets.map(budget => {
+    const spent = transactions
+      .filter(transaction => 
+        transaction.type === 'expense' && 
+        transaction.category === budget.category
+      )
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
+    
+    return {
+      ...budget,
+      spent
+    };
+  });
+
   return (
     <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
       {/* Header with Stats Cards */}
@@ -243,8 +258,8 @@ const FinanceModule = () => {
                 <DialogTitle>Gestion des Budgets</DialogTitle>
               </DialogHeader>
               <BudgetManager 
-                budgets={budgets}
-                onAddBudget={(budget) => setBudgets([...budgets, { ...budget, id: Date.now().toString(), spent: 0 }])}
+                budgets={budgetsWithSpent}
+                onAddBudget={(budget) => setBudgets([...budgets, { ...budget, id: Date.now().toString() }])}
                 onUpdateBudget={(id, updatedBudget) => setBudgets(budgets.map(b => b.id === id ? { ...b, ...updatedBudget } : b))}
                 onDeleteBudget={(id) => setBudgets(budgets.filter(b => b.id !== id))}
                 categories={categoryNames}
