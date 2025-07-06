@@ -175,8 +175,8 @@ export default function Index() {
         </div>
       )}
 
-      {/* Main Content - Mobile optimized with proper padding for bottom nav */}
-      <main className={`max-w-7xl mx-auto section-padding py-4 pb-20 lg:pb-8 lg:py-8 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
+      {/* Main Content - Mobile optimized with proper padding for bottom nav and iPhone 16 safe area */}
+      <main className={`max-w-7xl mx-auto section-padding py-4 pb-20 lg:pb-8 lg:py-8 pt-16 lg:pt-4 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
         <div className="w-full">
           <div className="transition-all duration-300 ease-in-out">
             {view === "home" && <HomeModule onNavigate={handleNavigation} />}
