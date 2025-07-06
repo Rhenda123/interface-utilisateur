@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
@@ -176,7 +175,7 @@ export default function Index() {
       )}
 
       {/* Main Content - Mobile optimized with proper padding for bottom nav and iPhone 16 safe area */}
-      <main className={`max-w-7xl mx-auto section-padding py-4 pb-24 lg:pb-8 lg:py-8 pt-16 lg:pt-4 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
+      <main className={`max-w-7xl mx-auto section-padding py-4 pb-32 lg:pb-8 lg:py-8 pt-16 lg:pt-4 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
         <div className="w-full">
           <div className="transition-all duration-300 ease-in-out">
             {view === "home" && <HomeModule onNavigate={handleNavigation} />}
@@ -190,7 +189,7 @@ export default function Index() {
 
       {/* Fixed Bottom Navigation - Native mobile app style with icons only - Larger size */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-skoolife-primary/20 dark:border-gray-700/50 shadow-2xl">
-        <div className="flex items-center justify-around px-1 py-3">
+        <div className="flex items-center justify-around px-1 py-4 pb-8">
           {navigationItems.map((item) => {
             const IconComponent = item.icon;
             return (
