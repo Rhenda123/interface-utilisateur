@@ -741,8 +741,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="space-y-4 sm:space-y-6 pt-safe-top px-3 sm:px-4 lg:px-6 pb-20 lg:pb-8 max-w-full overflow-hidden">
-      <div className="text-center mt-6 sm:mt-8 mb-6 sm:mb-8">
+    <div className="space-y-4 sm:space-y-6 pt-safe-top px-3 sm:px-4 lg:px-6 pb-8 lg:pb-4 max-w-full overflow-hidden">
+      <div className="text-center mt-6 sm:mt-8 mb-4 sm:mb-6">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-2 sm:mb-3">
           Tableau de bord
         </h2>
@@ -756,7 +756,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       </div>
 
       {/* Enhanced Responsive Quick Stats Grid with SKOOLIFE colors */}
-      <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-6 sm:mb-8`}>
+      <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-4 sm:mb-6`}>
         <Card 
           className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
           onClick={() => onNavigate?.('finances')}
@@ -830,7 +830,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
       {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
       {screenSize === 'mobile' ? (
-        <div className="relative mb-3">
+        <div className="relative mb-2">
           <Carousel 
             className="w-full"
             setApi={setCarouselApi}
@@ -851,7 +851,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </Carousel>
           
           {/* Carousel Indicators - Adjusted spacing from bottom navigation */}
-          <div className="flex justify-center mt-3 mb-2 gap-2">
+          <div className="flex justify-center mt-2 mb-1 gap-2">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}
