@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,9 +25,9 @@ interface Task {
 }
 
 const defaultCategories: Category[] = [
-  { id: "work", name: "Travail", color: "bg-blue-500" },
-  { id: "personal", name: "Personnel", color: "bg-green-500" },
-  { id: "study", name: "Études", color: "bg-purple-500" },
+  { id: "work", name: "Travail", color: "bg-skoolife-primary" },
+  { id: "personal", name: "Personnel", color: "bg-skoolife-secondary" },
+  { id: "study", name: "Études", color: "bg-skoolife-light" },
   { id: "health", name: "Santé", color: "bg-red-500" },
 ];
 
@@ -54,9 +55,9 @@ function TodoModule() {
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
 
   const colorOptions = [
-    "bg-red-500", "bg-blue-500", "bg-green-500", "bg-yellow-500", 
-    "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-teal-500",
-    "bg-orange-500", "bg-gray-500"
+    "bg-skoolife-primary", "bg-skoolife-secondary", "bg-skoolife-light", "bg-red-500", 
+    "bg-blue-500", "bg-green-500", "bg-purple-500", "bg-pink-500",
+    "bg-indigo-500", "bg-teal-500"
   ];
 
   useEffect(() => {
