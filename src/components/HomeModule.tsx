@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -550,7 +549,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       </CardContent>
     </Card>,
 
-    // Tasks Block
+    // Tasks Block - Simplified without urgent tasks section
     <Card key="tasks" className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-center justify-between mb-6">
@@ -598,7 +597,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <div className="flex items-center gap-2 mb-3">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochaines tâches</span>
             </div>
-            <div className="space-y-2 max-h-24">
+            <div className="space-y-2 max-h-24 overflow-y-auto">
               {tasks.filter((task: any) => !task.completed).slice(0, 2).map((task: any, index: number) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
                   <div className={`w-2 h-2 rounded-full ${
@@ -704,8 +703,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="fixed inset-0 pt-16 lg:pt-4 pb-32 lg:pb-8 px-3 sm:px-4 lg:px-6 overflow-hidden">
-      <div className="h-full flex flex-col overflow-hidden">
+    <div className="h-screen overflow-hidden flex flex-col pt-16 lg:pt-4 pb-32 lg:pb-8 px-3 sm:px-4 lg:px-6">
+      <div className="h-full flex flex-col">
         <div className="text-center mb-2 sm:mb-3 flex-shrink-0">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-1 sm:mb-2">
             Tableau de bord
