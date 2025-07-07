@@ -456,16 +456,16 @@ function TodoModule() {
                     
                     <div className="flex flex-wrap items-center gap-2 mb-3">
                       {taskCategory && (
-                        <Badge className={`${taskCategory.color} text-white border-none`}>
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${taskCategory.color} text-white border-none`}>
                           {taskCategory.name}
-                        </Badge>
+                        </span>
                       )}
                       <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${priorityColor[task.priority as keyof typeof priorityColor]}`}>
                         {getPriorityIcon(task.priority)}
                         {task.priority}
                       </span>
                       {task.deadline && (
-                        <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700">
                           {task.deadline}
                         </span>
                       )}
