@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,9 +23,9 @@ interface Task {
 }
 
 const defaultCategories: Category[] = [
-  { id: "work", name: "Travail", color: "bg-skoolife-primary" },
-  { id: "personal", name: "Personnel", color: "bg-skoolife-secondary" },
-  { id: "study", name: "Études", color: "bg-skoolife-light" },
+  { id: "work", name: "Travail", color: "bg-blue-500" },
+  { id: "personal", name: "Personnel", color: "bg-green-500" },
+  { id: "study", name: "Études", color: "bg-purple-500" },
   { id: "health", name: "Santé", color: "bg-red-500" },
 ];
 
@@ -55,9 +53,9 @@ function TodoModule() {
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
 
   const colorOptions = [
-    "bg-skoolife-primary", "bg-skoolife-secondary", "bg-skoolife-light", "bg-yellow-400",
-    "bg-orange-400", "bg-red-500", "bg-pink-500", "bg-purple-500",
-    "bg-blue-500", "bg-green-500", "bg-teal-500", "bg-gray-500"
+    "bg-red-500", "bg-blue-500", "bg-green-500", "bg-yellow-500", 
+    "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-teal-500",
+    "bg-orange-500", "bg-gray-500"
   ];
 
   useEffect(() => {
@@ -167,12 +165,10 @@ function TodoModule() {
     return true;
   });
 
-  // Couleurs Skoolife pour les priorités
   const priorityColor = {
     Haute: "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-700",
-    Moyenne: "bg-skoolife-primary text-gray-900 border border-yellow-300",
-    Faible: "bg-skoolife-light dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-yellow-200 dark:border-gray-600",
-    Élevée: "bg-skoolife-secondary text-gray-900 border border-orange-300"
+    Moyenne: "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-700",
+    Faible: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-700",
   };
 
   const getPriorityIcon = (priority: string) => {
