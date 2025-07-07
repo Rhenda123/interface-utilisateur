@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -192,14 +191,14 @@ function TodoModule() {
             variant="outline"
             className="rounded-full w-12 h-12 sm:w-auto sm:h-auto sm:rounded-lg sm:px-4 sm:py-2 shadow-lg active:scale-95 transition-all touch-manipulation"
           >
-            <Settings className="w-5 h-5 sm:mr-2" />
+            <Settings className="w-6 h-6 sm:mr-2" />
             <span className="hidden sm:inline">Catégories</span>
           </Button>
           <Button 
             onClick={() => setShowAddForm(!showAddForm)}
             className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-full w-12 h-12 sm:w-auto sm:h-auto sm:rounded-lg sm:px-4 sm:py-2 shadow-lg active:scale-95 transition-all touch-manipulation"
           >
-            <Plus className="w-5 h-5 sm:mr-2" />
+            <Plus className="w-6 h-6 sm:mr-2" />
             <span className="hidden sm:inline">Ajouter</span>
           </Button>
         </div>
