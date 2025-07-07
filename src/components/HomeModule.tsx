@@ -549,7 +549,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       </CardContent>
     </Card>,
 
-    // Tasks Block - Simplified without urgent tasks section
+    // Tasks Block
     <Card key="tasks" className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-center justify-between mb-6">
@@ -597,7 +597,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             <div className="flex items-center gap-2 mb-3">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prochaines tâches</span>
             </div>
-            <div className="space-y-2 max-h-24 overflow-y-auto">
+            <div className="space-y-2 max-h-24">
               {tasks.filter((task: any) => !task.completed).slice(0, 2).map((task: any, index: number) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
                   <div className={`w-2 h-2 rounded-full ${
@@ -703,156 +703,148 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col pt-16 lg:pt-4 pb-32 lg:pb-8 px-3 sm:px-4 lg:px-6">
-      <div className="h-full flex flex-col">
-        <div className="text-center mb-2 sm:mb-3 flex-shrink-0">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-1 sm:mb-2">
-            Tableau de bord
-          </h2>
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-bold">
-              Votre vue d'ensemble personnalisée
-            </span>
-          </div>
-          {/* Real-time sync indicator */}
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-2 h-2 bg-skoolife-primary rounded-full animate-pulse"></div>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              Synchronisé en temps réel
-            </span>
-          </div>
+    <div className="space-y-2 sm:space-y-3 pt-4 px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden pb-6 h-screen overflow-y-hidden">
+      <div className="text-center mb-2 sm:mb-3">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-1 sm:mb-2">
+          Tableau de bord
+        </h2>
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <span className="text-xs text-gray-500 dark:text-gray-400 font-bold">
+            Votre vue d'ensemble personnalisée
+          </span>
         </div>
-
-        {/* Enhanced Responsive Quick Stats Grid with SKOOLIFE colors */}
-        <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-4 sm:mb-6 flex-shrink-0`}>
-          <Card 
-            className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
-            onClick={() => onNavigate?.('finances')}
-          >
-            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-              <div className="flex items-center justify-center mb-2 sm:mb-3">
-                <TrendingUp className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 ${currentBalance >= 0 ? "text-skoolife-primary" : "text-skoolife-secondary"}`} />
-              </div>
-              <div className={`text-base sm:text-lg lg:text-2xl font-bold mb-1 sm:mb-2 ${
-                currentBalance >= 0 ? "text-skoolife-primary dark:text-yellow-400" : "text-skoolife-secondary dark:text-orange-400"
-              }`}>
-                €{currentBalance.toFixed(0)}
-              </div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                Solde Actuel
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
-            onClick={() => onNavigate?.('todo')}
-          >
-            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-              <div className="flex items-center justify-center mb-2 sm:mb-3">
-                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-primary" />
-              </div>
-              <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-primary dark:text-yellow-400 mb-1 sm:mb-2">
-                {pendingTasks}
-              </div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                Tâches
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
-            onClick={() => onNavigate?.('planning')}
-          >
-            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-              <div className="flex items-center justify-center mb-2 sm:mb-3">
-                <Calendar className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-primary" />
-              </div>
-              <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-primary dark:text-yellow-400 mb-1 sm:mb-2">
-                {todaysEvents.length}
-              </div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                Aujourd'hui
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
-            onClick={() => onNavigate?.('documents')}
-          >
-            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-              <div className="flex items-center justify-center mb-2 sm:mb-3">
-                <FileText className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-secondary" />
-              </div>
-              <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-secondary dark:text-orange-400 mb-1 sm:mb-2">
-                {documents.length}
-              </div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                Documents
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Séparateur visuel */}
-        <div className="my-2 sm:my-4 flex-shrink-0">
-          <Separator className="bg-skoolife-primary/20 dark:bg-gray-700" />
-        </div>
-
-        {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
-        <div className="flex-1 min-h-0 overflow-hidden">
-          {screenSize === 'mobile' ? (
-            <div className="relative h-full">
-              <Carousel 
-                className="w-full h-full"
-                setApi={setCarouselApi}
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-              >
-                <CarouselContent className="-ml-2 md:-ml-4 h-full">
-                  {contentBlocks.map((block, index) => (
-                    <CarouselItem key={index} className="pl-2 md:pl-4 basis-full h-full">
-                      <div className="h-full overflow-hidden">
-                        {block}
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
-              
-              {/* Carousel Indicators */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-                {contentBlocks.map((_, index) => (
-                  <button
-                    key={index}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentSlide === index 
-                        ? 'bg-skoolife-primary w-6' 
-                        : 'bg-gray-300 dark:bg-gray-600'
-                    }`}
-                    onClick={() => {
-                      setCurrentSlide(index);
-                      carouselApi?.scrollTo(index);
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 h-full overflow-hidden">
-              {contentBlocks.map((block, index) => (
-                <div key={index} className="h-full overflow-hidden">
-                  {block}
-                </div>
-              ))}
-            </div>
-          )}
+        {/* Real-time sync indicator */}
+        <div className="flex items-center justify-center gap-2">
+          <div className="w-2 h-2 bg-skoolife-primary rounded-full animate-pulse"></div>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Synchronisé en temps réel
+          </span>
         </div>
       </div>
+
+      {/* Enhanced Responsive Quick Stats Grid with SKOOLIFE colors */}
+      <div className={`grid ${gridConfig.statsGrid} gap-3 sm:gap-4 mb-4 sm:mb-6`}>
+        <Card 
+          className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
+          onClick={() => onNavigate?.('finances')}
+        >
+          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+            <div className="flex items-center justify-center mb-2 sm:mb-3">
+              <TrendingUp className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 ${currentBalance >= 0 ? "text-skoolife-primary" : "text-skoolife-secondary"}`} />
+            </div>
+            <div className={`text-base sm:text-lg lg:text-2xl font-bold mb-1 sm:mb-2 ${
+              currentBalance >= 0 ? "text-skoolife-primary dark:text-yellow-400" : "text-skoolife-secondary dark:text-orange-400"
+            }`}>
+              €{currentBalance.toFixed(0)}
+            </div>
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+              Solde Actuel
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
+          onClick={() => onNavigate?.('todo')}
+        >
+          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+            <div className="flex items-center justify-center mb-2 sm:mb-3">
+              <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-primary" />
+            </div>
+            <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-primary dark:text-yellow-400 mb-1 sm:mb-2">
+              {pendingTasks}
+            </div>
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+              Tâches
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-skoolife-light dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
+          onClick={() => onNavigate?.('planning')}
+        >
+          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+            <div className="flex items-center justify-center mb-2 sm:mb-3">
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-primary" />
+            </div>
+            <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-primary dark:text-yellow-400 mb-1 sm:mb-2">
+              {todaysEvents.length}
+            </div>
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+              Aujourd'hui
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-gradient-to-br from-white to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:shadow-xl transition-all duration-300 active:scale-95 cursor-pointer touch-manipulation"
+          onClick={() => onNavigate?.('documents')}
+        >
+          <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+            <div className="flex items-center justify-center mb-2 sm:mb-3">
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-skoolife-secondary" />
+            </div>
+            <div className="text-base sm:text-lg lg:text-2xl font-bold text-skoolife-secondary dark:text-orange-400 mb-1 sm:mb-2">
+              {documents.length}
+            </div>
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+              Documents
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Séparateur visuel */}
+      <div className="my-4 sm:my-6">
+        <Separator className="bg-skoolife-primary/20 dark:bg-gray-700" />
+      </div>
+
+      {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
+      {screenSize === 'mobile' ? (
+        <div className="relative mt-8">
+          <Carousel 
+            className="w-full"
+            setApi={setCarouselApi}
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+          >
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {contentBlocks.map((block, index) => (
+                <CarouselItem key={index} className="pl-2 md:pl-4 basis-full">
+                  <div className="h-full">
+                    {block}
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+          
+          {/* Carousel Indicators - Minimal spacing from bottom navigation */}
+          <div className="flex justify-center mt-2 gap-2 mb-8">
+            {contentBlocks.map((_, index) => (
+              <button
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  currentSlide === index 
+                    ? 'bg-skoolife-primary w-6' 
+                    : 'bg-gray-300 dark:bg-gray-600'
+                }`}
+                onClick={() => {
+                  setCurrentSlide(index);
+                  carouselApi?.scrollTo(index);
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-4">
+          {contentBlocks}
+        </div>
+      )}
     </div>
   );
 };
