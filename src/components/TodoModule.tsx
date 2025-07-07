@@ -55,9 +55,9 @@ function TodoModule() {
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
 
   const colorOptions = [
-    "bg-skoolife-primary", "bg-skoolife-secondary", "bg-skoolife-light", "bg-red-500", 
-    "bg-blue-500", "bg-green-500", "bg-purple-500", "bg-pink-500",
-    "bg-indigo-500", "bg-teal-500"
+    "bg-skoolife-primary", "bg-skoolife-secondary", "bg-skoolife-light", "bg-yellow-400",
+    "bg-orange-400", "bg-red-500", "bg-pink-500", "bg-purple-500",
+    "bg-blue-500", "bg-green-500", "bg-teal-500", "bg-gray-500"
   ];
 
   useEffect(() => {
