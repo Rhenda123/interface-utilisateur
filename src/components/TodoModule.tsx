@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -456,7 +457,7 @@ function TodoModule() {
                     
                     <div className="flex flex-wrap items-center gap-2 mb-3">
                       {taskCategory && (
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${taskCategory.color} text-white border-none`}>
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${taskCategory.color} text-white border border-white/20`}>
                           {taskCategory.name}
                         </span>
                       )}
@@ -465,7 +466,7 @@ function TodoModule() {
                         {task.priority}
                       </span>
                       {task.deadline && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
                           {task.deadline}
                         </span>
                       )}
