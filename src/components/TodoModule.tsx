@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -165,10 +166,12 @@ function TodoModule() {
     return true;
   });
 
+  // Couleurs Skoolife pour les priorités
   const priorityColor = {
     Haute: "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-700",
-    Moyenne: "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-700",
-    Faible: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-700",
+    Moyenne: "bg-skoolife-primary text-gray-900 border border-yellow-300",
+    Faible: "bg-skoolife-light dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-yellow-200 dark:border-gray-600",
+    Élevée: "bg-skoolife-secondary text-gray-900 border border-orange-300"
   };
 
   const getPriorityIcon = (priority: string) => {
