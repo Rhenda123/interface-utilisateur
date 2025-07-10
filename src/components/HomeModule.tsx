@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, TrendingUp, TrendingDown, AlertCircle, CheckCircle, ArrowRight, Target, Wallet, FileText } from "lucide-react";
+import PomodoroTimer from "./PomodoroTimer";
 
 interface HomeModuleProps {
   onNavigate?: (view: string) => void;
@@ -822,8 +823,8 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
             </CarouselContent>
           </Carousel>
           
-          {/* Carousel Indicators - Minimal spacing from bottom navigation */}
-          <div className="flex justify-center mt-2 gap-2 mb-8">
+          {/* Carousel Indicators */}
+          <div className="flex justify-center mt-2 gap-2 mb-4">
             {contentBlocks.map((_, index) => (
               <button
                 key={index}
@@ -839,10 +840,23 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
               />
             ))}
           </div>
+
+          {/* Pomodoro Timer - Mobile */}
+          <div className="mt-6 mb-8">
+            <PomodoroTimer />
+          </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-4">
-          {contentBlocks}
+        <div className="space-y-6">
+          {/* Content Grid - Desktop/Tablet */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {contentBlocks}
+          </div>
+          
+          {/* Pomodoro Timer - Desktop/Tablet */}
+          <div className="max-w-md mx-auto">
+            <PomodoroTimer />
+          </div>
         </div>
       )}
     </div>
