@@ -803,7 +803,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
       {/* Content Grid - Auto-scrolling Carousel on Mobile, Grid on Desktop/Tablet */}
       {screenSize === 'mobile' ? (
-        <div className="relative mt-8">
+        <div className="relative">
           <Carousel 
             className="w-full"
             setApi={setCarouselApi}
@@ -842,7 +842,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           </div>
 
           {/* Pomodoro Timer - Mobile */}
-          <div className="mt-6 mb-8">
+          <div className="mt-4">
             <PomodoroTimer />
           </div>
         </div>
