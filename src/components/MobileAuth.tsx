@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,10 +25,7 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (username === "r.henda" && password === "123456") {
-      toast({
-        title: "Connexion réussie",
-        description: "Bienvenue dans SKOOLIFE !",
-      });
+      // Suppression du toast de succès
       setTimeout(() => {
         onLogin();
       }, 500);
