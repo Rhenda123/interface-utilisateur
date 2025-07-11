@@ -174,8 +174,8 @@ export default function Index() {
         </div>
       )}
 
-      {/* Main Content - Optimized padding for bottom nav */}
-      <main className={`max-w-7xl mx-auto section-padding py-4 pb-24 lg:pb-8 lg:py-8 pt-16 lg:pt-4 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
+      {/* Main Content - Reduced padding bottom to not push navigation down */}
+      <main className={`max-w-7xl mx-auto section-padding py-4 pb-20 lg:pb-8 lg:py-8 pt-16 lg:pt-4 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
         <div className="w-full">
           <div className="transition-all duration-300 ease-in-out">
             {view === "home" && <HomeModule onNavigate={handleNavigation} />}
@@ -187,9 +187,9 @@ export default function Index() {
         </div>
       </main>
 
-      {/* Fixed Bottom Navigation - Repositioned properly */}
+      {/* Fixed Bottom Navigation - Always visible at bottom */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-skoolife-primary/20 dark:border-gray-700/50 shadow-2xl">
-        <div className="flex items-center justify-around px-1 py-3 pb-6">
+        <div className="flex items-center justify-around px-1 py-2 pb-4">
           {navigationItems.map((item) => {
             const IconComponent = item.icon;
             return (
