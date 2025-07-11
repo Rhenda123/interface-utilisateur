@@ -72,7 +72,8 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Votre identifiant"
-                className="pl-10 h-12 border-gray-200 focus:border-skoolife-primary"
+                className="pl-10 h-12 border-gray-200 focus:border-skoolife-primary text-base"
+                style={{ fontSize: '16px' }}
                 required
               />
             </div>
@@ -91,7 +92,8 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Votre mot de passe"
-                className="pl-10 pr-10 h-12 border-gray-200 focus:border-skoolife-primary"
+                className="pl-10 pr-10 h-12 border-gray-200 focus:border-skoolife-primary text-base"
+                style={{ fontSize: '16px' }}
                 required
               />
               <button
