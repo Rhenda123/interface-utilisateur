@@ -1,16 +1,18 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, User, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import MobileSignup from "./MobileSignup";
 
 interface MobileAuthProps {
   onLogin: () => void;
 }
 
 export default function MobileAuth({ onLogin }: MobileAuthProps) {
-  const [isLogin, setIsLogin] = useState(true);
+  const [currentView, setCurrentView] = useState<'login' | 'signup'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +27,6 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (username === "r.henda" && password === "123456") {
-      // Suppression du toast de succès
       setTimeout(() => {
         onLogin();
       }, 500);
@@ -40,6 +41,16 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
     setIsLoading(false);
   };
 
+  // Show signup page if currentView is 'signup'
+  if (currentView === 'signup') {
+    return (
+      <MobileSignup 
+        onBack={() => setCurrentView('login')} 
+        onLogin={onLogin}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-skoolife-light to-skoolife-white flex flex-col justify-center section-padding">
       {/* Header */}
@@ -48,7 +59,7 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
           SKOOLIFE
         </h1>
         <p className="text-gray-600 text-lg">
-          {isLogin ? "Connectez-vous à votre compte" : "Créez votre compte"}
+          Connectez-vous à votre compte
         </p>
       </div>
 
@@ -114,7 +125,7 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
                 Connexion...
               </div>
             ) : (
-              isLogin ? "Se connecter" : "S'inscrire"
+              "Se connecter"
             )}
           </Button>
         </form>
@@ -122,13 +133,13 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
         {/* Toggle Login/Register */}
         <div className="text-center pt-4 border-t border-gray-100">
           <p className="text-gray-600 mb-2">
-            {isLogin ? "Pas encore de compte ?" : "Déjà un compte ?"}
+            Pas encore de compte ?
           </p>
           <button
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => setCurrentView('signup')}
             className="text-skoolife-primary font-semibold hover:underline"
           >
-            {isLogin ? "Créer un compte" : "Se connecter"}
+            Créer un compte
           </button>
         </div>
       </div>
