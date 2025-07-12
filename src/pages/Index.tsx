@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
@@ -188,23 +187,23 @@ export default function Index() {
         </div>
       </main>
 
-      {/* Fixed Bottom Navigation - Toujours visible, complètement indépendante */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[60] bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-skoolife-primary/20 dark:border-gray-700/50 shadow-2xl safe-area-inset-bottom">
-        <div className="flex items-center justify-around px-4 py-4 pb-safe-bottom">
+      {/* Fixed Bottom Navigation - Exactement comme la capture d'écran */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[60] bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-skoolife-primary/20 dark:border-gray-700/50 shadow-2xl">
+        <div className="flex items-center justify-around px-2 py-2 pb-safe-bottom">
           {navigationItems.map((item) => {
             const IconComponent = item.icon;
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavigation(item.id)}
-                className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 touch-manipulation active:scale-95 min-w-[60px] ${
+                className={`flex flex-col items-center justify-center p-2 transition-all duration-200 touch-manipulation active:scale-95 min-w-[64px] ${
                   view === item.id
-                    ? "gradient-skoolife text-gray-900 shadow-lg scale-105"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                    ? "text-skoolife-primary"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
                 <IconComponent className="h-6 w-6 mb-1" />
-                <span className="text-xs font-medium">{item.label}</span>
+                <span className="text-xs font-medium leading-none">{item.label}</span>
               </button>
             );
           })}
