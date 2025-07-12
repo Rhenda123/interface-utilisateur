@@ -52,7 +52,7 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-skoolife-light to-skoolife-white flex flex-col justify-center section-padding">
+    <div className="min-h-screen bg-gradient-to-br from-skoolife-light to-skoolife-white flex flex-col justify-center section-padding pt-safe-top">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold gradient-skoolife bg-clip-text text-transparent mb-2">
@@ -145,7 +145,7 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
       </div>
 
       {/* Footer */}
-      <div className="text-center mt-8 text-gray-500 text-sm">
+      <div className="text-center mt-8 text-gray-500 text-sm pb-safe-bottom">
         <p>© 2025 SKOOLIFE. Tous droits réservés.</p>
       </div>
     </div>

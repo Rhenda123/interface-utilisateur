@@ -81,9 +81,9 @@ export default function MobileSignup({ onBack, onLogin }: MobileSignupProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-skoolife-light to-skoolife-white flex flex-col section-padding">
+    <div className="min-h-screen bg-gradient-to-br from-skoolife-light to-skoolife-white flex flex-col section-padding pt-safe-top">
       {/* Header */}
-      <div className="text-center mb-6 pt-safe-top">
+      <div className="text-center mb-6">
         <h1 className="text-3xl font-bold gradient-skoolife bg-clip-text text-transparent mb-2">
           SKOOLIFE+
         </h1>
