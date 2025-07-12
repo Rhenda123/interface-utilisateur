@@ -81,9 +81,9 @@ export default function MobileSignup({ onBack, onLogin }: MobileSignupProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-skoolife-light to-skoolife-white flex flex-col section-padding pt-safe-top">
-      {/* Header */}
-      <div className="text-center mb-6 mt-4">
+    <div className="min-h-screen bg-gradient-to-br from-skoolife-light to-skoolife-white flex flex-col section-padding">
+      {/* Header avec espace pour Dynamic Island */}
+      <div className="text-center mb-6 pt-16 mt-4">
         <h1 className="text-3xl font-bold gradient-skoolife bg-clip-text text-transparent mb-2">
           SKOOLIFE+
         </h1>
@@ -262,8 +262,8 @@ export default function MobileSignup({ onBack, onLogin }: MobileSignupProps) {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="text-center mt-6 text-gray-500 text-xs pb-safe-bottom">
+      {/* Footer avec espace pour la zone de sécurité en bas */}
+      <div className="text-center mt-6 text-gray-500 text-xs pb-8">
         <p>© 2025 SKOOLIFE. Tous droits réservés.</p>
       </div>
     </div>
