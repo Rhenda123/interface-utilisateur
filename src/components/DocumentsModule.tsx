@@ -1,9 +1,13 @@
-import React, { useState, useRef } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload, File, SortAsc, SortDesc, Trash2, Search, Filter, Grid3X3, List, Plus, Eye, FolderOpen } from 'lucide-react';
+import { Upload, File, SortAsc, SortDesc, Trash2, Search, Grid3X3, List, Plus, Eye, FolderOpen } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
+import AuthModule from './AuthModule';
 
 interface Document {
   id: string;
@@ -11,8 +15,8 @@ interface Document {
   size: number;
   type: string;
   category: string;
-  uploadDate: Date;
-  file: File;
+  created_at: string;
+  file_path: string;
 }
 
 const CATEGORIES = [
@@ -24,63 +28,119 @@ const CATEGORIES = [
 ];
 
 const DocumentsModule = () => {
-  const [documents, setDocuments] = useState<Document[]>(() => {
-    const saved = localStorage.getItem('skoolife_documents');
-    return saved ? JSON.parse(saved).map((doc: any) => ({
-      ...doc,
-      uploadDate: new Date(doc.uploadDate),
-      category: doc.category || 'Autre'
-    })) : [];
-  });
-  
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'date' | 'size' | 'type' | 'category'>('date');
+  const [sortBy, setSortBy] = useState<'name' | 'created_at' | 'size' | 'type' | 'category'>('created_at');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [categoryFilter, setCategoryFilter] = useState<string>('Toutes');
   const [selectedCategory, setSelectedCategory] = useState<string>('École');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [mobileView, setMobileView] = useState<'documents' | 'upload'>('documents');
+  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
-  const saveDocuments = (docs: Document[]) => {
-    const docsToSave = docs.map(doc => ({
-      id: doc.id,
-      name: doc.name,
-      size: doc.size,
-      type: doc.type,
-      category: doc.category,
-      uploadDate: doc.uploadDate.toISOString()
-    }));
-    localStorage.setItem('skoolife_documents', JSON.stringify(docsToSave));
-    setDocuments(docs);
+  useEffect(() => {
+    checkUser();
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchDocuments();
+      } else {
+        setDocuments([]);
+      }
+    });
+  }, []);
+
+  const checkUser = async () => {
+    setLoading(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    setUser(session?.user ?? null);
+    if (session?.user) {
+      await fetchDocuments();
+    }
+    setLoading(false);
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const fetchDocuments = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setDocuments(data || []);
+    } catch (error: any) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les documents: " + error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (!files) return;
+    if (!files || !user) return;
 
-    const newDocuments: Document[] = Array.from(files).map(file => ({
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      name: file.name,
-      size: file.size,
-      type: file.type || 'unknown',
-      category: selectedCategory,
-      uploadDate: new Date(),
-      file
-    }));
+    setUploading(true);
 
-    saveDocuments([...documents, ...newDocuments]);
-    
-    // Reset file input and switch to documents view on mobile
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-    if (window.innerWidth < 640) {
-      setMobileView('documents');
+    try {
+      for (const file of Array.from(files)) {
+        // Upload file to Supabase Storage
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('documents')
+          .upload(fileName, file);
+
+        if (uploadError) throw uploadError;
+
+        // Save document metadata to database
+        const { error: dbError } = await supabase
+          .from('documents')
+          .insert({
+            user_id: user.id,
+            name: file.name,
+            size: file.size,
+            type: file.type || 'unknown',
+            category: selectedCategory,
+            file_path: fileName
+          });
+
+        if (dbError) throw dbError;
+      }
+
+      toast({
+        title: "Succès",
+        description: `${files.length} document(s) téléchargé(s) avec succès`
+      });
+
+      await fetchDocuments();
+      
+      // Reset file input and switch to documents view on mobile
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      if (window.innerWidth < 640) {
+        setMobileView('documents');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erreur",
+        description: "Erreur lors du téléchargement: " + error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleSort = (field: 'name' | 'date' | 'size' | 'type' | 'category') => {
+  const handleSort = (field: 'name' | 'created_at' | 'size' | 'type' | 'category') => {
     if (sortBy === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -89,20 +149,61 @@ const DocumentsModule = () => {
     }
   };
 
-  const deleteDocument = (id: string) => {
-    const updatedDocs = documents.filter(doc => doc.id !== id);
-    saveDocuments(updatedDocs);
+  const deleteDocument = async (doc: Document) => {
+    try {
+      // Delete file from storage
+      const { error: storageError } = await supabase.storage
+        .from('documents')
+        .remove([doc.file_path]);
+
+      if (storageError) throw storageError;
+
+      // Delete from database
+      const { error: dbError } = await supabase
+        .from('documents')
+        .delete()
+        .eq('id', doc.id);
+
+      if (dbError) throw dbError;
+
+      toast({
+        title: "Succès",
+        description: "Document supprimé avec succès"
+      });
+
+      await fetchDocuments();
+    } catch (error: any) {
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la suppression: " + error.message,
+        variant: "destructive"
+      });
+    }
   };
 
-  const downloadDocument = (doc: Document) => {
-    const url = URL.createObjectURL(doc.file);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = doc.name;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const downloadDocument = async (doc: Document) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('documents')
+        .download(doc.file_path);
+
+      if (error) throw error;
+
+      const url = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = doc.name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error: any) {
+      toast({
+        title: "Erreur",
+        description: "Erreur lors du téléchargement: " + error.message,
+        variant: "destructive"
+      });
+    }
   };
 
   const formatFileSize = (bytes: number) => {
@@ -150,8 +251,8 @@ const DocumentsModule = () => {
         case 'name':
           comparison = a.name.localeCompare(b.name);
           break;
-        case 'date':
-          comparison = a.uploadDate.getTime() - b.uploadDate.getTime();
+        case 'created_at':
+          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
           break;
         case 'size':
           comparison = a.size - b.size;
@@ -172,6 +273,21 @@ const DocumentsModule = () => {
     return sortOrder === 'asc' ? <SortAsc className="h-3 w-3 sm:h-4 sm:w-4" /> : <SortDesc className="h-3 w-3 sm:h-4 sm:w-4" />;
   };
 
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto p-4 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+          <p>Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <AuthModule onAuthChange={() => checkUser()} />;
+  }
+
   // Mobile navigation items
   const mobileNavItems = [
     { id: 'documents', label: 'Documents', icon: FolderOpen },
@@ -187,6 +303,17 @@ const DocumentsModule = () => {
             <div className="flex items-center justify-between">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Mes Documents</h2>
               <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    setUser(null);
+                  }}
+                  className="text-xs"
+                >
+                  Déconnexion
+                </Button>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {filteredAndSortedDocuments.length} document{filteredAndSortedDocuments.length !== 1 ? 's' : ''}
                 </span>
@@ -263,9 +390,10 @@ const DocumentsModule = () => {
                 
                 <Button
                   onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
                   className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105 text-sm sm:text-base"
                 >
-                  Choisir des fichiers
+                  {uploading ? 'Téléchargement...' : 'Choisir des fichiers'}
                 </Button>
                 <input
                   ref={fileInputRef}
@@ -323,10 +451,10 @@ const DocumentsModule = () => {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => handleSort('date')}
+                    onClick={() => handleSort('created_at')}
                     className="border-yellow-200 dark:border-gray-600 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors duration-300 text-xs sm:text-sm h-8 sm:h-9"
                   >
-                    Date {getSortIcon('date')}
+                    Date {getSortIcon('created_at')}
                   </Button>
                   <Button
                     variant="outline"
@@ -373,7 +501,7 @@ const DocumentsModule = () => {
                       </div>
                       <div className="text-center text-xs text-gray-500 dark:text-gray-400 mb-3">
                         <div>{formatFileSize(doc.size)}</div>
-                        <div>{doc.uploadDate.toLocaleDateString('fr-FR')}</div>
+                        <div>{new Date(doc.created_at).toLocaleDateString('fr-FR')}</div>
                       </div>
                       <div className="flex justify-center">
                         <Button
@@ -381,7 +509,7 @@ const DocumentsModule = () => {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation();
-                            deleteDocument(doc.id);
+                            deleteDocument(doc);
                           }}
                           className="border-red-200 text-red-600 hover:bg-red-50 dark:border-red-600 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-300 opacity-0 group-hover:opacity-100"
                         >
@@ -408,7 +536,7 @@ const DocumentsModule = () => {
                               {doc.category}
                             </span>
                             <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                              {formatFileSize(doc.size)} • {doc.uploadDate.toLocaleDateString('fr-FR')}
+                              {formatFileSize(doc.size)} • {new Date(doc.created_at).toLocaleDateString('fr-FR')}
                             </p>
                           </div>
                         </div>
@@ -426,7 +554,7 @@ const DocumentsModule = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => deleteDocument(doc.id)}
+                          onClick={() => deleteDocument(doc)}
                           className="border-red-200 text-red-600 hover:bg-red-50 dark:border-red-600 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-300 h-8 sm:h-9 w-8 sm:w-9 p-0"
                         >
                           <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
