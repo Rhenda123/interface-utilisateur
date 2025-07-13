@@ -1,99 +1,213 @@
-import React, { useState, useEffect } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import React, { useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
+import UserAccountMenu from "@/components/UserAccountMenu";
+import HomeModule from "@/components/HomeModule";
+import TodoModule from "@/components/TodoModule";
+import ScheduleModule from "@/components/ScheduleModule";
+import DocumentsModule from "@/components/DocumentsModule";
+import FinanceModule from "@/components/FinanceModule";
+import { Menu, X, Home, User, Settings, Bell, LogOut, DollarSign, CheckSquare, Calendar, FileText } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Switch } from "@/components/ui/switch";
 
-const Index = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-      }
-    );
+export default function Index() {
+  const [view, setView] = useState("home");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/auth');
+  const handleNavigation = (newView: string) => {
+    setView(newView);
+    setMobileMenuOpen(false); // Close mobile menu when navigating
   };
 
-  // If not authenticated, redirect to auth page
-  useEffect(() => {
-    if (!session && !user) {
-      navigate('/auth');
-    }
-  }, [session, user, navigate]);
+  const navigationItems = [
+    { id: "home", label: "Home", icon: Home },
+    { id: "finances", label: "Finances", icon: DollarSign },
+    { id: "todo", label: "To-Do", icon: CheckSquare },
+    { id: "planning", label: "Planning", icon: Calendar },
+    { id: "documents", label: "Documents", icon: FileText }
+  ];
 
-  // Don't render anything if not authenticated
-  if (!session || !user) {
-    return null;
-  }
+  // User data for mobile menu
+  const user = {
+    name: "Ridouane Henda",
+    email: "r.henda@icloud.com",
+    avatar: "",
+    initials: "RH"
+  };
+
+  const handleLogout = () => {
+    console.log("Logout clicked");
+    setMobileMenuOpen(false);
+  };
+
+  const handleSwitchAccounts = () => {
+    console.log("Switch accounts clicked");
+    setMobileMenuOpen(false);
+  };
+
+  const handleAccountSettings = () => {
+    console.log("Account settings clicked");
+    setMobileMenuOpen(false);
+  };
+
+  const handleNotificationToggle = () => {
+    console.log("Notification toggle clicked");
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-skoolife-light via-white to-skoolife-light">
-      {/* Header with sign out option */}
-      <div className="flex justify-between items-center p-4 bg-white/80 backdrop-blur-sm border-b border-skoolife-primary/10">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-skoolife-primary rounded-lg flex items-center justify-center">
-            <span className="text-sm font-bold text-gray-800">S</span>
-          </div>
-          <span className="font-semibold text-gray-800">Skoolife</span>
-        </div>
-        <button
-          onClick={handleSignOut}
-          className="text-sm text-gray-600 hover:text-skoolife-primary transition-colors"
-        >
-          Déconnexion
-        </button>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-skoolife-light to-skoolife-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+      {/* Desktop-Only Header - Hidden on tablet and mobile */}
+      <header className="hidden lg:block sticky top-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-skoolife-primary/20 dark:border-gray-700/50 shadow-sm lg:shadow-lg">
+        <div className="max-w-7xl mx-auto section-padding">
+          <div className="flex items-center justify-between h-16 lg:h-20">
+            {/* Left: Brand - Mobile optimized */}
+            <h1 className="text-responsive-2xl font-bold gradient-skoolife bg-clip-text text-transparent">
+              SKOOLIFE
+            </h1>
+            
+            {/* Desktop Navigation - Hidden on mobile */}
+            <nav className="hidden lg:flex flex-1 justify-center">
+              <div className="inline-flex bg-white dark:bg-gray-800 rounded-xl lg:rounded-2xl p-1 shadow-lg border border-skoolife-primary dark:border-gray-700 gap-1">
+                {navigationItems.map((item) => (
+                  <button 
+                    key={item.id}
+                    onClick={() => setView(item.id)} 
+                    className={`btn-responsive font-medium transition-all duration-200 whitespace-nowrap hover:shadow-md ${
+                      view === item.id 
+                        ? "gradient-skoolife text-gray-900 shadow-md transform scale-105" 
+                        : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-skoolife-light dark:hover:bg-gray-700 hover:shadow-sm"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </nav>
 
-      {/* Main content */}
-      <main className="pb-20">
-        <section className="section-padding">
-          <div className="container">
-            <Card className="card-responsive">
-              <CardHeader>
-                <CardTitle>Welcome to Skoolife</CardTitle>
-                <CardDescription>
-                  Explore the features and start managing your tasks.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  This is a basic index page. You can add more content here.
-                </p>
-              </CardContent>
-            </Card>
+            {/* Right: Desktop User Controls */}
+            <div className="hidden lg:flex items-center gap-responsive">
+              <ThemeToggle />
+              <UserAccountMenu />
+            </div>
           </div>
-        </section>
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay - User Account Section */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-fade-in">
+          <div className="pt-20 section-padding space-y-4 sm:space-y-6 h-full overflow-y-auto">
+            {/* User Profile Section */}
+            <div className="flex items-center gap-responsive pb-4 sm:pb-6 border-b border-skoolife-primary/20 dark:border-gray-700">
+              <Avatar className="h-12 w-12 sm:h-16 sm:w-16 border-2 border-skoolife-primary/30">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="gradient-skoolife text-gray-900 font-semibold text-lg sm:text-xl">
+                  {user.initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-responsive-lg font-semibold text-gray-900 dark:text-white truncate">
+                  {user.name}
+                </p>
+                <p className="text-responsive-sm text-gray-500 dark:text-gray-400 truncate">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+
+            {/* Account Section */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">
+                Account
+              </p>
+              <div className="space-y-1">
+                <button 
+                  className="flex w-full items-center gap-responsive py-3 sm:py-4 px-3 sm:px-4 hover:bg-skoolife-light dark:hover:bg-gray-800 rounded-xl transition-all duration-200 active:scale-98 touch-manipulation"
+                  onClick={handleSwitchAccounts}
+                >
+                  <User className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600 dark:text-gray-300" />
+                  <span className="text-responsive-base font-medium">Switch accounts</span>
+                </button>
+                <button 
+                  className="flex w-full items-center gap-responsive py-3 sm:py-4 px-3 sm:px-4 hover:bg-skoolife-light dark:hover:bg-gray-800 rounded-xl transition-all duration-200 active:scale-98 touch-manipulation"
+                  onClick={handleAccountSettings}
+                >
+                  <Settings className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600 dark:text-gray-300" />
+                  <span className="text-responsive-base font-medium">Account settings</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Notifications Section */}
+            <div>
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">
+                Notifications
+              </p>
+              <div className="flex items-center justify-between py-3 sm:py-4 px-3 sm:px-4 hover:bg-skoolife-light dark:hover:bg-gray-800 rounded-xl transition-all duration-200">
+                <div className="flex items-center gap-responsive">
+                  <Bell className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600 dark:text-gray-300" />
+                  <span className="text-responsive-base font-medium">Email notifications</span>
+                </div>
+                <Switch 
+                  className="data-[state=checked]:bg-skoolife-primary scale-110 sm:scale-125"
+                  onCheckedChange={handleNotificationToggle}
+                />
+              </div>
+            </div>
+
+            {/* Theme Toggle */}
+            <div className="flex items-center justify-center py-4 sm:py-6 border-t border-gray-200/30 dark:border-gray-700/30">
+              <ThemeToggle />
+            </div>
+
+            {/* Logout Section */}
+            <div className="pt-2 border-t border-gray-200/30 dark:border-gray-700/30">
+              <button 
+                className="flex w-full items-center gap-responsive py-3 sm:py-4 px-3 sm:px-4 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl cursor-pointer text-red-600 dark:text-red-400 transition-all duration-200 active:scale-98 touch-manipulation"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-5 w-5 sm:h-6 sm:w-6" />
+                <span className="text-responsive-base font-semibold">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content - Mobile optimized with proper padding for bottom nav and iPhone 16 safe area */}
+      <main className={`max-w-7xl mx-auto section-padding py-4 pb-32 lg:pb-8 lg:py-8 pt-16 lg:pt-4 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
+        <div className="w-full">
+          <div className="transition-all duration-300 ease-in-out">
+            {view === "home" && <HomeModule onNavigate={handleNavigation} />}
+            {view === "finances" && <FinanceModule />}
+            {view === "todo" && <TodoModule />}
+            {view === "planning" && <ScheduleModule />}
+            {view === "documents" && <DocumentsModule />}
+          </div>
+        </div>
       </main>
 
-      {/* Bottom navigation */}
-      <nav className="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-sm border-t border-skoolife-primary/10 p-4">
-        <div className="container flex justify-around">
-          <Button variant="ghost">Finances</Button>
-          <Button variant="ghost">Tâches</Button>
-          <Button variant="ghost">Documents</Button>
+      {/* Fixed Bottom Navigation - Native mobile app style with icons only - Larger size */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-skoolife-primary/20 dark:border-gray-700/50 shadow-2xl">
+        <div className="flex items-center justify-around px-1 py-4 pb-8">
+          {navigationItems.map((item) => {
+            const IconComponent = item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNavigation(item.id)}
+                className={`flex items-center justify-center p-3 sm:p-3.5 rounded-full transition-all duration-200 touch-manipulation active:scale-95 ${
+                  view === item.id
+                    ? "gradient-skoolife text-gray-900 shadow-lg scale-105"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+              >
+                <IconComponent className="h-6 w-6 sm:h-7 sm:w-7" />
+              </button>
+            );
+          })}
         </div>
       </nav>
     </div>
   );
-};
-
-export default Index;
+}
