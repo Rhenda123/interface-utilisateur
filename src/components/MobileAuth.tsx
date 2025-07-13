@@ -6,13 +6,15 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, User, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import MobileSignup from "./MobileSignup";
+import MobileOfferSelection from "./MobileOfferSelection";
+import MobileCampusSignup from "./MobileCampusSignup";
 
 interface MobileAuthProps {
   onLogin: () => void;
 }
 
 export default function MobileAuth({ onLogin }: MobileAuthProps) {
-  const [currentView, setCurrentView] = useState<'login' | 'signup'>('login');
+  const [currentView, setCurrentView] = useState<'login' | 'offer-selection' | 'signup-plus' | 'signup-campus'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -41,12 +43,41 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
     setIsLoading(false);
   };
 
-  // Show signup page if currentView is 'signup'
-  if (currentView === 'signup') {
+  const handleOfferSelection = (offer: 'plus' | 'campus') => {
+    if (offer === 'plus') {
+      setCurrentView('signup-plus');
+    } else {
+      setCurrentView('signup-campus');
+    }
+  };
+
+  // Show offer selection page
+  if (currentView === 'offer-selection') {
+    return (
+      <MobileOfferSelection 
+        onSelectOffer={handleOfferSelection}
+        onBack={() => setCurrentView('login')} 
+      />
+    );
+  }
+
+  // Show Skoolife+ signup page
+  if (currentView === 'signup-plus') {
     return (
       <MobileSignup 
-        onBack={() => setCurrentView('login')} 
+        onBack={() => setCurrentView('offer-selection')} 
         onLogin={onLogin}
+      />
+    );
+  }
+
+  // Show Campus signup page
+  if (currentView === 'signup-campus') {
+    return (
+      <MobileCampusSignup 
+        onBack={() => setCurrentView('login')}
+        onLogin={onLogin}
+        onSwitchToPlus={() => setCurrentView('signup-plus')}
       />
     );
   }
@@ -136,7 +167,7 @@ export default function MobileAuth({ onLogin }: MobileAuthProps) {
             Pas encore de compte ?
           </p>
           <button
-            onClick={() => setCurrentView('signup')}
+            onClick={() => setCurrentView('offer-selection')}
             className="text-skoolife-primary font-semibold hover:underline"
           >
             Créer un compte
