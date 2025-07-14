@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,8 +12,8 @@ interface AuthPageProps {
 
 const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('r.henda@icloud.com');
+  const [password, setPassword] = useState('123456');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
