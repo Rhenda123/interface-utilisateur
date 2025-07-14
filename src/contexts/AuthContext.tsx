@@ -41,7 +41,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
       
       if (!error && data) {
-        setProfile(data);
+        // Type casting pour s'assurer que les valeurs correspondent aux types attendus
+        const profileData: Profile = {
+          ...data,
+          plan: (data.plan as 'free' | 'monthly' | 'yearly') || 'free',
+          subscription_status: (data.subscription_status as 'active' | 'inactive' | 'trial') || 'inactive'
+        };
+        setProfile(profileData);
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
