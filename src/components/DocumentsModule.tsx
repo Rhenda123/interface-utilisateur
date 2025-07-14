@@ -1,13 +1,11 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload, File, SortAsc, SortDesc, Trash2, Search, Grid3X3, List, Plus, Eye, FolderOpen } from 'lucide-react';
+import { Upload, File, SortAsc, SortDesc, Trash2, Search, Grid3X3, List, Plus, Eye, FolderOpen, LogOut } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import AuthModule from './AuthModule';
 
 interface Document {
   id: string;
@@ -21,7 +19,7 @@ interface Document {
 
 const CATEGORIES = [
   'École',
-  'Personnel',
+  'Personnel', 
   'Administratif',
   'Projet',
   'Autre'
@@ -29,7 +27,6 @@ const CATEGORIES = [
 
 const DocumentsModule = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'created_at' | 'size' | 'type' | 'category'>('created_at');
@@ -43,26 +40,8 @@ const DocumentsModule = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    checkUser();
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchDocuments();
-      } else {
-        setDocuments([]);
-      }
-    });
+    fetchDocuments();
   }, []);
-
-  const checkUser = async () => {
-    setLoading(true);
-    const { data: { session } } = await supabase.auth.getSession();
-    setUser(session?.user ?? null);
-    if (session?.user) {
-      await fetchDocuments();
-    }
-    setLoading(false);
-  };
 
   const fetchDocuments = async () => {
     try {
@@ -79,16 +58,21 @@ const DocumentsModule = () => {
         description: "Impossible de charger les documents: " + error.message,
         variant: "destructive"
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (!files || !user) return;
+    if (!files) return;
 
     setUploading(true);
 
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Utilisateur non connecté');
+
       for (const file of Array.from(files)) {
         // Upload file to Supabase Storage
         const fileExt = file.name.split('.').pop();
@@ -206,6 +190,14 @@ const DocumentsModule = () => {
     }
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Déconnexion",
+      description: "Vous avez été déconnecté."
+    });
+  };
+
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -284,10 +276,6 @@ const DocumentsModule = () => {
     );
   }
 
-  if (!user) {
-    return <AuthModule onAuthChange={() => checkUser()} />;
-  }
-
   // Mobile navigation items
   const mobileNavItems = [
     { id: 'documents', label: 'Documents', icon: FolderOpen },
@@ -306,12 +294,10 @@ const DocumentsModule = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={async () => {
-                    await supabase.auth.signOut();
-                    setUser(null);
-                  }}
-                  className="text-xs"
+                  onClick={handleLogout}
+                  className="text-xs text-red-600 dark:text-red-400 border-red-200 dark:border-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
                 >
+                  <LogOut className="h-3 w-3 mr-1" />
                   Déconnexion
                 </Button>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
