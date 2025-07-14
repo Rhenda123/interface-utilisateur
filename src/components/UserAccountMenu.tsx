@@ -1,5 +1,6 @@
 
 import React from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,19 +11,29 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { LogOut, User, Settings, Bell } from "lucide-react";
+import { LogOut, User, Settings, Bell, Crown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const UserAccountMenu = () => {
-  const user = {
-    name: "Ridouane Henda",
-    email: "r.henda@icloud.com",
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  if (!user) return null;
+
+  const userDisplayData = {
+    name: user.user_metadata?.first_name && user.user_metadata?.last_name 
+      ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+      : user.email?.split('@')[0] || "Utilisateur",
+    email: user.email || "",
     avatar: "",
-    initials: "RH"
+    initials: user.user_metadata?.first_name && user.user_metadata?.last_name
+      ? `${user.user_metadata.first_name[0]}${user.user_metadata.last_name[0]}`
+      : user.email?.[0]?.toUpperCase() || "U"
   };
 
-  const handleLogout = () => {
-    console.log("Logout clicked");
-    // Add your logout logic here
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/auth");
   };
 
   const handleSwitchAccounts = () => {
@@ -40,14 +51,26 @@ const UserAccountMenu = () => {
     // Add notification toggle logic here
   };
 
+  const getPlanDisplay = () => {
+    if (!profile) return "Free";
+    switch (profile.plan) {
+      case 'monthly':
+        return "SKOOLIFE+ Mensuel";
+      case 'yearly':
+        return "SKOOLIFE+ Annuel";
+      default:
+        return "Free";
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10 border-2 border-yellow-200 hover:border-yellow-300 transition-colors">
-            <AvatarImage src={user.avatar} alt={user.name} />
+            <AvatarImage src={userDisplayData.avatar} alt={userDisplayData.name} />
             <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 font-semibold">
-              {user.initials}
+              {userDisplayData.initials}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -61,18 +84,26 @@ const UserAccountMenu = () => {
         {/* User Profile Section */}
         <div className="flex items-center space-x-3 pb-4">
           <Avatar className="h-12 w-12 border-2 border-yellow-200">
-            <AvatarImage src={user.avatar} alt={user.name} />
+            <AvatarImage src={userDisplayData.avatar} alt={userDisplayData.name} />
             <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 font-semibold text-lg">
-              {user.initials}
+              {userDisplayData.initials}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <p className="text-lg font-semibold text-gray-900 dark:text-white truncate">
-              {user.name}
+              {userDisplayData.name}
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-              {user.email}
+              {userDisplayData.email}
             </p>
+            {profile && profile.plan !== 'free' && (
+              <div className="flex items-center gap-1 mt-1">
+                <Crown className="h-3 w-3 text-yellow-500" />
+                <span className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
+                  {getPlanDisplay()}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 

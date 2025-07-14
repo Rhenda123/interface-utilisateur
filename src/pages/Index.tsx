@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAccountMenu from "@/components/UserAccountMenu";
 import HomeModule from "@/components/HomeModule";
@@ -11,8 +13,33 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 
 export default function Index() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [view, setView] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/auth");
+    }
+  }, [user, loading, navigate]);
+
+  // Show loading spinner while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-skoolife-light to-skoolife-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-skoolife-primary mx-auto mb-4"></div>
+          <p className="text-responsive-body text-gray-600 dark:text-gray-300">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authenticated, the useEffect will redirect to /auth
+  if (!user) {
+    return null;
+  }
 
   const handleNavigation = (newView: string) => {
     setView(newView);
@@ -28,11 +55,15 @@ export default function Index() {
   ];
 
   // User data for mobile menu
-  const user = {
-    name: "Ridouane Henda",
-    email: "r.henda@icloud.com",
+  const userDisplayData = {
+    name: user.user_metadata?.first_name && user.user_metadata?.last_name 
+      ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+      : user.email?.split('@')[0] || "Utilisateur",
+    email: user.email || "",
     avatar: "",
-    initials: "RH"
+    initials: user.user_metadata?.first_name && user.user_metadata?.last_name
+      ? `${user.user_metadata.first_name[0]}${user.user_metadata.last_name[0]}`
+      : user.email?.[0]?.toUpperCase() || "U"
   };
 
   const handleLogout = () => {
@@ -100,17 +131,17 @@ export default function Index() {
             {/* User Profile Section */}
             <div className="flex items-center gap-responsive pb-4 sm:pb-6 border-b border-skoolife-primary/20 dark:border-gray-700">
               <Avatar className="h-12 w-12 sm:h-16 sm:w-16 border-2 border-skoolife-primary/30">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={userDisplayData.avatar} alt={userDisplayData.name} />
                 <AvatarFallback className="gradient-skoolife text-gray-900 font-semibold text-lg sm:text-xl">
-                  {user.initials}
+                  {userDisplayData.initials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="text-responsive-lg font-semibold text-gray-900 dark:text-white truncate">
-                  {user.name}
+                  {userDisplayData.name}
                 </p>
                 <p className="text-responsive-sm text-gray-500 dark:text-gray-400 truncate">
-                  {user.email}
+                  {userDisplayData.email}
                 </p>
               </div>
             </div>
