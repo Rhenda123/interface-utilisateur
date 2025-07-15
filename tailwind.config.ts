@@ -71,6 +71,19 @@ export default {
 					white: '#FFFFFF'       // Blanc
 				}
 			},
+			fontFamily: {
+				// Typographie SKOOLIFE
+				'heading': ['Poppins', 'sans-serif'],     // Pour les titres (Bold)
+				'body': ['Inter', 'sans-serif'],          // Pour le texte courant (Regular)
+				'sans': ['Inter', 'sans-serif'],          // Default sans-serif
+			},
+			fontWeight: {
+				// Poids spécifiques SKOOLIFE
+				'heading': '700',  // Bold pour les titres
+				'body': '400',     // Regular pour le texte
+				'medium': '500',   // Medium pour certains éléments
+				'semibold': '600', // Semi-bold pour les sous-titres
+			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
