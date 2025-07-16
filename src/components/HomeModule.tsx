@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, TrendingUp, TrendingDown, AlertCircle, CheckCircle, ArrowRight, Target, Wallet, FileText } from "lucide-react";
-import UserAccountMenu from "@/components/UserAccountMenu";
 
 interface HomeModuleProps {
   onNavigate?: (view: string) => void;
@@ -704,12 +703,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="space-y-2 sm:space-y-3 pt-12 safe-area-top px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden pb-6 h-screen overflow-y-hidden">
-      {/* Mobile User Menu - Top Right Position with Safe Area */}
-      <div className="lg:hidden fixed top-12 safe-area-top right-4 z-50">
-        <UserAccountMenu />
-      </div>
-      
+    <div className="space-y-2 sm:space-y-3 pt-4 px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden pb-6 h-screen overflow-y-hidden">
       <div className="text-center mb-2 sm:mb-3">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-skoolife-primary to-skoolife-secondary bg-clip-text text-transparent mb-1 sm:mb-2">
           Tableau de bord

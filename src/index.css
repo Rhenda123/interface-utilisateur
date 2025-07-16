@@ -170,30 +170,6 @@
     line-height: 1.6;
   }
   
-  /* iPhone Safe Area Support */
-  .safe-area-top {
-    padding-top: max(env(safe-area-inset-top), 1rem);
-  }
-  
-  .safe-area-bottom {
-    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
-  }
-  
-  .safe-area-left {
-    padding-left: max(env(safe-area-inset-left), 1rem);
-  }
-  
-  .safe-area-right {
-    padding-right: max(env(safe-area-inset-right), 1rem);
-  }
-  
-  /* Full safe area insets */
-  .safe-area-all {
-    padding-top: max(env(safe-area-inset-top), 1rem);
-    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
-    padding-left: max(env(safe-area-inset-left), 1rem);
-    padding-right: max(env(safe-area-inset-right), 1rem);
-  }
   /* Classes spécialisées pour Skoolife */
   .skoolife-title {
     @apply font-heading font-heading text-2xl sm:text-3xl lg:text-4xl;
