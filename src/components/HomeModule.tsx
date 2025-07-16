@@ -704,9 +704,9 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   ];
 
   return (
-    <div className="space-y-2 sm:space-y-3 pt-4 px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden pb-6 h-screen overflow-y-hidden">
-      {/* Mobile User Menu - Top Right Position */}
-      <div className="lg:hidden fixed top-4 right-4 z-50">
+    <div className="space-y-2 sm:space-y-3 pt-12 safe-area-top px-3 sm:px-4 lg:px-6 max-w-full overflow-hidden pb-6 h-screen overflow-y-hidden">
+      {/* Mobile User Menu - Top Right Position with Safe Area */}
+      <div className="lg:hidden fixed top-12 safe-area-top right-4 z-50">
         <UserAccountMenu />
       </div>
       
