@@ -205,6 +205,31 @@ export default function Index() {
         </div>
       )}
 
+      {/* Mobile Header with User Menu - Strategic position */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-skoolife-primary/20 dark:border-gray-700/50 shadow-sm">
+        <div className="flex items-center justify-between h-16 section-padding">
+          {/* Left: Brand */}
+          <h1 className="text-responsive-lg font-bold gradient-skoolife bg-clip-text text-transparent">
+            SKOOLIFE
+          </h1>
+          
+          {/* Right: User Menu - Strategic position */}
+          <div className="flex items-center gap-2">
+            <UserAccountMenu />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
+        </div>
+      </header>
+
       {/* Main Content - Mobile optimized with proper padding for bottom nav and iPhone 16 safe area */}
       <main className={`max-w-7xl mx-auto section-padding py-4 pb-32 lg:pb-8 lg:py-8 pt-16 lg:pt-4 transition-all duration-300 ${mobileMenuOpen ? 'lg:block hidden' : ''}`}>
         <div className="w-full">
