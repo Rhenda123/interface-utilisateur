@@ -8,7 +8,8 @@ import TodoModule from "@/components/TodoModule";
 import ScheduleModule from "@/components/ScheduleModule";
 import DocumentsModule from "@/components/DocumentsModule";
 import FinanceModule from "@/components/FinanceModule";
-import { Menu, X, Home, User, Settings, Bell, LogOut, DollarSign, CheckSquare, Calendar, FileText } from "lucide-react";
+import Offers from "./Offers";
+import { Menu, X, Home, User, Settings, Bell, LogOut, DollarSign, CheckSquare, Calendar, FileText, Tag } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 
@@ -51,7 +52,8 @@ export default function Index() {
     { id: "finances", label: "Finances", icon: DollarSign },
     { id: "todo", label: "To-Do", icon: CheckSquare },
     { id: "planning", label: "Planning", icon: Calendar },
-    { id: "documents", label: "Documents", icon: FileText }
+    { id: "documents", label: "Documents", icon: FileText },
+    { id: "offers", label: "Offres", icon: Tag }
   ];
 
   // User data for mobile menu
@@ -214,6 +216,7 @@ export default function Index() {
             {view === "todo" && <TodoModule />}
             {view === "planning" && <ScheduleModule />}
             {view === "documents" && <DocumentsModule />}
+            {view === "offers" && <Offers />}
           </div>
         </div>
       </main>
