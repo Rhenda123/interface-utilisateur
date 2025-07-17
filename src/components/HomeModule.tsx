@@ -482,11 +482,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   // Content blocks for the carousel
   const contentBlocks = [
     // Finance Block
-    <Card key="finance" className="border-skoolife-primary dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 h-full">
+    <Card key="finance" className="border-yellow-200 shadow-lg bg-white hover:shadow-xl transition-all duration-300 h-full">
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <Wallet className="w-5 h-5 text-skoolife-primary" />
+          <h3 className="text-lg sm:text-xl font-semibold text-black flex items-center gap-2">
+            <Wallet className="w-5 h-5 text-yellow-500 rounded-full" />
             Finances
           </h3>
           <Button
