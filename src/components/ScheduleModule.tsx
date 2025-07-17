@@ -143,7 +143,7 @@ function ScheduleModule() {
             onClick={() => setSelectedDay(null)}
             variant="outline"
             size="sm"
-            className="rounded-full shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all"
+            className="rounded-full shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all touch-manipulation active:scale-95"
           >
             <Eye className="w-4 h-4 mr-2" />
             Vue semaine
@@ -153,8 +153,18 @@ function ScheduleModule() {
         {/* Enhanced Add Event Button */}
         <div className="flex gap-3">
           <Button
-            onClick={() => handleTimeSlotClick(dayName, 9)}
-            className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full flex-1 shadow-lg hover:shadow-xl transition-all font-medium py-3"
+            onClick={() => {
+              const dayInfo = days.find(d => d.name === dayName);
+              const dayDate = dayInfo ? dayInfo.fullDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+              setQuickCreateData({
+                day: dayName,
+                startTime: '09:00',
+                endTime: '10:00',
+                date: dayDate
+              });
+              setShowQuickCreateModal(true);
+            }}
+            className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full flex-1 shadow-lg hover:shadow-xl transition-all font-medium py-3 touch-manipulation active:scale-95"
           >
             <Plus className="w-4 h-4 mr-2" />
             Ajouter un événement
@@ -172,7 +182,7 @@ function ScheduleModule() {
               setShowFullCreateModal(true);
             }}
             variant="outline"
-            className="rounded-full px-4 shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all"
+            className="rounded-full px-4 shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all touch-manipulation active:scale-95"
           >
             <Calendar className="w-4 h-4" />
           </Button>
@@ -232,8 +242,18 @@ function ScheduleModule() {
                 <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                 <p className="text-gray-500 dark:text-gray-400 mb-6 text-base">Aucun événement prévu</p>
                 <Button
-                  onClick={() => handleTimeSlotClick(dayName, 9)}
-                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all font-medium py-3 px-6"
+                  onClick={() => {
+                    const dayInfo = days.find(d => d.name === dayName);
+                    const dayDate = dayInfo ? dayInfo.fullDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+                    setQuickCreateData({
+                      day: dayName,
+                      startTime: '09:00',
+                      endTime: '10:00',
+                      date: dayDate
+                    });
+                    setShowQuickCreateModal(true);
+                  }}
+                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all font-medium py-3 px-6 touch-manipulation active:scale-95"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Ajouter un événement
