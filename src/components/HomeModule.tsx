@@ -41,14 +41,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
   const loadAllData = () => {
     try {
-      console.log('Loading all data for Home dashboard synchronization...');
-      
       // Load tasks
       const savedTasks = localStorage.getItem("skoolife_tasks");
       if (savedTasks) {
         const parsedTasks = JSON.parse(savedTasks);
         setTasks(parsedTasks);
-        console.log('Tasks loaded:', parsedTasks.length);
       }
 
       // Load events
@@ -56,7 +53,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       if (savedEvents) {
         const parsedEvents = JSON.parse(savedEvents);
         setEvents(parsedEvents);
-        console.log('Events loaded:', parsedEvents.length);
       }
 
       // Load documents with deduplication
@@ -67,7 +63,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
           index === self.findIndex((d: any) => d.id === doc.id)
         );
         setDocuments(uniqueDocs);
-        console.log('Documents loaded:', uniqueDocs.length);
       }
 
       // Load forum posts
@@ -75,7 +70,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       if (savedPosts) {
         const parsedPosts = JSON.parse(savedPosts);
         setPosts(parsedPosts);
-        console.log('Forum posts loaded:', parsedPosts.length);
       }
 
       // Load financial data
@@ -83,7 +77,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       if (savedFinances) {
         const parsedFinances = JSON.parse(savedFinances);
         setFinances(parsedFinances);
-        console.log('Finances loaded:', parsedFinances);
       }
 
       // Load transactions
@@ -91,7 +84,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       if (savedTransactions) {
         const parsedTransactions = JSON.parse(savedTransactions);
         setTransactions(parsedTransactions);
-        console.log('Transactions loaded:', parsedTransactions.length);
       }
 
       // Load budgets
@@ -99,13 +91,11 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       if (savedBudgets) {
         const parsedBudgets = JSON.parse(savedBudgets);
         setBudgets(parsedBudgets);
-        console.log('Budgets loaded:', parsedBudgets.length);
       }
 
       setLastUpdate(Date.now());
-      console.log('All data loaded successfully for Home dashboard');
     } catch (error) {
-      console.error('Error loading data for Home dashboard:', error);
+      // Silent error handling
     }
   };
 
@@ -116,23 +106,19 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     // Enhanced real-time synchronization with multiple listeners
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key && e.newValue) {
-        console.log('Storage change detected:', e.key);
         try {
           switch (e.key) {
             case "skoolife_finances":
               const newFinances = JSON.parse(e.newValue);
               setFinances(newFinances);
-              console.log('Home: Finances updated from storage');
               break;
             case "skoolife_tasks":
               const newTasks = JSON.parse(e.newValue);
               setTasks(newTasks);
-              console.log('Home: Tasks updated from storage');
               break;
             case "skoolife_events":
               const newEvents = JSON.parse(e.newValue);
               setEvents(newEvents);
-              console.log('Home: Events updated from storage');
               break;
             case "skoolife_documents":
               const parsedDocs = JSON.parse(e.newValue);
@@ -140,52 +126,44 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
                 index === self.findIndex((d: any) => d.id === doc.id)
               );
               setDocuments(uniqueDocs);
-              console.log('Home: Documents updated from storage');
               break;
             case "skoolife_forum_posts":
               const newPosts = JSON.parse(e.newValue);
               setPosts(newPosts);
-              console.log('Home: Forum posts updated from storage');
               break;
             case "skoolife_transactions":
               const newTransactions = JSON.parse(e.newValue);
               setTransactions(newTransactions);
-              console.log('Home: Transactions updated from storage');
               break;
             case "skoolife_budgets":
               const newBudgets = JSON.parse(e.newValue);
               setBudgets(newBudgets);
-              console.log('Home: Budgets updated from storage');
               break;
           }
           setLastUpdate(Date.now());
         } catch (error) {
-          console.error('Error parsing storage data in Home:', error);
+          // Silent error handling
         }
       }
     };
 
     // Custom event listeners for direct module updates
     const handleFinanceUpdate = (e: CustomEvent) => {
-      console.log('Home: Finance update event received');
       setFinances(e.detail);
       setLastUpdate(Date.now());
     };
     
     const handleTaskUpdate = (e: CustomEvent) => {
-      console.log('Home: Task update event received');
       setTasks(e.detail);
       setLastUpdate(Date.now());
     };
 
     const handleEventUpdate = (e: CustomEvent) => {
-      console.log('Home: Event update event received');
       setEvents(e.detail);
       setLastUpdate(Date.now());
     };
 
     const handleDocumentUpdate = (e: CustomEvent) => {
-      console.log('Home: Document update event received');
       const uniqueDocs = e.detail.filter((doc: any, index: number, self: any[]) => 
         index === self.findIndex((d: any) => d.id === doc.id)
       );
@@ -194,7 +172,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     };
     
     const handleDataUpdate = () => {
-      console.log('Home: General data update event received');
       loadAllData();
     };
 
@@ -213,7 +190,6 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
 
     // Focus-based synchronization for when user returns to tab
     const handleFocus = () => {
-      console.log('Home: Window focus detected, refreshing data');
       loadAllData();
     };
     window.addEventListener('focus', handleFocus);
@@ -315,7 +291,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     const expenses = currentMonthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + (t.amount || 0), 0);
     const net = income - expenses;
 
-    console.log('Current month calculation - Income:', income, 'Expenses:', expenses, 'Net:', net);
+    // Month calculation complete
 
     return { income, expenses, net };
   };
@@ -342,10 +318,7 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
     sunday.setDate(monday.getDate() + 6);
     sunday.setHours(23, 59, 59, 999);
     
-    console.log('Week range calculation (using user pseudo-code):');
-    console.log('Today:', today.toDateString());
-    console.log('Monday start:', monday.toDateString(), monday.toISOString());
-    console.log('Sunday end:', sunday.toDateString(), sunday.toISOString());
+    // Week range calculation complete
     
     return { monday, sunday };
   };
@@ -373,19 +346,17 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
   const todaysEvents = events.filter((event: any) => {
     const eventDay = event.day?.toLowerCase?.();
     const todayDay = todayDayName.toLowerCase();
-    console.log('Checking event:', event.name, 'Event day:', eventDay, 'Today:', todayDay);
+    // Event day check
     return eventDay === todayDay;
   });
   
-  console.log('Today is:', todayDayName);
-  console.log('All events:', events);
-  console.log('Today\'s events:', todaysEvents);
+  // Today's events calculated
 
   // Fixed this week events calculation using actual event dates
   const thisWeekEvents = events.filter((event: any) => {
     // Skip events without valid date property
     if (!event.date || typeof event.date !== 'string') {
-      console.log('Event skipped - no valid date:', event);
+      // Event skipped - no valid date
       return false;
     }
 
@@ -395,24 +366,23 @@ const HomeModule = ({ onNavigate }: HomeModuleProps) => {
       
       // Ensure eventDate is valid
       if (isNaN(eventDate.getTime())) {
-        console.log('Event skipped - invalid date format:', event.date, 'for event:', event.name);
+        // Event skipped - invalid date format
         return false;
       }
       
       // Check if the event date is within the current week range
       const isInCurrentWeek = eventDate >= monday && eventDate <= sunday;
       
-      console.log('Event:', event.name, 'Date:', event.date, 'Parsed:', eventDate.toDateString(), 'In current week:', isInCurrentWeek);
+      // Event processed
       
       return isInCurrentWeek;
     } catch (error) {
-      console.log('Error processing event date:', event.name, error);
+      // Error processing event date
       return false;
     }
   });
 
-  console.log('Current week range:', getCurrentWeekRange());
-  console.log('This week events (using actual dates):', thisWeekEvents.length, 'events:', thisWeekEvents.map(e => ({ name: e.name, date: e.date })));
+  // Week events calculated
 
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();

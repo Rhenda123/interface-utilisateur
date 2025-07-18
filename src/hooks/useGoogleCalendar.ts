@@ -79,7 +79,7 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
         description: "Synchronisation activée avec succès"
       });
     } catch (error) {
-      console.error('Google Calendar connection failed:', error);
+      // Google Calendar connection failed
       toast({
         title: "Erreur de connexion",
         description: error instanceof Error ? error.message : "Impossible de se connecter à Google Calendar",
@@ -139,7 +139,7 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
 
       return localEvents;
     } catch (error) {
-      console.error('Failed to sync Google Calendar events:', error);
+      // Failed to sync Google Calendar events
       toast({
         title: "Erreur de synchronisation",
         description: "Impossible de synchroniser avec Google Calendar",
@@ -181,7 +181,7 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
         } else {
           const created = await googleCalendarService.createEvent(googleEvent);
           // You would need to update the local event with the Google event ID
-          console.log('Created Google Calendar event:', created.id);
+          // Created Google Calendar event
         }
       }
       
@@ -190,7 +190,7 @@ export const useGoogleCalendar = (): UseGoogleCalendarReturn => {
         description: "Événements synchronisés avec Google Calendar"
       });
     } catch (error) {
-      console.error('Failed to sync events to Google Calendar:', error);
+      // Failed to sync events to Google Calendar
       toast({
         title: "Erreur de synchronisation",
         description: "Impossible de synchroniser vers Google Calendar",

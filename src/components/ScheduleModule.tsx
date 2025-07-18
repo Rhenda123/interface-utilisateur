@@ -35,15 +35,23 @@ function ScheduleModule() {
 
   const days = getDaysOfWeek(currentWeek);
 
-  // Check if mobile view
+  // Check if mobile view with debounce for performance
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
     const checkMobile = () => {
-      setIsMobileView(window.innerWidth < 768);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobileView(window.innerWidth < 768);
+      }, 100);
     };
     
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      clearTimeout(timeoutId);
+    };
   }, []);
   
   const generateTimeSlots = () => {
@@ -143,7 +151,7 @@ function ScheduleModule() {
             onClick={() => setSelectedDay(null)}
             variant="outline"
             size="sm"
-            className="rounded-full shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all touch-manipulation active:scale-95"
+            className="rounded-full shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all touch-manipulation active:scale-95 select-none"
           >
             <Eye className="w-4 h-4 mr-2" />
             Vue semaine
@@ -164,7 +172,7 @@ function ScheduleModule() {
               });
               setShowQuickCreateModal(true);
             }}
-            className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full flex-1 shadow-lg hover:shadow-xl transition-all font-medium py-3 touch-manipulation active:scale-95"
+            className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full flex-1 shadow-lg hover:shadow-xl transition-all font-medium py-3 touch-manipulation active:scale-95 select-none"
           >
             <Plus className="w-4 h-4 mr-2" />
             Ajouter un événement
@@ -182,7 +190,7 @@ function ScheduleModule() {
               setShowFullCreateModal(true);
             }}
             variant="outline"
-            className="rounded-full px-4 shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all touch-manipulation active:scale-95"
+            className="rounded-full px-4 shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all touch-manipulation active:scale-95 select-none"
           >
             <Calendar className="w-4 h-4" />
           </Button>
@@ -253,7 +261,7 @@ function ScheduleModule() {
                     });
                     setShowQuickCreateModal(true);
                   }}
-                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all font-medium py-3 px-6 touch-manipulation active:scale-95"
+                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all font-medium py-3 px-6 touch-manipulation active:scale-95 select-none"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Ajouter un événement
@@ -290,7 +298,11 @@ function ScheduleModule() {
   };
 
   const deleteEvent = (eventId: string) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
+    const confirmDelete = isMobileView 
+      ? window.confirm("Supprimer cet événement ?")
+      : window.confirm("Êtes-vous sûr de vouloir supprimer cet événement ?");
+    
+    if (confirmDelete) {
       setEvents(events.filter(e => e.id !== eventId));
     }
   };

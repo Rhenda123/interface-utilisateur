@@ -37,17 +37,14 @@ const UserAccountMenu = () => {
   };
 
   const handleSwitchAccounts = () => {
-    console.log("Switch accounts clicked");
     // Add switch accounts logic here
   };
 
   const handleAccountSettings = () => {
-    console.log("Account settings clicked");
     // Add account settings logic here
   };
 
   const handleNotificationToggle = () => {
-    console.log("Notification toggle clicked");
     // Add notification toggle logic here
   };
 

@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 
 export default function Index() {
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [view, setView] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -67,22 +67,20 @@ export default function Index() {
   };
 
   const handleLogout = () => {
-    console.log("Logout clicked");
     setMobileMenuOpen(false);
+    signOut();
   };
 
   const handleSwitchAccounts = () => {
-    console.log("Switch accounts clicked");
     setMobileMenuOpen(false);
   };
 
   const handleAccountSettings = () => {
-    console.log("Account settings clicked");
     setMobileMenuOpen(false);
   };
 
   const handleNotificationToggle = () => {
-    console.log("Notification toggle clicked");
+    // Toggle notification logic
   };
 
   return (

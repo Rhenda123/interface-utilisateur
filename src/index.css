@@ -250,4 +250,32 @@
   .gradient-skoolife {
     background: linear-gradient(135deg, hsl(var(--skoolife-primary)), hsl(var(--skoolife-secondary)));
   }
+
+  /* Enhanced button animations for ultra-fast response */
+  .btn-animation {
+    @apply transition-all duration-75 active:scale-95 active:brightness-90 touch-manipulation select-none;
+  }
+
+  /* Optimized hover effects */
+  .hover-effect {
+    @apply transition-all duration-75 hover:shadow-md hover:scale-102;
+  }
+
+  /* Mobile optimization */
+  .mobile-optimized {
+    @apply touch-manipulation select-none;
+  }
+}
+
+/* Prevent scrolling issues on mobile */
+html, body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* iOS specific optimizations */
+@supports (-webkit-touch-callout: none) {
+  .ios-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
