@@ -164,13 +164,14 @@ function ScheduleModule() {
             onClick={() => {
               const dayInfo = days.find(d => d.name === dayName);
               const dayDate = dayInfo ? dayInfo.fullDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
-              setQuickCreateData({
+              const createData = {
                 day: dayName,
                 startTime: '09:00',
                 endTime: '10:00',
                 date: dayDate
-              });
-              setShowQuickCreateModal(true);
+              };
+              setQuickCreateData(createData);
+              setTimeout(() => setShowQuickCreateModal(true), 0);
             }}
             className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full flex-1 shadow-lg hover:shadow-xl transition-all font-medium py-3 touch-manipulation active:scale-95 select-none"
           >
@@ -181,13 +182,14 @@ function ScheduleModule() {
             onClick={() => {
               const dayInfo = days.find(d => d.name === dayName);
               const dayDate = dayInfo ? dayInfo.fullDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
-              setQuickCreateData({
+              const createData = {
                 day: dayName,
                 startTime: '09:00',
                 endTime: '10:00',
                 date: dayDate
-              });
-              setShowFullCreateModal(true);
+              };
+              setQuickCreateData(createData);
+              setTimeout(() => setShowFullCreateModal(true), 0);
             }}
             variant="outline"
             className="rounded-full px-4 shadow-sm border-gray-200 dark:border-gray-700 hover:shadow-md transition-all touch-manipulation active:scale-95 select-none"
@@ -253,13 +255,14 @@ function ScheduleModule() {
                   onClick={() => {
                     const dayInfo = days.find(d => d.name === dayName);
                     const dayDate = dayInfo ? dayInfo.fullDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
-                    setQuickCreateData({
+                    const createData = {
                       day: dayName,
                       startTime: '09:00',
                       endTime: '10:00',
                       date: dayDate
-                    });
-                    setShowQuickCreateModal(true);
+                    };
+                    setQuickCreateData(createData);
+                    setTimeout(() => setShowQuickCreateModal(true), 0);
                   }}
                   className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all font-medium py-3 px-6 touch-manipulation active:scale-95 select-none"
                 >
@@ -385,7 +388,18 @@ function ScheduleModule() {
         {/* Hide action buttons on mobile, show on desktop */}
         <div className="hidden sm:flex items-center gap-2 sm:gap-3">
           <Button
-            onClick={() => setShowFullCreateModal(true)}
+            onClick={() => {
+              const today = new Date();
+              const todayString = today.toLocaleDateString('fr-FR', { weekday: 'long' });
+              const createData = {
+                day: todayString,
+                startTime: '09:00',
+                endTime: '10:00',
+                date: today.toISOString().split('T')[0]
+              };
+              setQuickCreateData(createData);
+              setTimeout(() => setShowFullCreateModal(true), 0);
+            }}
             className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 flex items-center gap-2 rounded-full sm:rounded-lg px-4 py-2 sm:px-6 sm:py-3 shadow-lg hover:shadow-xl active:scale-95 transition-all touch-manipulation font-medium"
           >
             <Plus className="w-4 h-4" />
